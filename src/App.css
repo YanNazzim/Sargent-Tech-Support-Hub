@@ -1,38 +1,34 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* More modern font */
+  padding-bottom: 30px; /* Add some space at the bottom if needed */
+  background-color: #bbbbbb;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-color: #0056B3; /* Lighter background */
+  padding: 15px; /* Reduced padding */
+  color: white; /* Darker text */
+  margin-bottom: 20px; /* Reduced margin */
+  border-bottom: 1px solid #8a8a8a; /* Subtle bottom border */
+}
+
+.App-header h1 {
+  font-size: 2em; /* Keep header prominent but not oversized */
+  margin: 0; /* Remove default h1 margin */
+}
+
+.App-logo {
+  border-radius: 25px;
+  border: solid 3px black;
+}
+
+.product-cards-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  padding: 10px; /* Reduced padding for the container itself */
+  gap: 15px; /* Reduced gap between cards */
+  max-width: 1000px; /* Optional: Set a max-width for the container */
+  margin: 0 auto; /* Center the container if max-width is set */
 }
