@@ -1,5 +1,4 @@
 import React from 'react';
-import './ProductCard.css';
 
 // ProductCard now accepts a 'url' prop
 function ProductCard({ image, title, description, url }) {

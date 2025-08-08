@@ -1,0 +1,83 @@
+.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.dark-mode .App-header {
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333;
+}
+
+.dark-mode h1 {
+  color: #bb86fc; /* A bright purple for a modern dark mode feel */
+}
+
+.dark-mode .product-card {
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .product-card-link:hover .product-card {
+  border-color: #bb86fc;
+}
+
+.dark-mode .product-card-title {
+  color: #bb86fc;
+}
+
+.dark-mode .product-card-description {
+  color: #a0a0a0;
+}
+
+.dark-mode .nav-arrow {
+  background-color: rgba(187, 134, 252, 0.8);
+  color: #121212;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .nav-arrow:hover {
+  background-color: #bb86fc;
+  color: #1e1e1e;
+}
+
+.dark-mode .card-slider {
+  background: #333;
+}
+
+.dark-mode .card-slider::-webkit-slider-thumb {
+  background: #bb86fc;
+}
+
+.dark-mode .card-slider::-moz-range-thumb {
+  background: #bb86fc;
+}
+
+.dark-mode .slider-label {
+  color: #a0a0a0;
+}
+
+.dark-mode-toggle {
+  background-color: #0056B3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  align-self: flex-end;
+}
+
+.dark-mode-toggle:hover {
+  background-color: #004494;
+}
+
+.dark-mode .dark-mode-toggle {
+  background-color: #bb86fc;
+  color: #121212;
+}
+
+.dark-mode .dark-mode-toggle:hover {
+  background-color: #a06dfa;
+}
