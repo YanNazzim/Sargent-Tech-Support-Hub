@@ -1,60 +1,67 @@
 .product-card {
-  border: 3px solid #000000;
-  border-radius: 25px; /* Slightly smaller border-radius */
-  padding: 15px; /* Reduced padding */
-  margin: 10px; /* Reduced margin for closer cards */
-  width: 250px; /* Slightly narrower cards */
-  min-height: 350px;
-  max-height: 350px;
+  border: 1px solid #e0e0e0; /* Lighter border */
+  border-radius: 15px; /* Modern border-radius */
+  padding: 20px;
+  width: 280px; /* Wider cards */
+  min-height: 400px; /* Taller cards for better content spacing */
+  max-height: 400px;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Lighter shadow */
-  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Softer shadow */
+  transition: all 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #ebebeb;
+  background-color: #ffffff; /* White background for the card */
+  overflow: hidden;
 }
 
 .product-card:hover {
-  transform: translateY(-3px); /* Slightly less pronounced hover effect */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slightly more pronounced shadow on hover */
+  transform: translateY(-5px); /* More pronounced hover effect */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Stronger shadow on hover */
+  border-color: #0056B3; /* Highlight border on hover */
 }
 
 .product-card-image {
   width: 100%;
-  max-height: 150px; /* Reduced image height */
-  object-fit: contain;
-  border-radius: 25px; /* Slightly smaller border-radius */
-  margin-bottom: 10px; /* Reduced margin */
+  max-height: 180px; /* Adjusted image height */
+  object-fit: cover; /* Use cover to fill the space */
+  border-radius: 10px; /* Softer border-radius */
+  margin-bottom: 15px;
 }
 
 .product-card-title {
-  font-size: 1.5em; /* Slightly smaller font size */
-  color: #000000;
-  white-space: nowrap; /* Prevents title from wrapping */
-  overflow: hidden; /* Hides overflow if title is too long */
-  text-wrap: initial; /* Adds "..." if title is too long */
+  font-size: 1.6em; /* Slightly larger font size */
+  color: #0056B3; /* Use Sargent blue for title */
+  font-weight: 600; /* Bolder title */
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Correct property for ellipsis */
 }
 
 .product-card-description {
-  font-size: 0.85em; /* Smaller font size for description */
-  font-weight: 500; /* Normal weight for description */
-  color: #000000;
-  line-height: 1.4; /* Slightly tighter line height */
-  /* We might want to limit description height for true minimalism */
-  max-height: 60px; /* Adjust based on desired lines of text */
+  font-size: 0.9em;
+  font-weight: 400; /* Normal weight */
+  color: #666; /* Softer text color */
+  line-height: 1.5;
+  flex-grow: 1; /* Allows the description to take up available space */
+  max-height: 80px; /* Increased max height */
   overflow: hidden;
   text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Limit to 4 lines */
+  -webkit-box-orient: vertical;
 }
-/* Styling for the <a> wrapper to remove default anchor tag styles */
+
 .product-card-link {
-  text-decoration: none; /* Removes underline */
-  color: inherit; /* Inherits text color from parent */
-  display: block; /* Makes the entire link take up the card's space */
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 /* Ensure the card hover still works */
 .product-card-link:hover .product-card {
-  transform: translateY(-3px); /* Slightly less pronounced hover effect */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slightly more pronounced shadow on hover */
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-color: #0056B3;
 }

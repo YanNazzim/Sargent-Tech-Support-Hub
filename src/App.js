@@ -39,13 +39,27 @@ function App() {
       description: "Your go-to resource for learning all about our product, its features, and benefits.",
       url: 'https://sargent-info.netlify.app/' // Replace with your actual info link
     },
+    {
+      id: 5,
+      image: templates,
+      title: 'Cylinders Tool',
+      description: "Explains how door lock cylinders work and provides a visual breakdown of their individual components.",
+      url: 'https://sargent-cylinders.netlify.app/'
+    },
+    {
+      id: 6,
+      image: templates,
+      title: 'Thick Door Tool',
+      description: "Helps you select the correct part numbers for thick door applications, ensuring compatibility and fit.",
+      url: 'https://sargent-thickdoor.netlify.app/'
+    },
   ];
 
   return (
     <div className="App">
       <header className="App-header">
         <a href='https://www.sargentlock.com/' target="_blank" rel="noopener noreferrer">
-        <img src={placeholder} className="App-logo" alt="logo" />
+        <img src={placeholder} className="App-logo" alt="Sargent logo" />
         </a>
         <h1>Sargent Tech Support Hub</h1>
       </header>

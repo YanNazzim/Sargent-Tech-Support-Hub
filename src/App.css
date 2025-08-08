@@ -1,34 +1,38 @@
 .App {
   text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* More modern font */
-  padding-bottom: 30px; /* Add some space at the bottom if needed */
-  background-color: #bbbbbb;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-bottom: 50px;
+  background-color: #f0f2f5; /* Light gray background for a modern feel */
 }
 
 .App-header {
-  background-color: #0056B3; /* Lighter background */
-  padding: 15px; /* Reduced padding */
-  color: white; /* Darker text */
-  margin-bottom: 20px; /* Reduced margin */
-  border-bottom: 1px solid #8a8a8a; /* Subtle bottom border */
+  background-color: #ffffff; /* White background for the header */
+  padding: 20px; /* Increased padding */
+  color: #333; /* Dark text for better contrast */
+  margin-bottom: 40px; /* Increased margin */
+  border-bottom: 1px solid #e0e0e0; /* A subtle, modern bottom border */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Soft shadow */
 }
 
 .App-header h1 {
-  font-size: 2em; /* Keep header prominent but not oversized */
-  margin: 0; /* Remove default h1 margin */
+  font-size: 2.5em; /* Larger header font size */
+  margin: 0;
+  color: #0056B3; /* Sargent blue */
 }
 
 .App-logo {
-  border-radius: 25px;
-  border: solid 3px black;
+  height: 160px; /* Adjusted logo size */
+  border-radius: 10px; /* Softer border radius */
+  border: none;
+  margin-bottom: 10px;
 }
 
 .product-cards-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 10px; /* Reduced padding for the container itself */
-  gap: 15px; /* Reduced gap between cards */
-  max-width: 1000px; /* Optional: Set a max-width for the container */
-  margin: 0 auto; /* Center the container if max-width is set */
+  padding: 20px;
+  gap: 25px; /* Increased gap between cards */
+  max-width: 1200px;
+  margin: 0 auto;
 }
