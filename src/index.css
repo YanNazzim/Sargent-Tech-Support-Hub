@@ -7,7 +7,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Default to dark mode for the entire body */
-  background-color: #121212;
+  background-color: #0A0A0A; /* New Deep Charcoal background */
   color: #e0e0e0;
   min-height: 100vh;
 }

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './App.css';
-import templates from './assets/templates.png';
+import templates from './assets/templates.png'; // Still imported but not used in ProductCard
 import placeholder from './assets/placeholder.jpg';
-import parts from './assets/parts.png';
-import handing from './assets/handing.png';
-import generalInfo from './assets/general_info.png';
+import parts from './assets/parts.png'; // Still imported but not used in ProductCard
+import handing from './assets/handing.png'; // Still imported but not used in ProductCard
+import generalInfo from './assets/general_info.png'; // Still imported but not used in ProductCard
 import RodCalculator from './RodCalculator';
+// Icons are kept
 import { Settings, Wrench, Lock, DoorOpen, Ruler, Info } from 'lucide-react'; 
 
 // Map product ID to Lucide icon for a richer visual
@@ -17,24 +18,28 @@ const productIcons = {
   5: DoorOpen, 
   6: DoorOpen, 
   7: Info, 
-  8: Info, // New entry for the Quiz
+  8: Info, 
 };
 
-// ProductCard component: Rewritten with pure CSS classes
-const ProductCard = ({ image, title, description, url, onClick, id }) => {
+// ProductCard component: REVISED for horizontal menu style
+// The 'image' prop is no longer needed since the icon is used for visuals
+const ProductCard = ({ title, description, url, onClick, id }) => {
   const Icon = productIcons[id] || Settings; 
 
   const CardContent = (
     <div className="product-card">
-      {/* Icon Area */}
+      {/* Icon Area (Left) */}
       <div className="card-icon-container">
         <Icon className="card-icon" aria-hidden="true" />
       </div>
 
-      <h3 className="card-title">{title}</h3>
-      <p className="card-description">{description}</p>
+      {/* New Content Area for Title and Description (Center) */}
+      <div className="card-text-content">
+          <h3 className="card-title">{title}</h3>
+          <p className="card-description">{description}</p>
+      </div>
       
-      {/* Action Button/Link at the bottom */}
+      {/* Action Button/Link (Right) */}
       <div className="card-button-container">
         <span className="card-button">
           {url ? 'Launch Tool' : 'Open Calculator'}
@@ -84,10 +89,8 @@ const App = () => {
     { id: 2, image: parts, title: 'Parts Lookup Tool', description: "Effortlessly find the right parts with precise information, saving you time and hassle.", url: 'https://sargent-parts.netlify.app/' },
     { id: 3, image: templates, title: 'Rod Length Calculator', description: "Precisely calculate Top Rod, Bottom Rod, and Rod Extension lengths for SVR and CVR exit devices.", onClick: () => setIsRodCalculatorOpen(true) },
     { id: 4, image: templates, title: 'Cylinders Tool', description: "Explains how door lock cylinders work and provides a visual breakdown of their individual components.", url: 'https://sargent-cylinders.netlify.app/' },
-    { id: 5, image: templates, title: 'Thick Door Tool', description: "Helps you select the correct part numbers for thick door applications, ensuring compatibility and fit.", url: 'https://sargent-thickdoor.netlify.app/' },
     { id: 6, image: handing, title: 'Handing Tool', description: "Visually determine the correct left or right handing for door locks, ensuring a precise and proper installation.", url: 'https://sargenthanding.netlify.app/' },
     { id: 7, image: generalInfo, title: 'General Product Information', description: "Your go-to resource for learning all about our product, its features, and benefits.", url: 'https://sargent-info.netlify.app/' },
-    // NEW: Sargent Product Quiz
     { id: 8, image: generalInfo, title: 'Sargent Product Quiz', description: "Test your knowledge of Sargent Hardware and products with this interactive quiz.", url: 'https://sargent-quiz.netlify.app/' },
   ];
 
@@ -101,6 +104,7 @@ const App = () => {
         <div className="max-w-7xl header-content">
           {/* LOGO LINK - Simplified and centered via CSS */}
           <a href='https://www.sargentlock.com/' target="_blank" rel="noopener noreferrer" aria-label="Go to Sargent website">
+            {/* The logo size is now controlled by CSS in App.css */}
             <img src={placeholder} className="header-logo" alt="Sargent logo" />
           </a>
         </div>
@@ -121,7 +125,7 @@ const App = () => {
             <ProductCard
               key={product.id}
               id={product.id} 
-              image={product.image}
+              // Removed image prop since it's no longer used in the component
               title={product.title}
               description={product.description}
               url={product.url}

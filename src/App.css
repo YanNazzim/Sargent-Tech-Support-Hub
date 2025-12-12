@@ -3,7 +3,8 @@
 /* --- GENERAL LAYOUT & FONT --- */
 .app-container {
   min-height: 100vh;
-  background-color: #121212; /* Dark background */
+  /* NEW COLOR: Deep Charcoal background */
+  background-color: #0A0A0A; 
   transition: background-color 0.5s;
 }
 
@@ -11,19 +12,20 @@
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 1.5rem; /* Increased padding */
+    padding-right: 1.5rem; /* Increased padding */
 }
 
 /* --- HEADER STYLES --- */
 .app-header {
-  background-color: #1e1e1e;
+  /* NEW COLOR: Dark Gray background */
+  background-color: #1A1A1A;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  padding: 1.25rem 0; /* py-5 */
+  padding: 1rem 0; /* py-4 */
   position: sticky;
   top: 0;
   z-index: 40;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #333333;
 }
 
 .header-content {
@@ -34,153 +36,132 @@
 }
 
 .header-logo {
-  /* CHANGE: Increased size (from 2.5rem) */
-  height: 8rem;
-  width: 8rem; 
-  /* CHANGE: Added border radius */
-  border-radius: 25px;
-  /* Optional: Ensure image covers the 8rem x 8rem area */
-  object-fit: cover; 
-}
-
-.header-title {
-  font-size: 2rem; /* text-3xl */
-  font-weight: 800; /* font-extrabold */
-  color: #ffffff;
-  letter-spacing: -0.025em; /* tracking-tight */
-}
-
-.header-tag {
-    display: none;
-    font-size: 0.875rem; /* text-sm */
-    font-weight: 500;
-    color: #8b5cf6; /* indigo-400 */
-    background-color: rgba(67, 56, 202, 0.1); /* indigo-900/50 */
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px; /* rounded-full */
-}
-
-@media (min-width: 640px) {
-    .header-tag {
-        display: inline-block;
-    }
+  /* CHANGE: Smaller, more modern logo size */
+  height: 4rem;
+  width: auto; 
+  border-radius: 0.5rem; /* Smoother radius */
+  object-fit: contain; 
 }
 
 /* --- MAIN SECTION --- */
 .section-title-container {
     text-align: center;
-    margin-bottom: 3rem; /* mb-12 */
+    margin-bottom: 2.5rem; /* mb-10 */
+    padding-top: 1rem;
 }
 
 .section-tag {
-    font-size: 1.125rem; /* text-lg */
+    font-size: 1rem; /* text-base */
     font-weight: 500;
-    color: #a855f7; /* indigo-400 */
+    /* NEW COLOR: Vibrant Blue Accent */
+    color: #3b82f6; 
     text-transform: uppercase;
     letter-spacing: 0.05em; /* tracking-wider */
+    margin-bottom: 0.25rem;
 }
 
 .section-title {
     margin-top: 0.5rem;
-    font-size: 3rem; /* text-4xl */
+    font-size: 2.5rem; /* text-4xl */
     font-weight: 800;
     color: #ffffff;
 }
 
-/* --- PRODUCT GRID --- */
+/* --- PRODUCT GRID (NEW LIST/MENU LAYOUT) --- */
 .product-grid {
+    /* Change to single column, centered, max width */
     display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 2rem; /* gap-8 */
+    grid-template-columns: 1fr;
+    gap: 1rem; /* Smaller gap for list look */
+    max-width: 900px;
+    margin: 0 auto; /* Center the grid */
 }
 
-@media (min-width: 768px) {
-    .product-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 1024px) {
-    .product-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 1280px) {
-    .product-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-}
-
-/* --- PRODUCT CARD --- */
+/* --- PRODUCT CARD (NEW HORIZONTAL LIST ITEM) --- */
 .product-card-link, .product-card-div {
     text-decoration: none;
     color: inherit;
     display: block;
-    height: 100%;
+    height: auto; /* Auto height for list item */
     cursor: pointer;
     outline: none;
 }
 
 .product-card {
-    background-color: #242424; /* Darker card background */
-    border-radius: 1rem; /* rounded-2xl */
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3); /* shadow-xl */
+    /* NEW COLOR: Dark Gray card background */
+    background-color: #1A1A1A; 
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); 
     transition: all 0.3s ease;
-    border: 1px solid #333;
-    padding: 1.5rem;
-    height: 80%;
+    border: 1px solid #333333;
+    padding: 1.25rem 1.5rem; /* Horizontal padding */
+    height: auto;
+    
+    /* HORIZONTAL FLEX LAYOUT FOR LIST STYLE */
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    flex-direction: row; /* Horizontal */
+    align-items: center; /* Center vertically */
+    text-align: left;
 }
 
 .product-card:hover, .product-card:focus-within {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5); /* hover:shadow-2xl */
-    border-color: #a855f7; /* indigo-500 */
+    transform: translateY(-2px); /* Smaller lift */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6); 
+    /* NEW COLOR: Blue Accent on hover */
+    border-color: #3b82f6; 
 }
 
 .card-icon-container {
-    margin-bottom: 1rem;
-    color: #a855f7; /* indigo-400 */
+    margin-right: 1.5rem;
+    margin-bottom: 0;
+    /* NEW COLOR: Blue Accent for Icons */
+    color: #3b82f6; 
+    flex-shrink: 0; /* Icon shouldn't shrink */
 }
 
 .card-icon {
-    width: 2.5rem; /* w-10 */
-    height: 2.5rem; /* h-10 */
+    width: 2rem; 
+    height: 2rem; 
+}
+
+/* New Content Wrapper for Title and Description */
+.card-text-content {
+    flex-grow: 1; /* Takes up available space */
+    margin-right: 1rem;
 }
 
 .card-title {
-    font-size: 1.25rem; /* text-xl */
+    font-size: 1.125rem; /* text-lg */
     font-weight: 700;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
     color: #ffffff;
 }
 
 .card-description {
     font-size: 0.875rem; /* text-sm */
-    font-weight: 500;
+    font-weight: 400; /* Lighter font weight */
     color: #9ca3af; /* gray-400 */
-    flex-grow: 1;
+    flex-grow: 0; /* No need for this to grow in horizontal layout */
+    margin-bottom: 0;
 }
 
 .card-button-container {
-    margin-top: 1rem;
-    width: 100%;
+    margin-top: 0;
+    width: auto;
+    flex-shrink: 0; /* Button shouldn't shrink */
 }
 
 .card-button {
     display: inline-block;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.5rem;
     font-size: 0.875rem;
     font-weight: 600;
-    border-radius: 9999px; /* rounded-full */
-    background-color: #10b981; /* teal-500 */
+    border-radius: 0.5rem; /* Less round button */
+    /* KEPT COLOR: Teal/Mint for action */
+    background-color: #10b981; 
     color: #ffffff;
     transition: background-color 0.3s;
-    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.4);
 }
 
 .card-button:hover {
@@ -190,312 +171,124 @@
 
 /* --- ROD CALCULATOR MODAL (Input Form) --- */
 .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(18, 18, 18, 0.9); /* Dark background with opacity */
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 1rem;
-    z-index: 50;
-    overflow-y: auto;
-    backdrop-filter: blur(4px); /* Simulate backdrop-blur-sm */
+    background-color: rgba(10, 10, 10, 0.95); /* Deeper overlay */
 }
 
 .calculator-modal {
-    background-color: #1e1e1e;
-    border-radius: 1rem; /* rounded-2xl */
-    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.7); /* shadow-3xl */
-    width: 100%;
-    max-width: 42rem; /* max-w-2xl */
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    transition: transform 0.3s ease;
-    border: 4px solid rgba(20, 184, 166, 0.2); /* ring-4 ring-teal-500/20 */
+    background-color: #1A1A1A;
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.9);
+    /* NEW RING COLOR: Blue Accent */
+    border: 4px solid rgba(59, 130, 246, 0.2); 
 }
 
 .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid #333;
-    padding-bottom: 1rem;
-}
-
-.modal-title {
-    font-size: 1.875rem; /* text-3xl */
-    font-weight: 700;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
+    border-bottom: 1px solid #444; /* Slightly lighter separator */
 }
 
 .modal-title-icon {
-    height: 1.75rem;
-    width: 1.75rem;
-    margin-right: 0.75rem;
-    color: #10b981; /* teal-400 */
-}
-
-.close-button {
-    color: #9ca3af;
-    padding: 0.5rem;
-    border-radius: 9999px;
-    transition: all 0.2s ease;
-}
-
-.close-button:hover {
-    color: #ffffff;
-    background-color: #333;
-}
-
-.modal-intro-text {
-    color: #9ca3af;
-    margin-bottom: 1.5rem;
-    font-size: 0.875rem;
+    /* KEPT COLOR: Teal/Mint for calculator */
+    color: #10b981; 
 }
 
 .input-group {
-    padding: 1.25rem;
-    border-radius: 0.75rem;
-    border: 1px solid #333;
-    margin-bottom: 1.5rem;
+    border: 1px solid #444;
 }
 
 .device-select-group {
-    background-color: rgba(67, 56, 202, 0.15); /* Slightly purple tinted background */
-    border-color: #4338ca;
+    /* NEW: Lighter Blue tinted background */
+    background-color: rgba(59, 130, 246, 0.1); 
+    /* NEW: Blue accent border */
+    border-color: #3b82f6; 
 }
 
 .measurement-input-group {
-    background-color: #121212; /* Darker background for contrast */
-    border-color: #374151;
-}
-
-.group-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
+    background-color: #0A0A0A; 
+    border-color: #444;
 }
 
 .device-select-group .group-title {
-    color: #a855f7; /* indigo-400 */
-}
-
-.measurement-input-group .group-title {
-    color: #ffffff;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 1rem;
-}
-
-@media (min-width: 768px) {
-    .form-grid.device-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 640px) {
-    .form-grid.measurement-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 1024px) {
-    .form-grid.measurement-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-.input-label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #d1d5db; /* gray-300 */
-    margin-bottom: 0.25rem;
+    /* NEW COLOR: Blue Accent */
+    color: #3b82f6; 
 }
 
 .form-input, .form-select {
-    width: 80%;
-    padding: 0.75rem;
-    border: 1px solid #4b5563; /* gray-600 */
-    background-color: #000000; /* Darker input background */
-    color: #ffffff;
-    border-radius: 0.5rem;
-    transition: all 0.2s;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    width: 100%; /* Make inputs fill the grid column */
+    border: 1px solid #333; 
+    background-color: #000000; 
 }
 
 .form-input:focus, .form-select:focus {
-    outline: none;
-    border-color: #10b981; /* teal-500 */
+    /* KEPT COLOR: Teal/Mint focus ring */
+    border-color: #10b981; 
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5);
 }
 
-.form-input:disabled, .form-select:disabled {
-    opacity: 0.6;
-    background-color: #333;
-    cursor: not-allowed;
-}
-
 .calculate-button {
-    margin-top: 2rem;
-    width: 100%;
-    background-color: #10b981; /* teal-600 */
-    color: #ffffff;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    font-weight: 800;
-    font-size: 1.25rem;
-    transition: all 0.2s ease;
+    /* KEPT COLOR: Teal/Mint for action */
+    background-color: #10b981; 
     box-shadow: 0 10px 15px rgba(16, 185, 129, 0.5);
 }
 
 .calculate-button:hover {
     background-color: #059669; /* teal-700 */
-    transform: scale(1.01);
 }
-
-.note-text {
-    font-size: 0.75rem;
-    text-align: center;
-    color: #4b5563; /* gray-600 */
-    margin-top: 1rem;
-}
-
 
 /* --- RESULT MODAL STYLES --- */
 .result-modal {
-    background-color: #1e1e1e;
-    border-radius: 1rem;
-    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.7);
-    width: 100%;
-    max-width: 32rem; /* max-w-xl */
-    padding: 2rem;
-    transition: transform 0.3s ease;
-    border: 4px solid rgba(168, 85, 247, 0.3); /* ring-4 ring-indigo-500/30 */
-}
-
-.result-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid #333;
-    padding-bottom: 1rem;
+    background-color: #1A1A1A;
+    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.9);
+    /* NEW RING COLOR: Blue Accent */
+    border: 4px solid rgba(59, 130, 246, 0.3); 
 }
 
 .result-modal-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #a855f7; /* indigo-400 */
-    display: flex;
-    align-items: center;
+    /* NEW COLOR: Blue Accent */
+    color: #3b82f6; 
 }
 
 .result-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr)); /* Single column for better mobile experience */
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
-
-.result-card {
-    padding: 1rem;
-    background-color: #121212;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(20, 184, 166, 0.5); /* border-teal-400/50 */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+@media (min-width: 640px) {
+    .result-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
-.result-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #9ca3af; /* gray-400 */
+
+.result-card {
+    background-color: #0A0A0A;
+    /* NEW BORDER COLOR: Teal/Mint */
+    border: 1px solid rgba(16, 185, 129, 0.5); 
+    /* Result card layout is already good */
 }
 
 .result-value {
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #10b981; /* teal-600 */
-    margin-top: 0.25rem;
-}
-
-.result-unit {
-    font-size: 0.75rem;
-    color: #6b7280; /* gray-500 */
+    /* KEPT COLOR: Teal/Mint for results */
+    color: #10b981; 
 }
 
 .result-icon {
-    height: 2rem;
-    width: 2rem;
+    /* KEPT COLOR: Teal/Mint for results */
     color: #10b981;
-    opacity: 0.6;
-    flex-shrink: 0;
-}
-
-.message-box {
-    padding: 1rem;
-    border-radius: 0.75rem;
-    display: flex;
-    align-items: flex-start;
-    border-left-width: 4px;
-    transition: all 0.2s;
-}
-
-.message-icon {
-    height: 1.25rem;
-    width: 1.25rem;
-    margin-right: 0.75rem;
-    margin-top: 0.125rem;
-    flex-shrink: 0;
-}
-
-.error-message {
-    background-color: rgba(185, 28, 28, 0.1); /* red-900/50 */
-    color: #fca5a5; /* red-300 */
-    border-color: #dc2626; /* red-600 */
-}
-
-.error-message .message-icon {
-    color: #f87171; /* red-400 */
 }
 
 .success-message {
-    background-color: rgba(22, 101, 52, 0.1); /* green-900/50 */
-    color: #bbf7d0; /* green-300 */
-    border-color: #10b981; /* green-600 */
-}
-
-.success-message .message-icon {
-    color: #4ade80; /* green-400 */
-}
-
-.message-text {
-    font-size: 0.875rem;
-    font-weight: 600;
+    /* KEPT COLORS, slightly higher opacity */
+    background-color: rgba(22, 101, 52, 0.2); 
+    color: #d1fae5; 
+    border-color: #10b981; 
 }
 
 .close-result-button {
-    margin-top: 1.5rem;
-    width: 100%;
-    background-color: #4f46e5; /* indigo-600 */
-    color: #ffffff;
-    padding: 0.75rem;
-    border-radius: 0.75rem;
-    font-weight: 700;
-    font-size: 1.125rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 10px 15px rgba(79, 70, 229, 0.5);
+    /* NEW COLOR: Blue Accent */
+    background-color: #3b82f6; 
+    box-shadow: 0 10px 15px rgba(59, 130, 246, 0.5);
 }
 
 .close-result-button:hover {
-    background-color: #4338ca; /* indigo-700 */
+    background-color: #2563eb; /* blue-700 */
 }
