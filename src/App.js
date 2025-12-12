@@ -17,6 +17,7 @@ const productIcons = {
   5: DoorOpen, 
   6: DoorOpen, 
   7: Info, 
+  8: Info, // New entry for the Quiz
 };
 
 // ProductCard component: Rewritten with pure CSS classes
@@ -86,6 +87,8 @@ const App = () => {
     { id: 5, image: templates, title: 'Thick Door Tool', description: "Helps you select the correct part numbers for thick door applications, ensuring compatibility and fit.", url: 'https://sargent-thickdoor.netlify.app/' },
     { id: 6, image: handing, title: 'Handing Tool', description: "Visually determine the correct left or right handing for door locks, ensuring a precise and proper installation.", url: 'https://sargenthanding.netlify.app/' },
     { id: 7, image: generalInfo, title: 'General Product Information', description: "Your go-to resource for learning all about our product, its features, and benefits.", url: 'https://sargent-info.netlify.app/' },
+    // NEW: Sargent Product Quiz
+    { id: 8, image: generalInfo, title: 'Sargent Product Quiz', description: "Test your knowledge of Sargent Hardware and products with this interactive quiz.", url: 'https://sargent-quiz.netlify.app/' },
   ];
 
   if (isRodCalculatorOpen) {
