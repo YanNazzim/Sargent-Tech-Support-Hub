@@ -59,7 +59,7 @@ const ResultModal = ({ results, message, isError, onClose }) => {
             >
                 <div className="result-modal-header">
                     <h2 id="modal-title" className="result-modal-title">
-                        <Ruler style={{ marginRight: '0.75rem', height: '1.75rem', width: '1.75rem' }} />
+                        <Ruler className="modal-title-icon" />
                         Calculation Results
                     </h2>
                     <button 
@@ -288,7 +288,7 @@ const RodCalculator = ({ onClose }) => {
                 aria-modal="true"
                 aria-labelledby="calculator-title"
             >
-                <div className="p-6 md:p-8">
+                <div> {/* Removed p-6 md:p-8 div as padding is now on calculator-modal */}
 
                     <div className="modal-header">
                         <h2 id="calculator-title" className="modal-title">
@@ -308,10 +308,10 @@ const RodCalculator = ({ onClose }) => {
                         Select your exit device type and enter the required measurements in inches.
                     </p>
 
-                    <div className="space-y-6">
+                    <div className="input-group-wrapper"> {/* Replaced space-y-6 */}
                         {/* Device Selection Group */}
                         <div className="input-group device-select-group">
-                            <h3 className="group-title">1. Select Device</h3>
+                            <h3 className="group-title">1. Select Device</h3> {/* Added group-title */}
                             <div className="form-grid device-grid">
                                 <div>
                                     <label htmlFor="deviceType" className="input-label">Device Type</label>
@@ -347,7 +347,7 @@ const RodCalculator = ({ onClose }) => {
 
                         {/* Measurement Inputs Group (Conditional Rendering Applied Here) */}
                         <div className="input-group measurement-input-group">
-                            <h3 className="group-title">2. Enter Measurements (Inches)</h3>
+                            <h3 className="group-title">2. Enter Measurements (Inches)</h3> {/* Added group-title */}
                             <div className="form-grid measurement-grid">
                                 {/* Show Door Height and AFF for Rod devices (CVR/SVR) or initial state */}
                                 {(inputs.deviceType === 'CVR' || inputs.deviceType === 'SVR' || inputs.deviceType === '') && (
