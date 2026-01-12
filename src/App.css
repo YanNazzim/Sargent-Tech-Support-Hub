@@ -3,25 +3,25 @@
 /* --- GENERAL LAYOUT & FONT --- */
 .app-container {
   min-height: 100vh;
-  /* NEW COLOR: Deep Charcoal background */
+  /* Deep Charcoal background (Permanent Dark Mode) */
   background-color: #0A0A0A; 
-  transition: background-color 0.5s;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .max-w-7xl {
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1.5rem; /* Increased padding */
-    padding-right: 1.5rem; /* Increased padding */
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 /* --- HEADER STYLES --- */
 .app-header {
-  /* NEW COLOR: Dark Gray background */
   background-color: #1A1A1A;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  padding: 1rem 0; /* py-4 */
+  padding: 1rem 0; 
   position: sticky;
   top: 0;
   z-index: 40;
@@ -31,103 +31,91 @@
 .header-content {
   display: flex;
   align-items: center;
-  /* CHANGE: Center content horizontally */
-  justify-content: center;
+  justify-content: center; /* Centered Logo */
 }
 
 .header-logo {
-  /* CHANGE: Smaller, more modern logo size */
-  height: 4rem;
+  height: 3.5rem; /* Slightly refined size */
   width: auto; 
-  border-radius: 0.5rem; /* Smoother radius */
+  border-radius: 0.5rem; 
   object-fit: contain; 
 }
 
 /* --- MAIN SECTION --- */
 .section-title-container {
     text-align: center;
-    margin-bottom: 2.5rem; /* mb-10 */
+    margin-bottom: 2.5rem; 
     padding-top: 1rem;
 }
 
 .section-tag {
-    font-size: 1rem; /* text-base */
-    font-weight: 500;
-    /* NEW COLOR: Vibrant Blue Accent */
-    color: #3b82f6; 
+    font-size: 0.875rem; 
+    font-weight: 600;
+    color: #3b82f6; /* Blue Accent */
     text-transform: uppercase;
-    letter-spacing: 0.05em; /* tracking-wider */
-    margin-bottom: 0.25rem;
+    letter-spacing: 0.05em; 
+    margin-bottom: 0.5rem;
 }
 
-/* RESPONSIVENESS ADJUSTMENT for Title */
 .section-title {
     margin-top: 0.5rem;
-    font-size: 2rem; /* Base size for mobile */
+    font-size: 2rem; 
     font-weight: 800;
     color: #ffffff;
 }
 
 @media (min-width: 640px) {
     .section-title {
-        font-size: 2.5rem; /* Larger size for desktop */
+        font-size: 2.5rem; 
     }
 }
 
 
-/* --- PRODUCT GRID (NEW LIST/MENU LAYOUT) --- */
+/* --- PRODUCT GRID --- */
 .product-grid {
-    /* Change to single column, centered, max width */
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1rem; /* Smaller gap for list look */
+    gap: 1rem; 
     max-width: 900px;
-    margin: 0 auto; /* Center the grid */
+    margin: 0 auto; 
 }
 
-/* --- PRODUCT CARD (NEW HORIZONTAL LIST ITEM) --- */
+/* --- PRODUCT CARD --- */
 .product-card-link, .product-card-div {
     text-decoration: none;
     color: inherit;
     display: block;
-    height: auto; /* Auto height for list item */
+    height: auto; 
     cursor: pointer;
     outline: none;
 }
 
 .product-card {
-    /* NEW COLOR: Dark Gray card background */
     background-color: #1A1A1A; 
-    border-radius: 0.75rem; /* rounded-xl */
+    border-radius: 0.75rem; 
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); 
     transition: all 0.3s ease;
     border: 1px solid #333333;
-    padding: 1.25rem 1.5rem; /* Horizontal padding */
+    padding: 1.25rem 1.5rem; 
     height: auto;
-    
-    /* HORIZONTAL FLEX LAYOUT FOR LIST STYLE */
     display: flex;
-    flex-direction: row; /* Horizontal */
-    align-items: center; /* Center vertically */
+    flex-direction: row; 
+    align-items: center; 
     text-align: left;
-    
-    /* RESPONSIVENESS: Ensure long text breaks */
     word-break: break-word; 
 }
 
 .product-card:hover, .product-card:focus-within {
-    transform: translateY(-2px); /* Smaller lift */
+    transform: translateY(-2px); 
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6); 
-    /* NEW COLOR: Blue Accent on hover */
-    border-color: #3b82f6; 
+    border-color: #3b82f6; /* Blue Accent Hover */
 }
 
 .card-icon-container {
     margin-right: 1.5rem;
     margin-bottom: 0;
-    /* NEW COLOR: Blue Accent for Icons */
     color: #3b82f6; 
-    flex-shrink: 0; /* Icon shouldn't shrink */
+    flex-shrink: 0; 
 }
 
 .card-icon {
@@ -135,33 +123,29 @@
     height: 2rem; 
 }
 
-/* New Content Wrapper for Title and Description */
 .card-text-content {
-    flex-grow: 1; /* Takes up available space */
+    flex-grow: 1; 
     margin-right: 1rem;
 }
 
 .card-title {
-    font-size: 1.125rem; /* text-lg */
+    font-size: 1.125rem; 
     font-weight: 700;
     margin-bottom: 0.25rem;
     color: #ffffff;
-    overflow-wrap: break-word;
 }
 
 .card-description {
-    font-size: 0.875rem; /* text-sm */
-    font-weight: 400; /* Lighter font weight */
-    color: #9ca3af; /* gray-400 */
-    flex-grow: 0; /* No need for this to grow in horizontal layout */
+    font-size: 0.875rem; 
+    font-weight: 400; 
+    color: #9ca3af; 
     margin-bottom: 0;
-    overflow-wrap: break-word;
 }
 
 .card-button-container {
     margin-top: 0;
     width: auto;
-    flex-shrink: 0; /* Button shouldn't shrink */
+    flex-shrink: 0; 
 }
 
 .card-button {
@@ -169,20 +153,19 @@
     padding: 0.5rem 1.5rem;
     font-size: 0.875rem;
     font-weight: 600;
-    border-radius: 0.5rem; /* Less round button */
-    /* KEPT COLOR: Teal/Mint for action */
-    background-color: #10b981; 
+    border-radius: 0.5rem; 
+    background-color: #10b981; /* Emerald/Teal Action */
     color: #ffffff;
     transition: background-color 0.3s;
     box-shadow: 0 2px 4px rgba(16, 185, 129, 0.4);
 }
 
 .card-button:hover {
-    background-color: #059669; /* teal-600 */
+    background-color: #059669; 
 }
 
 
-/* --- ROD CALCULATOR MODAL (Input Form) --- */
+/* --- ROD CALCULATOR & MODAL STYLES (DARK THEME) --- */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -193,7 +176,14 @@
     align-items: center;
     justify-content: center;
     z-index: 50;
-    background-color: rgba(10, 10, 10, 0.95); /* Deeper overlay */
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .calculator-modal {
@@ -204,32 +194,36 @@
     max-width: 640px;
     max-height: 90vh;
     overflow-y: auto;
-    
-    /* NEW RING COLOR: Blue Accent */
-    border: 4px solid rgba(59, 130, 246, 0.2); 
-    padding: 2.5rem 1.5rem; /* Full padding applied here */
-    
-    /* RESPONSIVENESS: Ensure long text breaks */
-    word-break: break-word; 
+    border: 1px solid #333;
+    padding: 0; /* Reset padding for header/body split */
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-header {
+    background-color: #111; /* Slightly darker header */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #444; /* Slightly lighter separator */
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #333;
+}
+
+.modal-body {
+    padding: 2rem;
 }
 
 .close-button {
-    background: none;
+    background: rgba(255,255,255,0.05);
     border: none;
     color: #9ca3af;
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 50%;
-    transition: color 0.2s, background-color 0.2s;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .close-button:hover {
@@ -238,71 +232,60 @@
 }
 
 .modal-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     display: flex;
     align-items: center;
+    color: #fff;
 }
 
 .modal-title-icon {
-    /* KEPT COLOR: Teal/Mint for calculator */
     color: #10b981; 
-    height: 1.75rem;
-    width: 1.75rem;
+    height: 1.5rem;
+    width: 1.5rem;
     margin-right: 0.75rem;
-}
-
-.modal-intro-text {
-    font-size: 1rem;
-    color: #9ca3af;
-    margin-bottom: 2rem;
-    overflow-wrap: break-word;
 }
 
 .input-group-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Replaces space-y-6 */
-    margin-bottom: 2.5rem;
+    gap: 1.5rem; 
+    margin-bottom: 2rem;
 }
 
 .input-group {
-    padding: 1.5rem; /* p-6 */
-    border-radius: 0.5rem;
-    border: 1px solid #444;
+    padding: 1.5rem; 
+    border-radius: 0.75rem;
+    border: 1px solid #333;
 }
 
+/* Highlighting the Device Selection area slightly */
 .device-select-group {
-    /* NEW: Lighter Blue tinted background */
-    background-color: rgba(59, 130, 246, 0.1); 
-    /* NEW: Blue accent border */
-    border-color: #3b82f6; 
+    background-color: rgba(59, 130, 246, 0.05); /* Very subtle blue tint */
+    border-color: rgba(59, 130, 246, 0.2); 
 }
 
 .measurement-input-group {
-    background-color: #0A0A0A; 
-    border-color: #444;
+    background-color: #151515; 
 }
 
 .group-title {
-    font-size: 1.125rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
     font-weight: 700;
     margin-bottom: 1rem;
-    /* NEW COLOR: Blue Accent */
+    letter-spacing: 0.05em;
     color: #3b82f6; 
 }
 
 .form-grid {
     display: grid;
     gap: 1.5rem;
-}
-
-.device-grid, .measurement-grid {
     grid-template-columns: 1fr;
 }
 @media (min-width: 640px) {
-    .device-grid, .measurement-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .form-grid {
+        grid-template-columns: 1fr 1fr;
     }
 }
 
@@ -310,131 +293,128 @@
     display: block;
     font-size: 0.875rem;
     font-weight: 500;
-    color: #e5e7eb;
+    color: #d1d5db;
     margin-bottom: 0.5rem;
 }
 
 .form-input, .form-select {
-    width: 100%; /* Make inputs fill the grid column */
-    /* FIX: Use border-box to ensure padding/border don't exceed 100% width, preventing overlap on narrow screens */
+    width: 100%; 
     box-sizing: border-box; 
     border: 1px solid #333; 
-    background-color: #000000; 
-    padding: 0.75rem 1rem; /* py-3 px-4 */
+    background-color: #0A0A0A; 
+    padding: 0.75rem 1rem; 
     font-size: 1rem;
-    border-radius: 0.375rem; /* rounded-md */
+    border-radius: 0.5rem; 
     color: #ffffff;
+    transition: border-color 0.2s;
 }
 
 .form-input:focus, .form-select:focus {
     outline: none;
-    /* KEPT COLOR: Teal/Mint focus ring */
-    border-color: #10b981; 
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5);
+    border-color: #3b82f6; 
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.form-select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .calculate-button {
-    /* KEPT COLOR: Teal/Mint for action */
-    background-color: #10b981; 
-    box-shadow: 0 10px 15px rgba(16, 185, 129, 0.5);
+    background-color: #3b82f6; /* Blue Primary Action */
     width: 100%;
-    padding: 1rem 1.5rem;
-    font-size: 1.125rem;
-    font-weight: 700;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
     border-radius: 0.5rem;
-    margin-top: 2.5rem;
-    margin-bottom: 1.5rem;
     border: none;
-    color: #0A0A0A; /* Dark text for contrast */
+    color: #ffffff;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .calculate-button:hover {
-    background-color: #059669; /* teal-700 */
+    background-color: #2563eb; 
 }
 
 .note-text {
     text-align: center;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: #6b7280;
+    margin-top: 1rem;
 }
 
-/* --- RESULT MODAL STYLES --- */
+/* --- RESULT MODAL (Inner) --- */
 .result-modal {
     background-color: #1A1A1A;
     border-radius: 1rem;
-    box-shadow: 0 20px 25px rgba(0, 0, 0, 0.9);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 1);
     width: 90%;
     max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-    
-    /* NEW RING COLOR: Blue Accent */
-    border: 4px solid rgba(59, 130, 246, 0.3); 
-    padding: 2.5rem;
-    
-    /* RESPONSIVENESS: Ensure long text breaks */
-    word-break: break-word; 
+    border: 1px solid #333;
+    overflow: hidden;
 }
 
 .result-modal-header {
+    background-color: #111;
+    padding: 1.5rem;
+    border-bottom: 1px solid #333;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #444;
 }
 
 .result-modal-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+    color: #fff;
     font-weight: 700;
     display: flex;
     align-items: center;
-    /* NEW COLOR: Blue Accent */
-    color: #3b82f6; 
 }
 
 .result-grid {
     display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr)); /* Single column for better mobile experience */
+    grid-template-columns: 1fr;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    padding: 2rem;
 }
 @media (min-width: 640px) {
     .result-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr 1fr;
     }
 }
 
-
 .result-card {
     background-color: #0A0A0A;
-    /* NEW BORDER COLOR: Teal/Mint */
-    border: 1px solid rgba(16, 185, 129, 0.5); 
-    padding: 1.5rem;
+    border: 1px solid #333;
+    padding: 1.25rem;
     border-radius: 0.75rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: border-color 0.2s;
+}
+
+.result-card:hover {
+    border-color: #10b981; /* Highlight on hover */
 }
 
 .result-label {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
     color: #9ca3af;
     margin-bottom: 0.25rem;
-    overflow-wrap: break-word;
+    font-weight: 600;
 }
 
 .result-value {
-    /* KEPT COLOR: Teal/Mint for results */
-    color: #10b981; 
-    font-size: 1.875rem;
-    font-weight: 800;
-    line-height: 1;
-    overflow-wrap: break-word;
+    color: #ffffff; 
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
 }
 
 .result-unit {
@@ -443,63 +423,51 @@
 }
 
 .result-icon {
-    /* KEPT COLOR: Teal/Mint for results */
     color: #10b981;
-    height: 3rem;
-    width: 3rem;
-    flex-shrink: 0;
+    height: 2rem;
+    width: 2rem;
 }
 
 .message-box {
+    margin: 0 2rem 2rem 2rem;
     padding: 1rem;
-    margin-bottom: 1.5rem;
     border-radius: 0.5rem;
     border: 1px solid;
     display: flex;
     align-items: center;
+    font-size: 0.875rem;
 }
 
 .message-icon {
-    height: 1.5rem;
-    width: 1.5rem;
     margin-right: 0.75rem;
-    flex-shrink: 0;
-}
-
-.message-text {
-    font-size: 0.875rem;
-    margin: 0;
-    overflow-wrap: break-word;
 }
 
 .error-message {
-    background-color: rgba(239, 68, 68, 0.2); /* Red tint */
-    color: #fca5a5; /* Light Red */
-    border-color: #f87171; /* Red */
+    background-color: rgba(239, 68, 68, 0.1); 
+    color: #fca5a5; 
+    border-color: rgba(239, 68, 68, 0.2);
 }
 
 .success-message {
-    /* KEPT COLORS, slightly higher opacity */
-    background-color: rgba(22, 101, 52, 0.2); 
-    color: #d1fae5; 
-    border-color: #10b981; 
+    background-color: rgba(16, 185, 129, 0.1); 
+    color: #6ee7b7; 
+    border-color: rgba(16, 185, 129, 0.2);
 }
 
 .close-result-button {
-    /* NEW COLOR: Blue Accent */
-    background-color: #3b82f6; 
-    box-shadow: 0 10px 15px rgba(59, 130, 246, 0.5);
-    width: 100%;
-    padding: 1rem 1.5rem;
-    font-size: 1.125rem;
-    font-weight: 700;
+    display: block;
+    width: calc(100% - 4rem);
+    margin: 0 2rem 2rem 2rem;
+    background-color: #1A1A1A;
+    border: 1px solid #333;
+    color: #fff;
+    padding: 0.75rem;
     border-radius: 0.5rem;
-    border: none;
-    color: #ffffff;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.2s;
 }
 
 .close-result-button:hover {
-    background-color: #2563eb; /* blue-700 */
+    background-color: #333;
 }

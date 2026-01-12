@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import './App.css';
-import templates from './assets/templates.png'; // Still imported but not used in ProductCard
+import './App.css'; // Global dark theme styles
 import placeholder from './assets/placeholder.jpg';
-import parts from './assets/parts.png'; // Still imported but not used in ProductCard
-import handing from './assets/handing.png'; // Still imported but not used in ProductCard
-import generalInfo from './assets/general_info.png'; // Still imported but not used in ProductCard
 import RodCalculator from './RodCalculator';
-// Icons are kept
+
+// Icons
 import { Settings, Wrench, Lock, DoorOpen, Ruler, Info } from 'lucide-react'; 
 
 // Map product ID to Lucide icon for a richer visual
@@ -21,8 +18,7 @@ const productIcons = {
   8: Info, 
 };
 
-// ProductCard component: REVISED for horizontal menu style
-// The 'image' prop is no longer needed since the icon is used for visuals
+// ProductCard Component
 const ProductCard = ({ title, description, url, onClick, id }) => {
   const Icon = productIcons[id] || Settings; 
 
@@ -33,16 +29,16 @@ const ProductCard = ({ title, description, url, onClick, id }) => {
         <Icon className="card-icon" aria-hidden="true" />
       </div>
 
-      {/* New Content Area for Title and Description (Center) */}
+      {/* Content Area (Center) */}
       <div className="card-text-content">
           <h3 className="card-title">{title}</h3>
           <p className="card-description">{description}</p>
       </div>
       
-      {/* Action Button/Link (Right) */}
+      {/* Action Button (Right) */}
       <div className="card-button-container">
         <span className="card-button">
-          {url ? 'Launch Tool' : 'Open Calculator'}
+          {url ? 'Launch Tool' : 'Open Tool'}
         </span>
       </div>
     </div>
@@ -64,9 +60,7 @@ const ProductCard = ({ title, description, url, onClick, id }) => {
       <div 
         onClick={onClick} 
         onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                onClick();
-            }
+            if (e.key === 'Enter' || e.key === ' ') onClick();
         }}
         role="button"
         tabIndex="0"
@@ -82,31 +76,27 @@ const ProductCard = ({ title, description, url, onClick, id }) => {
 };
 
 const App = () => {
+  // State for Calculator Modal
   const [isRodCalculatorOpen, setIsRodCalculatorOpen] = useState(false);
 
   const products = [
-    { id: 1, image: templates, title: 'Templates Lookup Tool', description: "Streamlines your search for templates, making it easy to get exactly what you need.", url: 'https://sargent-templates.netlify.app/' },
-    { id: 2, image: parts, title: 'Parts Lookup Tool', description: "Effortlessly find the right parts with precise information, saving you time and hassle.", url: 'https://sargent-parts.netlify.app/' },
-    { id: 3, image: templates, title: 'Rod Length Calculator', description: "Precisely calculate Top Rod, Bottom Rod, and Rod Extension lengths for SVR and CVR exit devices.", onClick: () => setIsRodCalculatorOpen(true) },
-    { id: 4, image: templates, title: 'Cylinders Tool', description: "Explains how door lock cylinders work and provides a visual breakdown of their individual components.", url: 'https://sargent-cylinders.netlify.app/' },
-    { id: 6, image: handing, title: 'Handing Tool', description: "Visually determine the correct left or right handing for door locks, ensuring a precise and proper installation.", url: 'https://sargenthanding.netlify.app/' },
-    { id: 7, image: generalInfo, title: 'General Product Information', description: "Your go-to resource for learning all about our product, its features, and benefits.", url: 'https://sargent-info.netlify.app/' },
-    { id: 8, image: generalInfo, title: 'Sargent Product Quiz', description: "Test your knowledge of Sargent Hardware and products with this interactive quiz.", url: 'https://sargent-quiz.netlify.app/' },
+    { id: 1, title: 'Templates Lookup Tool', description: "Streamlines your search for templates, making it easy to get exactly what you need.", url: 'https://sargent-templates.netlify.app/' },
+    { id: 2, title: 'Parts Lookup Tool', description: "Effortlessly find the right parts with precise information, saving you time and hassle.", url: 'https://sargent-parts.netlify.app/' },
+    { id: 3, title: 'Rod Length Calculator', description: "Precisely calculate Top Rod, Bottom Rod, and Rod Extension lengths for SVR and CVR exit devices.", onClick: () => setIsRodCalculatorOpen(true) },
+    { id: 4, title: 'Cylinders Tool', description: "Explains how door lock cylinders work and provides a visual breakdown of their individual components.", url: 'https://sargent-cylinders.netlify.app/' },
+    { id: 6, title: 'Handing Tool', description: "Visually determine the correct left or right handing for door locks, ensuring a precise and proper installation.", url: 'https://sargenthanding.netlify.app/' },
+    { id: 7, title: 'General Product Information', description: "Your go-to resource for learning all about our product, its features, and benefits.", url: 'https://sargent-info.netlify.app/' },
+    { id: 8, title: 'Sargent Product Quiz', description: "Test your knowledge of Sargent Hardware and products with this interactive quiz.", url: 'https://sargent-quiz.netlify.app/' },
   ];
-
-  if (isRodCalculatorOpen) {
-    return <RodCalculator onClose={() => setIsRodCalculatorOpen(false)} />;
-  }
 
   return (
     <div className="app-container">
       <header className="app-header">
         <div className="max-w-7xl header-content">
-          {/* LOGO LINK - Simplified and centered via CSS */}
-          <a href='https://www.sargentlock.com/' target="_blank" rel="noopener noreferrer" aria-label="Go to Sargent website">
-            {/* The logo size is now controlled by CSS in App.css */}
-            <img src={placeholder} className="header-logo" alt="Sargent logo" />
-          </a>
+            {/* Logo */}
+            <a href='https://www.sargentlock.com/' target="_blank" rel="noopener noreferrer" aria-label="Go to Sargent website">
+              <img src={placeholder} className="header-logo" alt="Sargent logo" />
+            </a>
         </div>
       </header>
 
@@ -125,7 +115,6 @@ const App = () => {
             <ProductCard
               key={product.id}
               id={product.id} 
-              // Removed image prop since it's no longer used in the component
               title={product.title}
               description={product.description}
               url={product.url}
@@ -134,6 +123,11 @@ const App = () => {
           ))}
         </div>
       </div>
+
+      {/* Rod Calculator Modal */}
+      {isRodCalculatorOpen && (
+        <RodCalculator onClose={() => setIsRodCalculatorOpen(false)} />
+      )}
     </div>
   );
 };
