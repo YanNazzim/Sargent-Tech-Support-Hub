@@ -252,6 +252,55 @@
     margin-right: 0.75rem;
 }
 
+/* --- BRAND SELECTOR --- */
+.brand-selector-container {
+    margin-bottom: 1.5rem;
+}
+
+.brand-label {
+    display: block;
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.brand-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.brand-chip {
+    background-color: #27272a;
+    border: 1px solid #3f3f46;
+    color: #d4d4d8;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.brand-chip:hover {
+    background-color: #3f3f46;
+}
+
+/* Brand Filter Active States matches badge colors */
+.brand-chip.active {
+    color: #fff;
+    border-color: transparent;
+}
+.brand-chip.active.all { background-color: #3b82f6; }
+.brand-chip.active.sargent { background-color: #1e3a8a; } /* Navy Blue */
+.brand-chip.active.corbin-russwin { background-color: #dc2626; } /* Red */
+.brand-chip.active.accentra { background-color: #7c3aed; } /* Purple */
+.brand-chip.active.norton-rixson { background-color: #064e3b; } /* Dark Green */
+
+
 /* --- FORM ELEMENTS --- */
 .input-group-wrapper {
     display: flex;
@@ -374,13 +423,52 @@
     border-radius: 0.75rem;
     padding: 1.5rem;
     text-align: left;
+    position: relative; 
 }
 
-.csr-card-header {
+/* Card Header Layout */
+.csr-card-top-row {
     display: flex;
-    align-items: flex-start; 
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.csr-card-header-left {
+    display: flex;
     gap: 1rem;
-    margin-bottom: 1.25rem;
+    align-items: center;
+}
+
+/* Brand Badge Styles (Top Right) */
+.brand-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.25rem;
+    letter-spacing: 0.05em;
+}
+
+/* Specific Brand Colors (Requested Update) */
+.brand-badge.sargent {
+    background-color: #1e3a8a; /* Navy Blue */
+    color: #ffffff;
+}
+
+.brand-badge.corbin-russwin {
+    background-color: #dc2626; /* Red */
+    color: #ffffff;
+}
+
+.brand-badge.accentra {
+    background-color: #7c3aed; /* Purple */
+    color: #ffffff;
+}
+
+.brand-badge.norton-rixson {
+    background-color: #064e3b; /* Dark Navy Green */
+    color: #ffffff;
 }
 
 .csr-avatar {
@@ -399,13 +487,29 @@
     font-size: 1.25rem;
     font-weight: 700;
     color: #fff;
+    line-height: 1.2;
+}
+
+.csr-region-block {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.csr-region-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
 }
 
 .csr-region-text {
-    margin: 0.25rem 0 0 0;
-    color: #9ca3af;
+    margin: 0;
+    color: #d1d5db;
     font-size: 0.9rem;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 /* New Highlight Style */
@@ -417,15 +521,11 @@
     padding: 0 2px;
 }
 
-/* New Territory Code Styles */
+/* Territory Code Styles */
 .csr-code-container {
     display: flex;
     align-items: center;
-    margin-top: 0.5rem;
-    background-color: rgba(16, 185, 129, 0.1); 
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    display: inline-flex;
+    margin-top: 0.25rem;
 }
 
 .csr-code-icon {
