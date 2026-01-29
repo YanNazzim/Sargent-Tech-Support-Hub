@@ -100,11 +100,11 @@ const CsrSearchModal = ({ onClose }) => {
             phone: "(203) 498-5595",
             email: "miriam.redgate@assaabloy.com",
             territoryCodes: "A01, A07, HI",
-            regionDescription: "CT, MA, ME, NH, RI, VT, South NJ, PA, DE, HI",
+            regionDescription: "CT, MA, ME, NH, RI, VT, South NJ, PA, DE, HI, Corbin Purchasing",
             keywords: [
                 "CT", "CONNECTICUT", "MA", "MASSACHUSETTS", "ME", "MAINE", "NH", "NEW HAMPSHIRE", 
                 "RI", "RHODE ISLAND", "VT", "VERMONT", "NJ", "NEW JERSEY", "SOUTH NJ", "SOUTH JERSEY", 
-                "PA", "PENNSYLVANIA", "DE", "DELAWARE", "HI", "HAWAII", "A01", "A07"
+                "PA", "PENNSYLVANIA", "DE", "DELAWARE", "HI", "HAWAII", "A01", "A07", "CORBIN PURCHASING", "CORBIN", "CORBIN RUSSWIN"
             ]
         },
         {
