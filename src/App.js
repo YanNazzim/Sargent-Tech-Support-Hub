@@ -3,7 +3,7 @@ import './App.css'; // Global dark theme styles
 import placeholder from './assets/placeholder.jpg';
 import RodCalculator from './RodCalculator';
 
-// Icons (Removed 'ArrowRight' to fix the compilation warning)
+// Icons 
 import { Settings, Wrench, Lock, DoorOpen, Ruler, Info, MapPin, Search, User, Phone, Mail, X } from 'lucide-react'; 
 
 // Map product ID to Lucide icon for a richer visual
@@ -68,23 +68,24 @@ const ProductCard = ({ title, description, url, onClick, id }) => {
 const CsrSearchModal = ({ onClose }) => {
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Data derived from SARGENT Customer Relations Sheet
+    // Data derived from SARGENT Customer Relations Sheet [cite: 5]
+    // Updated mapping for New Jersey split 
     const csrData = useMemo(() => [
         {
             id: 'miriam',
             name: "Miriam Redgate",
             phone: "(203) 498-5595",
             email: "miriam.redgate@assaabloy.com",
-            regionDescription: "New England, Tri-State, Hawaii",
-            keywords: ["CT", "CONNECTICUT", "MA", "MASSACHUSETTS", "ME", "MAINE", "NH", "NEW HAMPSHIRE", "RI", "RHODE ISLAND", "VT", "VERMONT", "NJ", "NEW JERSEY", "PA", "PENNSYLVANIA", "DE", "DELAWARE", "HI", "HAWAII", "A01", "A07"]
+            regionDescription: "New England, Southern NJ, PA, DE, HI",
+            keywords: ["CT", "CONNECTICUT", "MA", "MASSACHUSETTS", "ME", "MAINE", "NH", "NEW HAMPSHIRE", "RI", "RHODE ISLAND", "VT", "VERMONT", "SOUTH JERSEY", "SOUTHERN NEW JERSEY", "SOUTH NJ", "PA", "PENNSYLVANIA", "DE", "DELAWARE", "HI", "HAWAII", "A01", "A07"]
         },
         {
             id: 'anne',
             name: "Anne Dempster",
             phone: "(203) 498-5840",
             email: "anne.dempster@assaabloy.com",
-            regionDescription: "Upstate NY, Metro NY, Chesapeake, Arrow",
-            keywords: ["NY", "NEW YORK", "MD", "MARYLAND", "VA", "VIRGINIA", "DC", "DISTRICT OF COLUMBIA", "ARROW", "A02", "A03", "A08"]
+            regionDescription: "Upstate NY, Metro NY, Northern NJ, Chesapeake, Arrow",
+            keywords: ["NY", "NEW YORK", "MD", "MARYLAND", "VA", "VIRGINIA", "DC", "DISTRICT OF COLUMBIA", "NORTH JERSEY", "NORTHERN NEW JERSEY", "NORTH NJ", "ARROW", "A02", "A03", "A08"]
         },
         {
             id: 'alyssa',
@@ -106,7 +107,7 @@ const CsrSearchModal = ({ onClose }) => {
             id: 'maritza',
             name: "Maritza Yugchaoquendo",
             phone: "(203) 498-5699",
-            email: "maritza.yugchaoquendo@assaabloy.com",
+            email: "maritza.yughaoquedo@assaabloy.com",
             regionDescription: "Pacific NW, Canada, International",
             keywords: ["WA", "WASHINGTON", "OR", "OREGON", "ID", "IDAHO", "AK", "ALASKA", "CANADA", "INTERNATIONAL", "INTL", "A44"]
         },
@@ -174,7 +175,7 @@ const CsrSearchModal = ({ onClose }) => {
                                 id="csr-search"
                                 type="text"
                                 className="form-input with-icon"
-                                placeholder="e.g. Georgia, Janelle, or CA..."
+                                placeholder="e.g. North Jersey, Miriam, or CA..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
                                 autoFocus
@@ -214,7 +215,7 @@ const CsrSearchModal = ({ onClose }) => {
                         ) : (
                             <div className="empty-state">
                                 <Info size={40} className="empty-icon"/>
-                                <p>Enter a state name (e.g., "Texas"), a code (e.g., "TX"), or a CSR name to find your rep.</p>
+                                <p>Enter a location (e.g., "North Jersey"), a code (e.g., "TX"), or a CSR name to find your rep.</p>
                             </div>
                         )}
                     </div>
