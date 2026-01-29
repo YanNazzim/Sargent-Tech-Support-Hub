@@ -3,14 +3,13 @@
 /* --- GENERAL LAYOUT & FONT --- */
 .app-container {
   min-height: 100vh;
-  /* Deep Charcoal background (Permanent Dark Mode) */
   background-color: #0A0A0A; 
   color: #ffffff;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .max-w-7xl {
-    max-width: 1400px; /* Expanded for better grid distribution */
+    max-width: 1400px; 
     margin-left: auto;
     margin-right: auto;
     padding-left: 1.5rem;
@@ -31,7 +30,7 @@
 .header-content {
   display: flex;
   align-items: center;
-  justify-content: center; /* Centered Logo */
+  justify-content: center; 
 }
 
 .header-logo {
@@ -51,7 +50,7 @@
 .section-tag {
     font-size: 0.875rem; 
     font-weight: 600;
-    color: #3b82f6; /* Blue Accent */
+    color: #3b82f6; 
     text-transform: uppercase;
     letter-spacing: 0.05em; 
     margin-bottom: 0.5rem;
@@ -73,7 +72,6 @@
 /* --- PRODUCT GRID (RESPONSIVE) --- */
 .product-grid {
     display: grid;
-    /* Automatically creates as many columns as fit, at least 340px each */
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 1.5rem; 
     width: 100%;
@@ -100,8 +98,8 @@
     height: 100%;
     display: flex;
     flex-direction: column; 
-    align-items: center; /* Centered content */
-    text-align: center; /* Centered text */
+    align-items: center; 
+    text-align: center; 
     word-break: break-word; 
     box-sizing: border-box;
 }
@@ -142,7 +140,7 @@
     font-size: 0.95rem; 
     font-weight: 400; 
     color: #9ca3af; 
-    margin-bottom: 0;
+    margin: 0;
     line-height: 1.6;
 }
 
@@ -160,7 +158,7 @@
     padding: 0.75rem 1.5rem;
     font-size: 0.9rem;
     font-weight: 600;
-    border-radius: 2rem; /* Pill style */
+    border-radius: 2rem; 
     background-color: transparent;
     border: 2px solid #3b82f6;
     color: #3b82f6;
@@ -380,7 +378,7 @@
 
 .csr-card-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start; 
     gap: 1rem;
     margin-bottom: 1.25rem;
 }
@@ -393,6 +391,53 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0; 
+}
+
+.csr-name {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.csr-region-text {
+    margin: 0.25rem 0 0 0;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* New Highlight Style */
+.highlight-match {
+    background-color: rgba(250, 204, 21, 0.3); /* Bright Yellow (Transparent) */
+    color: #fef08a; /* Light Yellow Text */
+    border-radius: 2px;
+    font-weight: 600;
+    padding: 0 2px;
+}
+
+/* New Territory Code Styles */
+.csr-code-container {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+    background-color: rgba(16, 185, 129, 0.1); 
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    display: inline-flex;
+}
+
+.csr-code-icon {
+    color: #10b981;
+    margin-right: 0.35rem;
+}
+
+.csr-code-text {
+    font-family: 'Monaco', 'Consolas', monospace; 
+    font-size: 0.8rem;
+    color: #10b981; 
+    font-weight: 600;
 }
 
 .csr-contact-actions {

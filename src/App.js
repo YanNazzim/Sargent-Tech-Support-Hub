@@ -4,7 +4,7 @@ import placeholder from './assets/placeholder.jpg';
 import RodCalculator from './RodCalculator';
 
 // Icons 
-import { Settings, Wrench, Lock, DoorOpen, Ruler, Info, MapPin, Search, User, Phone, Mail, X } from 'lucide-react'; 
+import { Settings, Wrench, Lock, DoorOpen, Ruler, Info, MapPin, Search, User, Phone, Mail, X, Hash } from 'lucide-react'; 
 
 // Map product ID to Lucide icon for a richer visual
 const productIcons = {
@@ -19,7 +19,31 @@ const productIcons = {
   9: MapPin, // Icon for CSR Tool
 };
 
-// --- COMPONENTS ---
+// --- HELPER COMPONENT FOR HIGHLIGHTING ---
+// Splits text by the search term and wraps matches in a span
+const HighlightedText = ({ text, highlight }) => {
+    if (!highlight || !highlight.trim()) {
+        return <span>{text}</span>;
+    }
+    // Escape special regex characters to prevent errors
+    const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escapedHighlight})`, 'gi');
+    const parts = text.split(regex);
+
+    return (
+        <span>
+            {parts.map((part, i) => 
+                regex.test(part) ? (
+                    <span key={i} className="highlight-match">{part}</span>
+                ) : (
+                    part
+                )
+            )}
+        </span>
+    );
+};
+
+// --- MAIN COMPONENTS ---
 
 // ProductCard Component
 const ProductCard = ({ title, description, url, onClick, id }) => {
@@ -68,70 +92,118 @@ const ProductCard = ({ title, description, url, onClick, id }) => {
 const CsrSearchModal = ({ onClose }) => {
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Data derived from SARGENT Customer Relations Sheet [cite: 5]
-    // Updated mapping for New Jersey split 
+    // Data derived from Split States - Sargent CSR Territories.xlsx
     const csrData = useMemo(() => [
         {
             id: 'miriam',
             name: "Miriam Redgate",
             phone: "(203) 498-5595",
             email: "miriam.redgate@assaabloy.com",
-            regionDescription: "New England, Southern NJ, PA, DE, HI",
-            keywords: ["CT", "CONNECTICUT", "MA", "MASSACHUSETTS", "ME", "MAINE", "NH", "NEW HAMPSHIRE", "RI", "RHODE ISLAND", "VT", "VERMONT", "SOUTH JERSEY", "SOUTHERN NEW JERSEY", "SOUTH NJ", "PA", "PENNSYLVANIA", "DE", "DELAWARE", "HI", "HAWAII", "A01", "A07"]
+            territoryCodes: "A01, A07, HI",
+            regionDescription: "CT, MA, ME, NH, RI, VT, South NJ, PA, DE, HI",
+            keywords: [
+                "CT", "CONNECTICUT", "MA", "MASSACHUSETTS", "ME", "MAINE", "NH", "NEW HAMPSHIRE", 
+                "RI", "RHODE ISLAND", "VT", "VERMONT", "NJ", "NEW JERSEY", "SOUTH NJ", "SOUTH JERSEY", 
+                "PA", "PENNSYLVANIA", "DE", "DELAWARE", "HI", "HAWAII", "A01", "A07"
+            ]
         },
         {
             id: 'anne',
             name: "Anne Dempster",
             phone: "(203) 498-5840",
             email: "anne.dempster@assaabloy.com",
-            regionDescription: "Upstate NY, Metro NY, Northern NJ, Chesapeake, Arrow",
-            keywords: ["NY", "NEW YORK", "MD", "MARYLAND", "VA", "VIRGINIA", "DC", "DISTRICT OF COLUMBIA", "NORTH JERSEY", "NORTHERN NEW JERSEY", "NORTH NJ", "ARROW", "A02", "A03", "A08"]
+            territoryCodes: "A02, A03, A08, Arrow",
+            regionDescription: "NY (Upstate & Metro), North NJ, MD, VA, DC",
+            keywords: [
+                "NY", "NEW YORK", "UPSTATE NY", "METRO NY", "NJ", "NEW JERSEY", "NORTH NJ", "NORTH JERSEY", 
+                "MD", "MARYLAND", "VA", "VIRGINIA", "DC", "DISTRICT OF COLUMBIA", "ARROW", "A02", "A03", "A08"
+            ]
         },
         {
             id: 'alyssa',
             name: "Alyssa Carey",
             phone: "(203) 498-5531",
             email: "alyssa.carey@assaabloy.com",
-            regionDescription: "Mid America, Mid Continent, Rockies, Grainger",
-            keywords: ["OH", "OHIO", "KY", "KENTUCKY", "WV", "WEST VIRGINIA", "IN", "INDIANA", "IL", "ILLINOIS", "MO", "MISSOURI", "KS", "KANSAS", "IA", "IOWA", "NE", "NEBRASKA", "CO", "COLORADO", "UT", "UTAH", "WY", "WYOMING", "MT", "MONTANA", "GRAINGER", "A21", "A22", "A43"]
+            territoryCodes: "A21, A22, A43, Grainger",
+            regionDescription: "OH (South), IL (South/Mid), IN (South), ID (South), KY, WV, MO, KS, IA, NE, CO, UT, WY, MT",
+            keywords: [
+                "OH", "OHIO", "SOUTH OH", "SOUTH OHIO", 
+                "IN", "INDIANA", "SOUTH IN", "SOUTH INDIANA", 
+                "IL", "ILLINOIS", "SOUTH IL", "MID IL", "MID ILLINOIS", 
+                "MO", "MISSOURI", "EAST MO", "WEST MO", 
+                "KS", "KANSAS", "IA", "IOWA", "NE", "NEBRASKA", 
+                "CO", "COLORADO", "UT", "UTAH", "WY", "WYOMING", "MT", "MONTANA", 
+                "ID", "IDAHO", "SOUTH ID", "SOUTH IDAHO",
+                "KY", "KENTUCKY", "WV", "WEST VIRGINIA",
+                "GRAINGER", "A21", "A22", "A43"
+            ]
         },
         {
             id: 'robin',
             name: "Robin Pascale",
             phone: "(203) 498-5596",
             email: "robin.pascale@assaabloy.com",
-            regionDescription: "Carolinas, South, North Shores/Central",
-            keywords: ["NC", "NORTH CAROLINA", "SC", "SOUTH CAROLINA", "TN", "TENNESSEE", "AL", "ALABAMA", "MI", "MICHIGAN", "WI", "WISCONSIN", "MN", "MINNESOTA", "ND", "NORTH DAKOTA", "SD", "SOUTH DAKOTA", "A13", "A16", "A31", "A32"]
-        },
-        {
-            id: 'maritza',
-            name: "Maritza Yugchaoquendo",
-            phone: "(203) 498-5699",
-            email: "maritza.yughaoquedo@assaabloy.com",
-            regionDescription: "Pacific NW, Canada, International",
-            keywords: ["WA", "WASHINGTON", "OR", "OREGON", "ID", "IDAHO", "AK", "ALASKA", "CANADA", "INTERNATIONAL", "INTL", "A44"]
-        },
-        {
-            id: 'janelle',
-            name: "Janelle Schmittberger",
-            phone: "(203) 498-5693",
-            email: "janelle.schmittberger@assaabloy.com",
-            regionDescription: "Florida, Georgia, Arizona, California, Nevada",
-            keywords: ["FL", "FLORIDA", "GA", "GEORGIA", "AZ", "ARIZONA", "CA", "CALIFORNIA", "NV", "NEVADA", "NM", "NEW MEXICO", "A15", "A37", "A38", "A39"]
+            territoryCodes: "A13, A16, A31, A32",
+            regionDescription: "OH (North), IL (North), IN (North/West), MI, WI, MN, ND, SD, NC, SC, TN, AL",
+            keywords: [
+                "NC", "NORTH CAROLINA", "SC", "SOUTH CAROLINA", 
+                "TN", "TENNESSEE", "EAST TN", "WEST TN", 
+                "AL", "ALABAMA", "MI", "MICHIGAN", "WI", "WISCONSIN", 
+                "MN", "MINNESOTA", "ND", "NORTH DAKOTA", "SD", "SOUTH DAKOTA", 
+                "IL", "ILLINOIS", "NORTH IL", "NORTH ILLINOIS",
+                "IN", "INDIANA", "NORTH IN", "WEST IN",
+                "OH", "OHIO", "NORTH OH", "NORTH OHIO",
+                "A13", "A16", "A31", "A32"
+            ]
         },
         {
             id: 'shirley',
             name: "Shirley Sotaski",
             phone: "(203) 498-5715",
             email: "shirley.sotaski@assaabloy.com",
-            regionDescription: "Southwest, Gulf Central, Himmels",
-            keywords: ["TX", "TEXAS", "OK", "OKLAHOMA", "AR", "ARKANSAS", "LA", "LOUISIANA", "MS", "MISSISSIPPI", "HIMMELS", "A27", "A28"]
+            territoryCodes: "A27, A28, Himmels",
+            regionDescription: "TX (North/South), OK, AR, LA, MS",
+            keywords: [
+                "TX", "TEXAS", "NORTH TX", "SOUTH TX", 
+                "LA", "LOUISIANA", "NORTH LA", "SOUTH LA",
+                "OK", "OKLAHOMA", "AR", "ARKANSAS", "MS", "MISSISSIPPI", 
+                "HIMMELS", "A27", "A28"
+            ]
+        },
+        {
+            id: 'janelle',
+            name: "Janelle Schmittberger",
+            phone: "(203) 498-5693",
+            email: "janelle.schmittberger@assaabloy.com",
+            territoryCodes: "A15, A37, A38, A39",
+            regionDescription: "TX (West), FL, GA, AZ, NM, CA, NV",
+            keywords: [
+                "FL", "FLORIDA", "GA", "GEORGIA", "AZ", "ARIZONA", 
+                "TX", "TEXAS", "WEST TX", "WEST TEXAS",
+                "NV", "NEVADA", "NORTH NV", "SOUTH NV",
+                "CA", "CALIFORNIA", "NORTH CA", "SOUTH CA",
+                "NM", "NEW MEXICO", "A15", "A37", "A38", "A39"
+            ]
+        },
+        {
+            id: 'maritza',
+            name: "Maritza Yugchaoquendo",
+            phone: "(203) 498-5699",
+            email: "maritza.yugchaoquendo@assaabloy.com",
+            territoryCodes: "A44, Intl",
+            regionDescription: "ID (North), WA, OR, AK, Canada, International",
+            keywords: [
+                "WA", "WASHINGTON", "OR", "OREGON", 
+                "ID", "IDAHO", "NORTH ID", "NORTH IDAHO",
+                "AK", "ALASKA", "CANADA", "INTERNATIONAL", "INTL", "A44"
+            ]
         },
         {
             id: 'patricia',
             name: "Patricia Hansen",
             phone: "(203) 498-5596",
             email: "patricia.hansen@assaabloy.com",
+            territoryCodes: "Distributor Accounts",
             regionDescription: "Intermountain, Clark, Anixter, ADI, IDN, JLM",
             keywords: ["INTERMOUNTAIN", "CLARK", "ANIXTER", "ADI", "IDN", "JLM"]
         },
@@ -140,17 +212,19 @@ const CsrSearchModal = ({ onClose }) => {
             name: "Jennifer Leslie",
             phone: "(203) 498-5698",
             email: "jennifer.leslie@assaabloy.com",
+            territoryCodes: "Distributor Accounts",
             regionDescription: "Akron, Banner, SELOCK, Norwood, Dugmore",
             keywords: ["AKRON", "BANNER", "SELOCK", "NORWOOD", "DUGMORE", "MIDWEST WHOLESALE"]
         }
     ], []);
 
-    // Filter Logic: Matches Name OR Keywords
+    // Filter Logic: Matches Name OR Keywords OR Territory Code
     const results = useMemo(() => {
         if (!searchTerm) return [];
         const lowerTerm = searchTerm.toLowerCase().trim();
         return csrData.filter(csr => 
             csr.name.toLowerCase().includes(lowerTerm) || 
+            csr.territoryCodes.toLowerCase().includes(lowerTerm) ||
             csr.keywords.some(k => k.toLowerCase().includes(lowerTerm))
         );
     }, [searchTerm, csrData]);
@@ -168,14 +242,14 @@ const CsrSearchModal = ({ onClose }) => {
                 
                 <div className="modal-body">
                     <div className="input-group search-container">
-                        <label className="input-label" htmlFor="csr-search">Search by State, Name, or Distributor</label>
+                        <label className="input-label" htmlFor="csr-search">Search by State, Code, or Name</label>
                         <div className="search-input-wrapper">
                              <Search className="search-icon-absolute" size={20}/>
                              <input
                                 id="csr-search"
                                 type="text"
                                 className="form-input with-icon"
-                                placeholder="e.g. North Jersey, Miriam, or CA..."
+                                placeholder="e.g. Ohio, A03, or Janelle..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
                                 autoFocus
@@ -193,7 +267,17 @@ const CsrSearchModal = ({ onClose }) => {
                                         </div>
                                         <div>
                                             <h3 className="csr-name">{csr.name}</h3>
-                                            <p className="csr-region-text">{csr.regionDescription}</p>
+                                            <p className="csr-region-text">
+                                                {/* Apply Highlighting */}
+                                                <HighlightedText text={csr.regionDescription} highlight={searchTerm} />
+                                            </p>
+                                            <div className="csr-code-container">
+                                                <Hash size={12} className="csr-code-icon"/>
+                                                <span className="csr-code-text">
+                                                    {/* Apply Highlighting to Code as well */}
+                                                    <HighlightedText text={csr.territoryCodes} highlight={searchTerm} />
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="csr-contact-actions">
@@ -215,7 +299,7 @@ const CsrSearchModal = ({ onClose }) => {
                         ) : (
                             <div className="empty-state">
                                 <Info size={40} className="empty-icon"/>
-                                <p>Enter a location (e.g., "North Jersey"), a code (e.g., "TX"), or a CSR name to find your rep.</p>
+                                <p>Enter a code (e.g. "A03"), state (e.g. "Ohio"), or name.</p>
                             </div>
                         )}
                     </div>
