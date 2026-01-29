@@ -124,7 +124,7 @@ const CsrSearchModal = ({ onClose }) => {
             name: "Alyssa Carey",
             phone: "(203) 498-5531",
             email: "alyssa.carey@assaabloy.com",
-            territoryCodes: "A21, A22, A43, Grainger",
+            territoryCodes: "A21, A22, A43, Grainger, Cleveland Vicon",
             regionDescription: "OH (South), IL (South/Mid), IN (South), ID (South), KY, WV, MO, KS, IA, NE, CO, UT, WY, MT",
             keywords: [
                 "OH", "OHIO", "SOUTH OH", "SOUTH OHIO", 
@@ -135,7 +135,7 @@ const CsrSearchModal = ({ onClose }) => {
                 "CO", "COLORADO", "UT", "UTAH", "WY", "WYOMING", "MT", "MONTANA", 
                 "ID", "IDAHO", "SOUTH ID", "SOUTH IDAHO",
                 "KY", "KENTUCKY", "WV", "WEST VIRGINIA",
-                "GRAINGER", "A21", "A22", "A43"
+                "GRAINGER", "A21", "A22", "A43", "CLEVELAND VICON", "CLEVELAND"
             ]
         },
         {
