@@ -86,6 +86,8 @@
     height: 100%; 
     cursor: pointer;
     outline: none;
+    position: relative;
+    border-radius: 1rem;
 }
 
 .product-card {
@@ -102,12 +104,61 @@
     text-align: center; 
     word-break: break-word; 
     box-sizing: border-box;
+    position: relative;
+    z-index: 1;
 }
 
 .product-card:hover, .product-card:focus-within {
     transform: translateY(-8px) scale(1.02); 
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); 
     border-color: #3b82f6; 
+}
+
+/* --- GOLD GLOW ANIMATION (NEW FEATURE) --- */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.new-feature-glow {
+    /* No additional styling needed on the wrapper itself */
+}
+
+.new-feature-glow::before, 
+.new-feature-glow::after {
+    content: '';
+    position: absolute;
+    inset: -3px; /* Extends beyond the card */
+    z-index: 0; /* Behind the card content */
+    background: conic-gradient(from var(--angle), transparent 70%, #FFD700); /* Gold */
+    border-radius: 1rem;
+    animation: rotate 4s linear infinite;
+}
+
+.new-feature-glow::after {
+    filter: blur(15px); /* Soft glow behind */
+}
+
+@keyframes rotate {
+    from { --angle: 0deg; }
+    to { --angle: 360deg; }
+}
+
+/* --- NEW BADGE STYLE --- */
+.new-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #FFD700; /* Gold */
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: 0.05em;
 }
 
 .card-icon-container {

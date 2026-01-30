@@ -138,10 +138,17 @@ const RAW_CSR_DATA = [
 
 // --- COMPONENTS ---
 
-const ProductCard = ({ title, description, url, onClick, id }) => {
+const ProductCard = ({ title, description, url, onClick, id, isNew }) => {
   const Icon = productIcons[id] || Settings; 
+  // Add 'new-feature-glow' class if isNew is true
+  const cardClassName = isNew ? "product-card-div new-feature-glow" : "product-card-div";
+  const linkClassName = isNew ? "product-card-link new-feature-glow" : "product-card-link";
+
   const CardContent = (
     <div className="product-card">
+      {/* ADDED: NEW Badge */}
+      {isNew && <span className="new-badge">NEW!</span>}
+      
       <div className="card-icon-container">
         <Icon className="card-icon" aria-hidden="true" />
       </div>
@@ -157,11 +164,11 @@ const ProductCard = ({ title, description, url, onClick, id }) => {
     </div>
   );
   if (url) {
-    return <a href={url} target="_blank" rel="noopener noreferrer" className="product-card-link">{CardContent}</a>;
+    return <a href={url} target="_blank" rel="noopener noreferrer" className={linkClassName}>{CardContent}</a>;
   } else if (onClick) {
-    return <div onClick={onClick} className="product-card-div">{CardContent}</div>;
+    return <div onClick={onClick} className={cardClassName}>{CardContent}</div>;
   }
-  return <div className="product-card-div">{CardContent}</div>;
+  return <div className={cardClassName}>{CardContent}</div>;
 };
 
 // --- CSR SEARCH MODAL ---
@@ -181,12 +188,9 @@ const CsrSearchModal = ({ onClose }) => {
                     regionList.push(...mappedRegions);
                     allKeywords.push(...mappedRegions);
 
-                    // --- KEY CHANGE: Expand Codes to Full Names (TX -> TEXAS) ---
+                    // Expand Codes to Full Names (TX -> TEXAS)
                     mappedRegions.forEach(region => {
-                        // Region might be "North TX", "South OH", or just "CT"
-                        // We check if the region contains a state code
                         Object.keys(STATE_TO_FULL).forEach(stateCode => {
-                            // Check for exact match or word boundary match (e.g. "North TX" contains "TX")
                             const regex = new RegExp(`\\b${stateCode}\\b`, 'i');
                             if (regex.test(region)) {
                                 allKeywords.push(STATE_TO_FULL[stateCode]);
@@ -313,8 +317,9 @@ const CsrSearchModal = ({ onClose }) => {
                                         <a href={`tel:${csr.phone}`} className="csr-action-btn">
                                             <Phone size={16} /> {csr.phone}
                                         </a>
+                                        {/* Email Button: Shows email address */}
                                         <a href={`mailto:${csr.email}`} className="csr-action-btn secondary">
-                                            <Mail size={16} /> Email Support
+                                            <Mail size={16} /> {csr.email}
                                         </a>
                                     </div>
                                 </div>
@@ -347,9 +352,21 @@ const App = () => {
   const products = [
     { id: 1, title: 'Templates Lookup Tool', description: "Streamlines your search for templates, making it easy to get exactly what you need.", url: 'https://sargent-templates.netlify.app/' },
     { id: 2, title: 'Parts Lookup Tool', description: "Effortlessly find the right parts with precise information, saving you time and hassle.", url: 'https://sargent-parts.netlify.app/' },
-    { id: 9, title: 'Find Your CSR', description: "Locate Customer Support Specialists for Sargent, Corbin Russwin, ACCENTRA, and Norton Rixson.", onClick: () => setIsCsrSearchOpen(true) },
+    { 
+        id: 9, 
+        title: 'Find Your CSR', 
+        description: "Locate Customer Support Specialists for Sargent, Corbin Russwin, ACCENTRA, and Norton Rixson.", 
+        onClick: () => setIsCsrSearchOpen(true),
+        isNew: true // NEW FEATURE FLAG
+    },
     { id: 3, title: 'Rod Length Calculator', description: "Precisely calculate Top Rod, Bottom Rod, and Rod Extension lengths for SVR and CVR exit devices.", onClick: () => setIsRodCalculatorOpen(true) },
-    { id: 5, title: 'Rail Length Calculator', description: "Determine uncut and cut rail lengths for 80 Series and PE80 Series Exit Devices based on door width.", onClick: () => setIsRailCalculatorOpen(true) },
+    { 
+        id: 5, 
+        title: 'Rail Length Calculator', 
+        description: "Determine uncut and cut rail lengths for 80 Series and PE80 Series Exit Devices based on door width.", 
+        onClick: () => setIsRailCalculatorOpen(true),
+        isNew: true // NEW FEATURE FLAG
+    },
     { id: 6, title: 'Handing Tool', description: "Visually determine the correct left or right handing for door locks, ensuring a precise and proper installation.", onClick: () => setIsHandingToolOpen(true) },
     { id: 4, title: 'Cylinders Tool', description: "Explains how door lock cylinders work and provides a visual breakdown of their individual components.", url: 'https://sargent-cylinders.netlify.app/' },
     { id: 7, title: 'General Product Information', description: "Your go-to resource for learning all about our product, its features, and benefits.", url: 'https://sargent-info.netlify.app/' },
@@ -381,6 +398,7 @@ const App = () => {
               description={product.description}
               url={product.url}
               onClick={product.onClick}
+              isNew={product.isNew}
             />
           ))}
         </div>
