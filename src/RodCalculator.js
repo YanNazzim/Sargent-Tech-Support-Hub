@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Ruler, X, Calculator, CheckCircle, AlertTriangle, ArrowRight, TrendingUp, TrendingDown, Box } from 'lucide-react'; 
-// Note: All styling is now handled by the global App.css to ensure theme consistency
+import { X, Calculator, AlertTriangle, ArrowRight, ArrowUp, ArrowDown, Disc, Plus } from 'lucide-react'; 
 
 // ----------------------------------------------------------------------------
 // DATA CONSTANTS - Based on 2026 ROD LENGTH CALCULATIONS (Rev 4)
+// ** LOGIC PRESERVED EXACTLY AS REQUESTED **
 // ----------------------------------------------------------------------------
 const CONSTANTS = {
     // --- CONCEALED VERTICAL RODS (CVR) - STANDARD ---
@@ -47,55 +47,6 @@ const roundToRodStandard = (num) => {
     return (Math.ceil(val * 4) / 4).toFixed(3);
 };
 
-// --- Sub-Component: Result Modal ---
-const ResultModal = ({ results, message, isError, onClose }) => {
-    const items = [
-        { label: 'Top Rod', value: results.topRodLength, icon: TrendingUp },
-        { label: 'Bottom Rod', value: results.bottomRodLength, icon: TrendingDown },
-        { label: 'Extension', value: results.rodExtension, icon: Box },
-        { label: 'Crossbar', value: results.crossbarLength, icon: Ruler }
-    ].filter(i => i.value && i.value !== 'N/A');
-
-    return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="result-modal" onClick={e => e.stopPropagation()}>
-                <div className="result-modal-header">
-                    <h2 className="result-modal-title">
-                        <Calculator className="modal-title-icon" />
-                        Calculation Results
-                    </h2>
-                    <button onClick={onClose} className="close-button"><X size={24} /></button>
-                </div>
-
-                <div className="result-grid">
-                    {items.map((item, idx) => {
-                        const Icon = item.icon;
-                        return (
-                            <div key={idx} className="result-card">
-                                <div>
-                                    <p className="result-label">{item.label}</p>
-                                    <p className="result-value">{item.value}"</p>
-                                    <p className="result-unit">Inches</p>
-                                </div>
-                                <Icon className="result-icon" />
-                            </div>
-                        );
-                    })}
-                </div>
-
-                {message && (
-                    <div className={`message-box ${isError ? 'error-message' : 'success-message'}`}>
-                        {isError ? <AlertTriangle className="message-icon" /> : <CheckCircle className="message-icon" />}
-                        <p className="message-text">{message}</p>
-                    </div>
-                )}
-
-                <button onClick={onClose} className="close-result-button">Close</button>
-            </div>
-        </div>
-    );
-};
-
 // --- Main Component ---
 const RodCalculator = ({ onClose }) => {
     const [inputs, setInputs] = useState({
@@ -106,15 +57,16 @@ const RodCalculator = ({ onClose }) => {
         doorWidth: '',
     });
     const [seriesOptions, setSeriesOptions] = useState([]);
-    const [results, setResults] = useState({});
+    const [results, setResults] = useState(null); 
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
-    const [showModal, setShowModal] = useState(false);
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         if (['doorHeight', 'aff', 'doorWidth'].includes(id) && value < 0) return;
         setInputs(prev => ({ ...prev, [id]: value }));
+        // Clear results when input changes to encourage recalculation
+        if(results) setResults(null);
     };
 
     const updateSeriesOptions = useCallback((type) => {
@@ -166,12 +118,12 @@ const RodCalculator = ({ onClose }) => {
 
         if (deviceType === 'Crossbar') {
             if (isNaN(dw) || dw <= 0) {
-                setMessage('Enter valid Door Width'); setIsError(true); setShowModal(true); return;
+                setMessage('Enter valid Door Width'); setIsError(true); return;
             }
             cb = roundToRodStandard(dw - CONSTANTS.CROSSBAR_STD);
         } else {
             if (isNaN(dh) || isNaN(aff) || dh <= 0 || aff <= 0 || !deviceSeries) {
-                setMessage('Please complete all fields'); setIsError(true); setShowModal(true); return;
+                setMessage('Please complete all fields'); setIsError(true); return;
             }
 
             const P = CONSTANTS[deviceSeries];
@@ -211,17 +163,27 @@ const RodCalculator = ({ onClose }) => {
         }
 
         setResults({ topRodLength: tr, bottomRodLength: br, rodExtension: re, crossbarLength: cb });
-        setMessage('Calculations complete based on 2026 specs.');
+        setMessage('');
         setIsError(false);
-        setShowModal(true);
     };
+
+    // Calculate Total Top Length helper
+    const getTotalTopLength = () => {
+        if (!results || results.topRodLength === 'N/A' || results.rodExtension === 'N/A') return null;
+        const ext = parseFloat(results.rodExtension) || 0;
+        const top = parseFloat(results.topRodLength) || 0;
+        if (ext <= 0) return null;
+        return (top + ext).toFixed(3);
+    };
+
+    const totalTopLength = getTotalTopLength();
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="calculator-modal" onClick={e => e.stopPropagation()}>
+            <div className="calculator-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '650px', maxHeight: '90vh' }}>
                 <div className="modal-header">
                     <h2 className="modal-title">
-                        <Calculator className="modal-title-icon" /> 
+                        <Calculator className="modal-title-icon" style={{color: '#3b82f6'}} /> 
                         Rod Length Calculator (2026)
                     </h2>
                     <button onClick={onClose} className="close-button" aria-label="Close">
@@ -280,25 +242,111 @@ const RodCalculator = ({ onClose }) => {
                         </div>
                     </div>
 
-                    <button onClick={calculate} className="calculate-button">
+                    <button onClick={calculate} className="calculate-button" style={{ marginBottom: '1.5rem' }}>
                         Calculate Lengths <ArrowRight size={20} style={{ display: 'inline', marginLeft: '8px' }}/>
                     </button>
                     
-                    <p className="note-text">
-                        Results are rounded to the nearest 0.25" per Sargent Engineering standards.
-                    </p>
+                    {/* --- ERROR MESSAGE --- */}
+                    {isError && message && (
+                        <div className="message-box error fade-in" style={{ padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', color: '#fca5a5', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <AlertTriangle size={20} />
+                            <span>{message}</span>
+                        </div>
+                    )}
+
+                    {/* --- RESULTS DISPLAY (INLINE) --- */}
+                    {results && !isError && (
+                        <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            
+                            {/* TOP ASSEMBLY BLOCK */}
+                            {results.crossbarLength === 'N/A' && (
+                                <div className="csr-result-card" style={{ 
+                                    background: '#1e293b', 
+                                    borderLeft: '5px solid #3b82f6',
+                                    padding: '0' // Remove default padding to control inner layout
+                                }}>
+                                    <div style={{ padding: '1rem 1.5rem', background: 'rgba(59, 130, 246, 0.1)', borderBottom: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                                        <div className="csr-card-header-left">
+                                            <ArrowUp size={24} color="#3b82f6" />
+                                            <h3 className="csr-name" style={{fontSize: '1.1rem'}}>Top Rod Assembly</h3>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
+                                        {/* Top Rod */}
+                                        <div style={{ padding: '1.5rem', textAlign: 'center', background: '#1e293b' }}>
+                                            <p style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Top Rod Length</p>
+                                            <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#fff', margin: '0.5rem 0' }}>{results.topRodLength}"</p>
+                                            <p style={{ fontSize: '0.75rem', color: '#64748b' }}>Standard</p>
+                                        </div>
+                                        {/* Extension */}
+                                        <div style={{ padding: '1.5rem', textAlign: 'center', background: '#1e293b' }}>
+                                            <p style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Extension</p>
+                                            <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#60a5fa', margin: '0.5rem 0' }}>
+                                                {parseFloat(results.rodExtension) > 0 ? results.rodExtension + '"' : 'None'}
+                                            </p>
+                                            <p style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                                                {parseFloat(results.rodExtension) > 0 ? 'Required' : 'Not needed'}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Total Length Sum - Only visible if Extension exists */}
+                                    {totalTopLength && (
+                                        <div style={{ 
+                                            background: 'rgba(59, 130, 246, 0.15)', 
+                                            padding: '1rem', 
+                                            borderTop: '1px solid rgba(59, 130, 246, 0.2)',
+                                            textAlign: 'center',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            gap: '10px'
+                                        }}>
+                                            <Plus size={20} color="#60a5fa" />
+                                            <div style={{ textAlign: 'left' }}>
+                                                <span style={{ color: '#93c5fd', fontSize: '0.9rem', fontWeight: '600', display: 'block' }}>TOTAL TOP LENGTH</span>
+                                                <span style={{ color: '#fff', fontSize: '1.25rem', fontWeight: 'bold' }}>{totalTopLength}"</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* BOTTOM ASSEMBLY BLOCK */}
+                            {results.crossbarLength === 'N/A' && (
+                                <div className="csr-result-card" style={{ 
+                                    background: '#1e293b', 
+                                    borderLeft: '5px solid #10b981',
+                                    padding: '0'
+                                }}>
+                                    <div style={{ padding: '1rem 1.5rem', background: 'rgba(16, 185, 129, 0.1)', borderBottom: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                                        <div className="csr-card-header-left">
+                                            <ArrowDown size={24} color="#10b981" />
+                                            <h3 className="csr-name" style={{fontSize: '1.1rem'}}>Bottom Rod Assembly</h3>
+                                        </div>
+                                    </div>
+                                    <div style={{ padding: '1.5rem', textAlign: 'center' }}>
+                                        <p style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Bottom Rod Length</p>
+                                        <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#fff', margin: '0.5rem 0' }}>{results.bottomRodLength}"</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* CROSSBAR BLOCK */}
+                            {results.crossbarLength !== 'N/A' && (
+                                <div className="csr-result-card" style={{ background: '#1e293b', borderLeft: '5px solid #f59e0b', padding: '1.5rem', textAlign: 'center' }}>
+                                    <Disc size={32} color="#f59e0b" style={{ margin: '0 auto 1rem auto' }} />
+                                    <p style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Crossbar Length</p>
+                                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fff', margin: '0.5rem 0' }}>{results.crossbarLength}"</p>
+                                    <p style={{ fontSize: '0.8rem', color: '#64748b' }}>For {inputs.doorWidth}" Door</p>
+                                </div>
+                            )}
+
+                        </div>
+                    )}
                 </div>
             </div>
-
-            {/* Results Modal - Rendered on top when triggered */}
-            {showModal && (
-                <ResultModal 
-                    results={results} 
-                    message={message} 
-                    isError={isError} 
-                    onClose={() => setShowModal(false)} 
-                />
-            )}
         </div>
     );
 };

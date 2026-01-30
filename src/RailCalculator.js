@@ -87,6 +87,23 @@ export default function RailCalculator({ onClose }) {
                 </div>
 
                 <div className="modal-body">
+                    {/* --- IMPORTANT NOTE --- */}
+                    <div className="message-box error fade-in" style={{ 
+                        marginBottom: '1.5rem', 
+                        padding: '1rem', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '12px',
+                        background: 'rgba(239, 68, 68, 0.15)',
+                        border: '1px solid rgba(239, 68, 68, 0.4)',
+                        color: '#fca5a5'
+                    }}>
+                        <AlertTriangle size={24} />
+                        <p style={{ margin: 0, fontWeight: '600', fontSize: '0.9rem' }}>
+                            NOTE: These measurements are for the rail ONLY (end-to-end) with NO chassis or end caps attached.
+                        </p>
+                    </div>
+
                     {/* --- CONTROLS --- */}
                     <div className="input-group-wrapper">
                         {/* Generation & Stile */}
