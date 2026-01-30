@@ -21,13 +21,25 @@ const productIcons = {
   9: MapPin, // Icon for CSR Tool
 };
 
-// --- HELPER: HIGHLIGHTED TEXT ---
-const HighlightedText = ({ text, highlight }) => {
-    if (!highlight || !highlight.trim()) {
+// --- HELPER: HIGHLIGHTED TEXT (UPDATED) ---
+// Now accepts an array of keywords to highlight flexible matches
+const HighlightedText = ({ text, highlightKeywords }) => {
+    if (!text) return null;
+    if (!highlightKeywords || highlightKeywords.length === 0) {
         return <span>{text}</span>;
     }
-    const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`(${escapedHighlight})`, 'gi');
+
+    // Escape regex characters for all keywords and join them with OR (|)
+    // Filter out empty strings to avoid infinite loops
+    const validKeywords = highlightKeywords.filter(k => k && k.trim().length > 0);
+    
+    if (validKeywords.length === 0) return <span>{text}</span>;
+
+    const pattern = validKeywords
+        .map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+        .join('|');
+
+    const regex = new RegExp(`(${pattern})`, 'gi');
     const parts = text.toString().split(regex);
 
     return (
@@ -60,7 +72,6 @@ const STATE_TO_FULL = {
 };
 
 // --- DATA: MASTER TERRITORY MAP ---
-// Maps A-Codes to specific states/regions based on the "Split States" CSV
 const TERRITORY_DEFINITIONS = {
     "A01": ["CT", "MA", "ME", "NH", "RI", "VT"],
     "A02": ["Upstate NY"],
@@ -190,7 +201,9 @@ const CsrSearchModal = ({ onClose }) => {
 
                     // Expand Codes to Full Names (TX -> TEXAS)
                     mappedRegions.forEach(region => {
+                        // Extract any state codes present in the region string
                         Object.keys(STATE_TO_FULL).forEach(stateCode => {
+                            // Check for word boundary to avoid matching substring
                             const regex = new RegExp(`\\b${stateCode}\\b`, 'i');
                             if (regex.test(region)) {
                                 allKeywords.push(STATE_TO_FULL[stateCode]);
@@ -231,6 +244,32 @@ const CsrSearchModal = ({ onClose }) => {
             csr.keywords.some(k => k.toLowerCase().includes(lowerTerm))
         );
     }, [searchTerm, selectedBrand, processedData]);
+
+    // --- SMART HIGHLIGHT LOGIC ---
+    // Determines all related terms to highlight.
+    // e.g. Input: "Tex" -> Highlights: ["Tex", "TEXAS", "TX"]
+    const highlightKeywords = useMemo(() => {
+        if (!searchTerm) return [];
+        const cleanTerm = searchTerm.trim().toUpperCase();
+        const keywords = [searchTerm.trim()]; // Always highlight exactly what user typed
+
+        // 1. Direct Code Match (e.g. User types "TX" -> Highlight "TEXAS" too)
+        if (STATE_TO_FULL[cleanTerm]) {
+            keywords.push(STATE_TO_FULL[cleanTerm]);
+        }
+
+        // 2. Full Name or Partial Name Match (e.g. User types "Texas" OR "Tex" -> Highlight "TX")
+        // We iterate through all states to find if the user typed a known state name
+        Object.entries(STATE_TO_FULL).forEach(([code, fullName]) => {
+            if (fullName.includes(cleanTerm) || code === cleanTerm) {
+                keywords.push(code);      // Add "TX"
+                keywords.push(fullName);  // Add "TEXAS"
+            }
+        });
+
+        return [...new Set(keywords)]; // Remove duplicates
+    }, [searchTerm]);
+
 
     const brands = ['All', 'Sargent', 'Corbin Russwin', 'ACCENTRA', 'Norton Rixson'];
 
@@ -295,7 +334,7 @@ const CsrSearchModal = ({ onClose }) => {
                                                 <div className="csr-code-container">
                                                     <Hash size={12} className="csr-code-icon"/>
                                                     <span className="csr-code-text">
-                                                        <HighlightedText text={csr.territoryCodes} highlight={searchTerm} />
+                                                        <HighlightedText text={csr.territoryCodes} highlightKeywords={highlightKeywords} />
                                                     </span>
                                                 </div>
                                             </div>
@@ -309,7 +348,7 @@ const CsrSearchModal = ({ onClose }) => {
                                     <div className="csr-region-block">
                                         <p className="csr-region-label">Territory Coverage:</p>
                                         <p className="csr-region-text">
-                                            <HighlightedText text={csr.regionDescription} highlight={searchTerm} />
+                                            <HighlightedText text={csr.regionDescription} highlightKeywords={highlightKeywords} />
                                         </p>
                                     </div>
 

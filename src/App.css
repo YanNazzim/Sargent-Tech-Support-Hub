@@ -388,6 +388,7 @@
     display: grid;
     gap: 1.5rem;
     grid-template-columns: 1fr;
+    gap: 1rem;
 }
 
 @media (min-width: 640px) {
@@ -563,13 +564,15 @@
     line-height: 1.5;
 }
 
-/* New Highlight Style */
+/* --- UPDATED MODERN HIGHLIGHT --- */
 .highlight-match {
-    background-color: rgba(250, 204, 21, 0.3); /* Bright Yellow (Transparent) */
-    color: #fef08a; /* Light Yellow Text */
-    border-radius: 2px;
-    font-weight: 600;
-    padding: 0 2px;
+    background-color: rgba(255, 255, 255, 0.2); /* Blue tint background */
+    color: #fac960; /* Bright Blue text */
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    border-radius: 4px;
+    font-weight: 700;
+    padding: 0 4px;
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.1);
 }
 
 /* Territory Code Styles */
