@@ -2,9 +2,11 @@ import React, { useState, useMemo } from 'react';
 import './App.css'; // Global dark theme styles
 import placeholder from './assets/placeholder.jpg';
 import RodCalculator from './RodCalculator';
+import HandingTool from './HandingTool';
+import RailCalculator from './RailCalculator';
 
 // Icons 
-import { Settings, Wrench, Lock, DoorOpen, Ruler, Info, MapPin, Search, User, Phone, Mail, X, Hash, Check } from 'lucide-react'; 
+import { Settings, Wrench, Lock, Ruler, Info, MapPin, Search, User, Phone, Mail, X, Hash, Check, RotateCcw, Scissors } from 'lucide-react'; 
 
 // Map product ID to Lucide icon for a richer visual
 const productIcons = {
@@ -12,8 +14,8 @@ const productIcons = {
   2: Wrench, 
   3: Ruler, 
   4: Lock, 
-  5: DoorOpen, 
-  6: DoorOpen, 
+  5: Scissors, // Icon for Rail Calculator
+  6: RotateCcw, // Icon for Handing Tool
   7: Info, 
   8: Info, 
   9: MapPin, // Icon for CSR Tool
@@ -100,7 +102,6 @@ const TERRITORY_DEFINITIONS = {
 };
 
 // --- DATA: CSR RAW DATA ---
-//
 const RAW_CSR_DATA = [
     // --- SARGENT ---
     { name: "Miriam Redgate", phone: "(203) 498-5595", email: "miriam.redgate@assaabloy.com", brand: "Sargent", codes: ["A01", "A07", "HI"] },
@@ -340,12 +341,16 @@ const CsrSearchModal = ({ onClose }) => {
 const App = () => {
   const [isRodCalculatorOpen, setIsRodCalculatorOpen] = useState(false);
   const [isCsrSearchOpen, setIsCsrSearchOpen] = useState(false);
+  const [isHandingToolOpen, setIsHandingToolOpen] = useState(false);
+  const [isRailCalculatorOpen, setIsRailCalculatorOpen] = useState(false);
 
   const products = [
     { id: 1, title: 'Templates Lookup Tool', description: "Streamlines your search for templates, making it easy to get exactly what you need.", url: 'https://sargent-templates.netlify.app/' },
     { id: 2, title: 'Parts Lookup Tool', description: "Effortlessly find the right parts with precise information, saving you time and hassle.", url: 'https://sargent-parts.netlify.app/' },
-    { id: 3, title: 'Rod Length Calculator', description: "Precisely calculate Top Rod, Bottom Rod, and Rod Extension lengths for SVR and CVR exit devices.", onClick: () => setIsRodCalculatorOpen(true) },
     { id: 9, title: 'Find Your CSR', description: "Locate Customer Support Specialists for Sargent, Corbin Russwin, ACCENTRA, and Norton Rixson.", onClick: () => setIsCsrSearchOpen(true) },
+    { id: 3, title: 'Rod Length Calculator', description: "Precisely calculate Top Rod, Bottom Rod, and Rod Extension lengths for SVR and CVR exit devices.", onClick: () => setIsRodCalculatorOpen(true) },
+    { id: 5, title: 'Rail Length Calculator', description: "Determine uncut and cut rail lengths for 80 Series and PE80 Series Exit Devices based on door width.", onClick: () => setIsRailCalculatorOpen(true) },
+    { id: 6, title: 'Handing Tool', description: "Visually determine the correct left or right handing for door locks, ensuring a precise and proper installation.", onClick: () => setIsHandingToolOpen(true) },
     { id: 4, title: 'Cylinders Tool', description: "Explains how door lock cylinders work and provides a visual breakdown of their individual components.", url: 'https://sargent-cylinders.netlify.app/' },
     { id: 7, title: 'General Product Information', description: "Your go-to resource for learning all about our product, its features, and benefits.", url: 'https://sargent-info.netlify.app/' },
     { id: 8, title: 'Sargent Product Quiz', description: "Test your knowledge of Sargent Hardware and products with this interactive quiz.", url: 'https://sargent-quiz.netlify.app/' },
@@ -383,6 +388,8 @@ const App = () => {
 
       {isRodCalculatorOpen && <RodCalculator onClose={() => setIsRodCalculatorOpen(false)} />}
       {isCsrSearchOpen && <CsrSearchModal onClose={() => setIsCsrSearchOpen(false)} />}
+      {isHandingToolOpen && <HandingTool onClose={() => setIsHandingToolOpen(false)} />}
+      {isRailCalculatorOpen && <RailCalculator onClose={() => setIsRailCalculatorOpen(false)} />}
     </div>
   );
 };

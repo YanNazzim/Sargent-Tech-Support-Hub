@@ -612,3 +612,8 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* --- UTILITIES --- */
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
