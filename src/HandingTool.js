@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { 
     X, RotateCcw, CheckCircle, AlertTriangle, Lock, 
-    Video, LogOut, Key, DoorOpen 
+    Video, LogOut, Key, DoorOpen, Maximize2
 } from 'lucide-react';
 import handingDiagram from './assets/handing.png';
 import './HandingTool.css';
@@ -31,6 +31,7 @@ const EXIT_DEVICE_MODELS = [
 const HandingTool = ({ onClose }) => {
     const [category, setCategory] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
+    const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
     // --- LOGIC: DETERMINE HANDING STATUS ---
     const result = useMemo(() => {
@@ -166,29 +167,30 @@ const HandingTool = ({ onClose }) => {
                     )}
 
                     {/* VIDEO & DIAGRAM SECTION */}
-                    <div className="parts-grid two-col fade-in">
+                    <div className="parts-grid two-col handing-reference-section fade-in">
                         {/* Visual Reference Diagram */}
-                        <div className="part-info-card" style={{background: '#1a1a1a', border: '1px solid #333'}}>
+                        <div className="part-info-card clickable-diagram-card" onClick={() => setIsImageModalOpen(true)}>
                             <div className="note-header" style={{color: '#3b82f6'}}>
                                 <Lock size={18} />
-                                <span>VISUAL REFERENCE</span>
+                                <span>VISUAL REFERENCE (Click to Enlarge)</span>
+                                <Maximize2 size={14} style={{marginLeft: 'auto', opacity: 0.6}} />
                             </div>
-                            <div style={{background: '#fff', borderRadius: '4px', padding: '10px', marginTop: '10px'}}>
-                                <img src={handingDiagram} alt="Handing Diagram" style={{width: '100%', height: 'auto', display: 'block'}} />
+                            <div className="diagram-preview-container">
+                                <img src={handingDiagram} alt="Handing Diagram" className="diagram-img" />
                             </div>
-                            <p className="detail-text" style={{textAlign: 'center', marginTop: '8px'}}>
+                            <p className="detail-text" style={{textAlign: 'center', marginTop: '12px'}}>
                                 Always view door from the <strong>Secure Side (Outside)</strong>.
                             </p>
                         </div>
 
                         {/* Video Tutorial (If available) */}
                         {videoData ? (
-                            <div className="part-info-card" style={{background: '#1a1a1a', border: '1px solid #333'}}>
+                            <div className="part-info-card video-card">
                                 <div className="note-header" style={{color: '#f59e0b'}}>
                                     <Video size={18} />
                                     <span>{videoData.title}</span>
                                 </div>
-                                <div style={{marginTop: '10px', borderRadius: '4px', overflow: 'hidden', aspectRatio: '16/9'}}>
+                                <div className="video-container">
                                     <iframe 
                                         src={videoData.url} 
                                         title="Tutorial" 
@@ -199,7 +201,7 @@ const HandingTool = ({ onClose }) => {
                                 </div>
                             </div>
                         ) : (
-                            <div className="part-info-card" style={{background: '#1a1a1a', border: '1px solid #333', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', opacity: 0.6}}>
+                            <div className="part-info-card video-card empty-video">
                                 <Video size={32} style={{marginBottom: '10px'}} />
                                 <p className="detail-text">Select a specific handed model to view re-handing tutorials.</p>
                             </div>
@@ -208,6 +210,19 @@ const HandingTool = ({ onClose }) => {
 
                 </div>
             </div>
+
+            {/* FULLSCREEN IMAGE MODAL */}
+            {isImageModalOpen && (
+                <div className="image-zoom-overlay" onClick={() => setIsImageModalOpen(false)}>
+                    <div className="zoom-modal-content" onClick={e => e.stopPropagation()}>
+                        <button className="zoom-close-btn" onClick={() => setIsImageModalOpen(false)}>
+                            <X size={32} />
+                        </button>
+                        <img src={handingDiagram} alt="Full Handing Diagram" className="full-zoom-img" />
+                        <div className="zoom-caption">Handing Reference Diagram - Secure Side (Outside) View</div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

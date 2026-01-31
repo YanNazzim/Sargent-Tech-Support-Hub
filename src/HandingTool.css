@@ -30,8 +30,121 @@
     padding: 10px;
 }
 
-@media (max-width: 640px) {
-    .handing-modal .parts-grid.two-col {
+/* --- 25% Larger Reference Section --- */
+.handing-reference-section {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem !important;
+    margin-top: 1rem;
+}
+
+.handing-modal .part-info-card {
+    min-height: 280px; /* Increased height */
+    display: flex;
+    flex-direction: column;
+    background: #1a1a1a;
+    border: 1px solid #333;
+}
+
+.diagram-preview-container {
+    background: #fff;
+    border-radius: 4px;
+    padding: 12px;
+    margin-top: 10px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.diagram-preview-container:hover {
+    transform: scale(1.02);
+}
+
+.diagram-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 180px;
+    object-fit: contain;
+}
+
+.video-container {
+    margin-top: 10px;
+    border-radius: 4px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    flex-grow: 1;
+}
+
+.empty-video {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0.6;
+}
+
+/* --- Image Zoom Modal --- */
+.image-zoom-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+    padding: 2rem;
+}
+
+.zoom-modal-content {
+    position: relative;
+    max-width: 95vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.full-zoom-img {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 8px;
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+
+.zoom-close-btn {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.zoom-close-btn:hover {
+    transform: scale(1.2);
+}
+
+.zoom-caption {
+    color: #94a3b8;
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .handing-reference-section {
         grid-template-columns: 1fr;
+    }
+    .image-zoom-overlay {
+        padding: 1rem;
     }
 }
