@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { X, Scissors, ArrowRight, CheckCircle, AlertTriangle } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { X, Scissors, ArrowRight, CheckCircle, AlertTriangle, Layers, Maximize } from 'lucide-react';
+import './RailCalculator.css';
 
 // --- DATA: RAIL SPECS ---
 const RAIL_SIZES = [
@@ -35,11 +36,22 @@ const FORMULAS = {
     }
 };
 
+const GENERATION_OPTIONS = [
+    { id: '80_SERIES', label: '80 Series', sub: 'Standard Device' },
+    { id: 'PE80_SERIES', label: 'PE80 Series', sub: 'NextGen Device' }
+];
+
+const STILE_OPTIONS = [
+    { id: 'NARROW', label: 'Narrow Stile', sub: '8300/8400/8500' },
+    { id: 'WIDE', label: 'Wide Stile', sub: '8600/8700/8800/8900' }
+];
+
 export default function RailCalculator({ onClose }) {
-    const [generation, setGeneration] = useState('80_SERIES'); // '80_SERIES' or 'PE80_SERIES'
-    const [stile, setStile] = useState('NARROW'); // 'NARROW' or 'WIDE'
+    const [generation, setGeneration] = useState('80_SERIES'); 
+    const [stile, setStile] = useState('NARROW'); 
     const [doorWidth, setDoorWidth] = useState('');
     const [result, setResult] = useState(null);
+    const resultsRef = useRef(null);
 
     const calculate = () => {
         const width = parseFloat(doorWidth);
@@ -71,14 +83,27 @@ export default function RailCalculator({ onClose }) {
             isPE: generation === 'PE80_SERIES',
             stileLabel: stile === 'NARROW' ? (generation === 'PE80_SERIES' ? 'NE (Narrow)' : 'Narrow Stile') : (generation === 'PE80_SERIES' ? 'WE (Wide)' : 'Wide Stile')
         });
+
+        // Auto Scroll to results
+        setTimeout(() => {
+            if (resultsRef.current) {
+                resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }, 100);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            calculate();
+        }
     };
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="calculator-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+            <div className="calculator-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '650px' }}>
                 <div className="modal-header">
                     <h2 className="modal-title">
-                        <Scissors className="modal-title-icon" style={{ transform: 'rotate(-90deg)' }}/>
+                        <Scissors className="modal-title-icon" style={{ transform: 'rotate(-90deg)', color: '#3b82f6' }}/>
                         Rail Length Calculator
                     </h2>
                     <button onClick={onClose} className="close-button">
@@ -88,73 +113,75 @@ export default function RailCalculator({ onClose }) {
 
                 <div className="modal-body">
                     {/* --- IMPORTANT NOTE --- */}
-                    <div className="message-box error fade-in" style={{ 
-                        marginBottom: '1.5rem', 
-                        padding: '1rem', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '12px',
-                        background: 'rgba(239, 68, 68, 0.15)',
-                        border: '1px solid rgba(239, 68, 68, 0.4)',
-                        color: '#fca5a5'
-                    }}>
-                        <AlertTriangle size={24} />
-                        <p style={{ margin: 0, fontWeight: '600', fontSize: '0.9rem' }}>
-                            NOTE: These measurements are for the rail ONLY (end-to-end) with NO chassis or end caps attached.
-                        </p>
+                    <div className="message-box warning">
+                        <AlertTriangle size={20} />
+                        <span>Calculations are for the rail ONLY (no chassis/end caps).</span>
                     </div>
 
-                    {/* --- CONTROLS --- */}
-                    <div className="input-group-wrapper">
-                        {/* Generation & Stile */}
-                        <div className="form-grid">
-                            <div className="input-group">
-                                <label className="input-label">Device Generation</label>
-                                <select 
-                                    className="form-select" 
-                                    value={generation} 
-                                    onChange={(e) => setGeneration(e.target.value)}
+                    {/* --- STEP 1: GENERATION --- */}
+                    <div>
+                        <h3 className="group-title">1. Device Generation</h3>
+                        <div className="option-grid">
+                            {GENERATION_OPTIONS.map(opt => (
+                                <button
+                                    key={opt.id}
+                                    onClick={() => setGeneration(opt.id)}
+                                    className={`option-btn ${generation === opt.id ? 'active' : ''}`}
                                 >
-                                    <option value="80_SERIES">80 Series (Standard)</option>
-                                    <option value="PE80_SERIES">PE80 Series (NextGen)</option>
-                                </select>
-                            </div>
-                            <div className="input-group">
-                                <label className="input-label">Stile Width</label>
-                                <select 
-                                    className="form-select" 
-                                    value={stile} 
-                                    onChange={(e) => setStile(e.target.value)}
-                                >
-                                    <option value="NARROW">Narrow Stile {generation === 'PE80_SERIES' ? '(NE)' : ''}</option>
-                                    <option value="WIDE">Wide Stile {generation === 'PE80_SERIES' ? '(WE)' : ''}</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        {/* Door Width Input */}
-                        <div className="input-group measurement-input-group">
-                            <label className="input-label" htmlFor="rail-dw">Door Width (Inches)</label>
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                                <input 
-                                    id="rail-dw"
-                                    type="number" 
-                                    className="form-input" 
-                                    placeholder="e.g. 36" 
-                                    value={doorWidth}
-                                    onChange={(e) => setDoorWidth(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && calculate()}
-                                />
-                                <button onClick={calculate} className="calculate-button" style={{ width: 'auto', whiteSpace: 'nowrap' }}>
-                                    Calculate <ArrowRight size={18} style={{ marginLeft: 8 }}/>
+                                    <Layers size={20} className="option-icon" />
+                                    <div>
+                                        <span className="option-label">{opt.label}</span>
+                                        <span className="option-sub">{opt.sub}</span>
+                                    </div>
+                                    {generation === opt.id && <CheckCircle size={18} className="check-icon" />}
                                 </button>
-                            </div>
+                            ))}
                         </div>
+                    </div>
+
+                    {/* --- STEP 2: STILE WIDTH --- */}
+                    <div className="fade-in">
+                        <h3 className="group-title">2. Stile Width</h3>
+                        <div className="option-grid">
+                            {STILE_OPTIONS.map(opt => (
+                                <button
+                                    key={opt.id}
+                                    onClick={() => setStile(opt.id)}
+                                    className={`option-btn ${stile === opt.id ? 'active' : ''}`}
+                                >
+                                    <Maximize size={20} className="option-icon" />
+                                    <div>
+                                        <span className="option-label">{opt.label}</span>
+                                        <span className="option-sub">{opt.sub}</span>
+                                    </div>
+                                    {stile === opt.id && <CheckCircle size={18} className="check-icon" />}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* --- STEP 3: DOOR WIDTH --- */}
+                    <div className="fade-in">
+                        <h3 className="group-title">3. Door Width</h3>
+                        <div className="input-row">
+                            <input 
+                                type="number" 
+                                className="form-input" 
+                                placeholder="Enter width in inches (e.g. 36)" 
+                                value={doorWidth}
+                                onChange={(e) => setDoorWidth(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                autoFocus
+                            />
+                        </div>
+                        <button onClick={calculate} className="calculate-btn">
+                            Calculate Rail <ArrowRight size={20} />
+                        </button>
                     </div>
 
                     {/* --- RESULTS DISPLAY --- */}
                     {result && !result.error && (
-                        <div className="fade-in">
+                        <div className="fade-in" ref={resultsRef}>
                             <div className="csr-result-card" style={{ 
                                 background: '#1e293b', 
                                 borderLeft: '5px solid #3b82f6',
@@ -173,21 +200,22 @@ export default function RailCalculator({ onClose }) {
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
-                                    <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px', textAlign: 'center' }}>
-                                        <p style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Stock / Uncut Length</p>
-                                        <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', margin: '0.5rem 0' }}>{result.uncutLength}"</p>
-                                        <p style={{ fontSize: '0.8rem', color: '#64748b' }}>Full Rail Size</p>
+                                <div className="rail-results-grid">
+                                    <div className="rail-box stock">
+                                        <p className="rail-label">Stock / Uncut Length</p>
+                                        <p className="rail-value">{result.uncutLength}"</p>
+                                        <p className="rail-sub">Full Rail Size</p>
                                     </div>
-                                    <div style={{ background: 'rgba(59, 130, 246, 0.1)', padding: '1rem', borderRadius: '8px', textAlign: 'center', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
-                                        <p style={{ fontSize: '0.8rem', color: '#60a5fa', textTransform: 'uppercase', fontWeight: '600' }}>Actual Cut Length</p>
-                                        <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', margin: '0.5rem 0' }}>{result.cutLength}"</p>
-                                        <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>For {doorWidth}" Door</p>
+                                    <div className="rail-box cut">
+                                        <p className="rail-label cut-label">Actual Cut Length</p>
+                                        <p className="rail-value">{result.cutLength}"</p>
+                                        <p className="rail-sub">For {doorWidth}" Door</p>
                                     </div>
                                 </div>
-                                <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: '#64748b', textAlign: 'center' }}>
+                                
+                                <div className="calc-note">
                                     Calculation: Door Width ({doorWidth}") - Deduction ({result.deduction}")
-                                </p>
+                                </div>
                             </div>
                         </div>
                     )}

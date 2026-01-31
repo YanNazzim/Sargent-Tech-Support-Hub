@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { X, Calculator, AlertTriangle, ArrowRight, ArrowUp, ArrowDown, Disc, Plus } from 'lucide-react'; 
+import React, { useState, useMemo, useRef } from 'react';
+import { 
+    X, Calculator, AlertTriangle, ArrowRight, ArrowUp, ArrowDown, 
+    Disc, Plus, Tag, Info, Search, CheckCircle 
+} from 'lucide-react'; 
+import './RodCalculator.css'; 
 
 // ----------------------------------------------------------------------------
 // DATA CONSTANTS - Based on 2026 ROD LENGTH CALCULATIONS (Rev 4)
-// ** LOGIC PRESERVED EXACTLY AS REQUESTED **
 // ----------------------------------------------------------------------------
 const CONSTANTS = {
     // --- CONCEALED VERTICAL RODS (CVR) - STANDARD ---
@@ -47,6 +50,128 @@ const roundToRodStandard = (num) => {
     return (Math.ceil(val * 4) / 4).toFixed(3);
 };
 
+// Helper: Get Ordering Part Number
+const getPartNumber = (series, height, aff) => {
+    if (!series || !height || !aff) return null;
+
+    const is5CH = series.includes('5CH');
+    const prefix = is5CH ? '5CH-' : '';
+    
+    let topBase = '';
+    let bottomBase = 'N/A'; 
+    let topNotes = [];
+    let topSuffix = '';
+    let bottomSuffix = '';
+
+    // --- 1. SVR 8700 / 9700 / PE8700 ---
+    if (series.includes('SVR_8700') || series.includes('SVR_PE8700')) {
+        topBase = '670T'; 
+        topSuffix = ' x Finish';
+        bottomBase = '670B'; 
+        bottomSuffix = ' x Finish';
+    } 
+    // --- 2. SVR 2700 / 3700 ---
+    else if (series.includes('SVR_2700_3700')) {
+        topBase = '672T';
+        topSuffix = ' x Finish';
+        bottomBase = '672B';
+        bottomSuffix = ' x Finish';
+    }
+    // --- 3. L Series (8600) ---
+    else if (series.includes('CVR_L_8600')) {
+        topBase = '692L';
+        bottomBase = 'N/A'; 
+    }
+    // --- 4. 7000 SERIES ---
+    else if (series.includes('7000')) {
+        bottomBase = '691B'; 
+        if (series === '7000_STD') {
+            topBase = 'MD694T';
+        } else if (series === '7000_WD') {
+            topBase = 'WD694T';
+        } else if (series === '7000_WD_AUX') {
+            topBase = 'WDA694T';
+            topNotes = [
+                'Requires 3 extra parts for Aux/ELR/Reader:',
+                '1. Extension Rod (94-0212)', 
+                '2. Plate for Aux Control (68-0917)',
+                '3. Screw (01-1137)'
+            ];
+        }
+    }
+    // --- 5. PE8400 / PE8600 ---
+    else if (series.includes('PE8400') || series.includes('PE8600')) {
+        topBase = 'P692T';
+        bottomBase = '692B';
+    }
+    // --- 6. MD/AD 8400 & 8600 (Standard) ---
+    else if (series.includes('CVR_8400_MD8600')) {
+        topBase = 'MD691T';
+        bottomBase = '691B';
+    }
+    // --- 7. WD8600 No Trim ---
+    else if (series.includes('CVR_WD8600_NOTRIM')) {
+        topBase = 'WD691T';
+        bottomBase = '691B';
+    }
+    // --- 8. WD8600 With Aux ---
+    else if (series.includes('CVR_WD8600_AUX')) {
+        topBase = 'WDA691T';
+        bottomBase = '691B';
+        topNotes = [
+            'Requires 3 extra parts for Aux operation:',
+            '1. Notched Extension Rod (68-0918)',
+            '2. Plate for Aux Control (68-0917)',
+            '3. Screw (01-1137)'
+        ];
+    } 
+    else {
+        return null; 
+    }
+
+    return {
+        topRod: `${prefix}${topBase} x ${height} x ${aff}${topSuffix}`,
+        bottomRod: bottomBase !== 'N/A' ? `${prefix}${bottomBase} x ${aff}${bottomSuffix}` : 'N/A',
+        notes: topNotes
+    };
+};
+
+// --- Available Options Data ---
+const DEVICE_TYPES = [
+    { id: 'CVR', label: 'CVR (Concealed)', detail: '8400 / 8600 / L / PE8400 / PE8600' },
+    { id: 'SVR', label: 'SVR (Surface)', detail: '2700 / 3700 / 8700 / 9700 / PE8700' },
+    { id: '7000', label: '7000 (Multi-Point)', detail: '7000 Series' },
+    { id: 'Crossbar', label: 'Crossbar Only', detail: '90 Series' },
+];
+
+const SERIES_DATA = {
+    'CVR': [
+        { value: 'CVR_8400_MD8600_STD', label: '8400 / MD8600 (Std)' },
+        { value: 'CVR_WD8600_NOTRIM_STD', label: 'WD8600 No Trim (Std)' },
+        { value: 'CVR_WD8600_AUX_STD', label: 'WD8600 w/ Aux (Std)' },
+        { value: 'CVR_SN_8600_STD', label: 'SN-MD/WD8600 (Std)' },
+        { value: 'CVR_SN_AUX_STD', label: 'SN-MD/WD8600 w/ Aux (Std)' },
+        { value: 'CVR_PE8400_PE8600_STD', label: 'PE8400 / PE8600 (Std)' },
+        { value: 'CVR_L_8600_STD', label: 'L-Series 8600 (Less Btm Rod)' },
+        { value: 'CVR_8400_MD8600_5CH', label: '8400 / MD8600 (5CH)' },
+        { value: 'CVR_WD8600_NOTRIM_5CH', label: 'WD8600 No Trim (5CH)' },
+        { value: 'CVR_WD8600_AUX_5CH', label: 'WD8600 w/ Aux (5CH)' },
+        { value: 'CVR_SN_8600_5CH', label: 'SN-MD/WD8600 (5CH)' },
+        { value: 'CVR_SN_AUX_5CH', label: 'SN-MD/WD8600 w/ Aux (5CH)' },
+        { value: 'CVR_PE8400_PE8600_5CH', label: 'PE8400 / PE8600 (5CH)' },
+    ],
+    'SVR': [
+        { value: 'SVR_2700_3700', label: '2700 / 3700 Series' },
+        { value: 'SVR_8700_9700', label: '8700 / 9700 Series' },
+        { value: 'SVR_PE8700', label: 'PE8700 Premium' },
+    ],
+    '7000': [
+        { value: '7000_STD', label: '7000 Series (Std)' },
+        { value: '7000_WD', label: 'WD7000 No Trim' },
+        { value: '7000_WD_AUX', label: '7000 w/ Aux' },
+    ]
+};
+
 // --- Main Component ---
 const RodCalculator = ({ onClose }) => {
     const [inputs, setInputs] = useState({
@@ -56,58 +181,49 @@ const RodCalculator = ({ onClose }) => {
         aff: '',
         doorWidth: '',
     });
-    const [seriesOptions, setSeriesOptions] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState(null); 
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
+    
+    // Ref for scrolling to results
+    const resultsRef = useRef(null);
+
+    // Filtered Series Options based on search
+    const filteredSeries = useMemo(() => {
+        if (!inputs.deviceType || inputs.deviceType === 'Crossbar') return [];
+        const options = SERIES_DATA[inputs.deviceType] || [];
+        if (!searchTerm) return options;
+        return options.filter(opt => opt.label.toLowerCase().includes(searchTerm.toLowerCase()));
+    }, [inputs.deviceType, searchTerm]);
+
+    const handleTypeSelect = (typeId) => {
+        setInputs({
+            deviceType: typeId,
+            deviceSeries: '', 
+            doorHeight: '',
+            aff: '',
+            doorWidth: '',
+        });
+        setSearchTerm('');
+        setResults(null);
+        setMessage('');
+        setIsError(false);
+    };
+
+    const handleSeriesSelect = (seriesValue) => {
+        setInputs(prev => ({ ...prev, deviceSeries: seriesValue }));
+        setResults(null);
+    };
 
     const handleInputChange = (e) => {
         const { id, value } = e.target;
         if (['doorHeight', 'aff', 'doorWidth'].includes(id) && value < 0) return;
         setInputs(prev => ({ ...prev, [id]: value }));
-        // Clear results when input changes to encourage recalculation
         if(results) setResults(null);
     };
 
-    const updateSeriesOptions = useCallback((type) => {
-        let options = [];
-        if (type === 'CVR') {
-            options = [
-                { value: 'CVR_8400_MD8600_STD', label: '8400 / MD8600 (Std)' },
-                { value: 'CVR_WD8600_NOTRIM_STD', label: 'WD8600 No Trim (Std)' },
-                { value: 'CVR_WD8600_AUX_STD', label: 'WD8600 w/ Aux (Std)' },
-                { value: 'CVR_SN_8600_STD', label: 'SN-MD/WD8600 (Std)' },
-                { value: 'CVR_SN_AUX_STD', label: 'SN-MD/WD8600 w/ Aux (Std)' },
-                { value: 'CVR_PE8400_PE8600_STD', label: 'PE8400 / PE8600 (Std)' },
-                { value: 'CVR_L_8600_STD', label: 'L-Series 8600 (Std)' },
-                { value: 'CVR_8400_MD8600_5CH', label: '8400 / MD8600 (5CH)' },
-                { value: 'CVR_WD8600_NOTRIM_5CH', label: 'WD8600 No Trim (5CH)' },
-                { value: 'CVR_WD8600_AUX_5CH', label: 'WD8600 w/ Aux (5CH)' },
-                { value: 'CVR_SN_8600_5CH', label: 'SN-MD/WD8600 (5CH)' },
-                { value: 'CVR_SN_AUX_5CH', label: 'SN-MD/WD8600 w/ Aux (5CH)' },
-                { value: 'CVR_PE8400_PE8600_5CH', label: 'PE8400 / PE8600 (5CH)' },
-            ];
-        } else if (type === 'SVR') {
-            options = [
-                { value: 'SVR_2700_3700', label: '2700 / 3700 Series' },
-                { value: 'SVR_8700_9700', label: '8700 / 9700 Series' },
-                { value: 'SVR_PE8700', label: 'PE8700 Premium' },
-            ];
-        } else if (type === '7000') {
-            options = [
-                { value: '7000_STD', label: '7000 Series (Std)' },
-                { value: '7000_WD', label: 'WD7000 No Trim' },
-                { value: '7000_WD_AUX', label: '7000 w/ Aux' },
-            ];
-        }
-        setSeriesOptions(options);
-        setInputs(prev => ({ ...prev, deviceSeries: '' }));
-    }, []);
-
-    useEffect(() => {
-        updateSeriesOptions(inputs.deviceType);
-    }, [inputs.deviceType, updateSeriesOptions]);
-
+    // Calculate Function
     const calculate = () => {
         const dh = parseFloat(inputs.doorHeight);
         const aff = parseFloat(inputs.aff);
@@ -115,6 +231,7 @@ const RodCalculator = ({ onClose }) => {
         const { deviceType, deviceSeries } = inputs;
         
         let tr = 'N/A', br = 'N/A', re = 'N/A', cb = 'N/A';
+        let partInfo = null;
 
         if (deviceType === 'Crossbar') {
             if (isNaN(dw) || dw <= 0) {
@@ -128,7 +245,7 @@ const RodCalculator = ({ onClose }) => {
 
             const P = CONSTANTS[deviceSeries];
             
-            // LOGIC A: CVR, 7000, SVR 2700/3700 (Calculated Extension)
+            // LOGIC A: CVR, 7000, SVR 2700/3700
             if (deviceType === 'CVR' || deviceType === '7000' || deviceSeries === 'SVR_2700_3700') {
                 const rodSpace = dh - aff - P.DH_OFFSET;
                 
@@ -143,9 +260,15 @@ const RodCalculator = ({ onClose }) => {
                     re = 0;
                     tr = rodSpace;
                 }
-                br = aff - P.BR_OFFSET;
+
+                // ** L SERIES SPECIFIC: NO BOTTOM ROD **
+                if (deviceSeries.includes('CVR_L_8600')) {
+                    br = 'N/A';
+                } else {
+                    br = aff - P.BR_OFFSET;
+                }
             } 
-            // LOGIC B: SVR 8700/9700/PE (Fixed Extension)
+            // LOGIC B: SVR 8700/9700/PE
             else if (deviceType === 'SVR') {
                  if ((dh - aff) > P.MAX_ROD) {
                      re = P.RE_FIXED;
@@ -160,31 +283,50 @@ const RodCalculator = ({ onClose }) => {
             tr = roundToRodStandard(tr);
             br = roundToRodStandard(br);
             re = roundToRodStandard(re);
+
+            partInfo = getPartNumber(deviceSeries, dh, aff);
         }
 
-        setResults({ topRodLength: tr, bottomRodLength: br, rodExtension: re, crossbarLength: cb });
+        setResults({ 
+            topRodLength: tr, 
+            bottomRodLength: br, 
+            rodExtension: re, 
+            crossbarLength: cb,
+            partInfo 
+        });
         setMessage('');
         setIsError(false);
+
+        // Auto Scroll to results after short delay for render
+        setTimeout(() => {
+            if (resultsRef.current) {
+                resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }, 100);
     };
 
-    // Calculate Total Top Length helper
-    const getTotalTopLength = () => {
+    const totalTopLength = (() => {
         if (!results || results.topRodLength === 'N/A' || results.rodExtension === 'N/A') return null;
         const ext = parseFloat(results.rodExtension) || 0;
         const top = parseFloat(results.topRodLength) || 0;
         if (ext <= 0) return null;
         return (top + ext).toFixed(3);
-    };
+    })();
 
-    const totalTopLength = getTotalTopLength();
+    // Helper for Enter Key Press
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            calculate();
+        }
+    };
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="calculator-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '650px', maxHeight: '90vh' }}>
+            <div className="calculator-modal" onClick={e => e.stopPropagation()}>
                 <div className="modal-header">
                     <h2 className="modal-title">
                         <Calculator className="modal-title-icon" style={{color: '#3b82f6'}} /> 
-                        Rod Length Calculator (2026)
+                        Rod Length Calculator
                     </h2>
                     <button onClick={onClose} className="close-button" aria-label="Close">
                         <X size={24} />
@@ -192,154 +334,227 @@ const RodCalculator = ({ onClose }) => {
                 </div>
 
                 <div className="modal-body">
-                    <div className="input-group-wrapper">
-                        {/* 1. Device Selection */}
-                        <div className="input-group device-select-group">
-                            <h3 className="group-title">1. Device Configuration</h3>
-                            <div className="form-grid">
-                                <div>
-                                    <label className="input-label" htmlFor="deviceType">Device Type</label>
-                                    <select id="deviceType" className="form-select" value={inputs.deviceType} onChange={handleInputChange}>
-                                        <option value="">-- Select Type --</option>
-                                        <option value="CVR">CVR (Concealed)</option>
-                                        <option value="SVR">SVR (Surface)</option>
-                                        <option value="7000">7000 (Multi-Point)</option>
-                                        <option value="Crossbar">Crossbar Only</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="input-label" htmlFor="deviceSeries">Series Model</label>
-                                    <select id="deviceSeries" className="form-select" value={inputs.deviceSeries} onChange={handleInputChange} disabled={!seriesOptions.length}>
-                                        <option value="">-- Select Series --</option>
-                                        {seriesOptions.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-                                    </select>
-                                </div>
+                    
+                    {/* --- STEP 1: DEVICE TYPE SELECTION --- */}
+                    <div>
+                        <h3 className="group-title">1. Select Device Type</h3>
+                        <div className="device-type-grid">
+                            {DEVICE_TYPES.map(type => (
+                                <button
+                                    key={type.id}
+                                    onClick={() => handleTypeSelect(type.id)}
+                                    className={`device-type-btn ${inputs.deviceType === type.id ? 'active' : ''}`}
+                                >
+                                    <span className="device-label">{type.label}</span>
+                                    <span className="device-detail">{type.detail}</span>
+                                    {inputs.deviceType === type.id && <CheckCircle size={18} className="device-check" />}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* --- STEP 2: MODEL SELECTION (If not Crossbar) --- */}
+                    {inputs.deviceType && inputs.deviceType !== 'Crossbar' && (
+                        <div className="fade-in">
+                            <h3 className="group-title">2. Select Model</h3>
+                            
+                            {/* Search Bar */}
+                            <div className="search-container">
+                                <Search size={20} className="search-icon" />
+                                <input 
+                                    type="text" 
+                                    placeholder="Search model (e.g., 8600, PE, Aux)..." 
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="model-search-input"
+                                />
+                            </div>
+
+                            {/* Options Grid */}
+                            <div className="model-list custom-scroll">
+                                {filteredSeries.length > 0 ? (
+                                    filteredSeries.map(opt => (
+                                        <button
+                                            key={opt.value}
+                                            onClick={() => handleSeriesSelect(opt.value)}
+                                            className={`model-btn ${inputs.deviceSeries === opt.value ? 'active' : ''}`}
+                                        >
+                                            {opt.label}
+                                        </button>
+                                    ))
+                                ) : (
+                                    <div className="no-models">
+                                        No models found matching "{searchTerm}"
+                                    </div>
+                                )}
                             </div>
                         </div>
+                    )}
 
-                        {/* 2. Measurements */}
-                        <div className="input-group measurement-input-group">
-                            <h3 className="group-title">2. Measurements</h3>
+                    {/* --- STEP 3: MEASUREMENTS --- */}
+                    {((inputs.deviceType === 'Crossbar') || (inputs.deviceType && inputs.deviceSeries)) && (
+                        <div className="fade-in">
+                            <h3 className="group-title">
+                                {inputs.deviceType === 'Crossbar' ? '2. Measurements' : '3. Measurements'}
+                            </h3>
                             <div className="form-grid">
                                 {inputs.deviceType !== 'Crossbar' ? (
                                     <>
                                         <div>
                                             <label className="input-label" htmlFor="doorHeight">Door Height (Inches)</label>
-                                            <input type="number" id="doorHeight" className="form-input" placeholder="e.g. 84" value={inputs.doorHeight} onChange={handleInputChange} />
+                                            <input 
+                                                type="number" 
+                                                id="doorHeight" 
+                                                className="form-input" 
+                                                placeholder="e.g. 84" 
+                                                value={inputs.doorHeight} 
+                                                onChange={handleInputChange} 
+                                                onKeyDown={handleKeyDown}
+                                                autoFocus 
+                                            />
                                         </div>
                                         <div>
                                             <label className="input-label" htmlFor="aff">AFF (Handle Height)</label>
-                                            <input type="number" id="aff" className="form-input" placeholder="e.g. 41" value={inputs.aff} onChange={handleInputChange} />
+                                            <input 
+                                                type="number" 
+                                                id="aff" 
+                                                className="form-input" 
+                                                placeholder="e.g. 41" 
+                                                value={inputs.aff} 
+                                                onChange={handleInputChange} 
+                                                onKeyDown={handleKeyDown}
+                                            />
                                         </div>
                                     </>
                                 ) : (
                                     <div style={{ gridColumn: '1 / -1' }}>
                                         <label className="input-label" htmlFor="doorWidth">Door Width (Inches)</label>
-                                        <input type="number" id="doorWidth" className="form-input" placeholder="e.g. 36" value={inputs.doorWidth} onChange={handleInputChange} />
+                                        <input 
+                                            type="number" 
+                                            id="doorWidth" 
+                                            className="form-input" 
+                                            placeholder="e.g. 36" 
+                                            value={inputs.doorWidth} 
+                                            onChange={handleInputChange} 
+                                            onKeyDown={handleKeyDown}
+                                            autoFocus 
+                                        />
                                     </div>
                                 )}
                             </div>
-                        </div>
-                    </div>
 
-                    <button onClick={calculate} className="calculate-button" style={{ marginBottom: '1.5rem' }}>
-                        Calculate Lengths <ArrowRight size={20} style={{ display: 'inline', marginLeft: '8px' }}/>
-                    </button>
+                            <button onClick={calculate} className="calculate-button">
+                                Calculate Results <ArrowRight size={20} style={{ display: 'inline', marginLeft: '8px' }}/>
+                            </button>
+                        </div>
+                    )}
                     
                     {/* --- ERROR MESSAGE --- */}
                     {isError && message && (
-                        <div className="message-box error fade-in" style={{ padding: '1rem', background: 'rgba(239, 68, 68, 0.1)', color: '#fca5a5', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <div className="message-box error fade-in">
                             <AlertTriangle size={20} />
                             <span>{message}</span>
                         </div>
                     )}
 
-                    {/* --- RESULTS DISPLAY (INLINE) --- */}
+                    {/* --- RESULTS DISPLAY --- */}
                     {results && !isError && (
-                        <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <div className="results-container fade-in" ref={resultsRef}>
                             
+                            {/* --- PART NUMBER SECTION --- */}
+                            {results.partInfo && (
+                                <div className="csr-result-card part-info-card">
+                                    <div className="csr-card-header-left">
+                                        <Tag size={20} color="#6366f1" />
+                                        <h3 className="csr-name" style={{color: '#818cf8'}}>Ordering Part Numbers</h3>
+                                    </div>
+                                    
+                                    <div className={`parts-grid ${results.partInfo.bottomRod !== 'N/A' ? 'two-col' : 'one-col'}`}>
+                                        <div className="part-box">
+                                            <span className="part-label">Top Rod Part #</span>
+                                            <p className="part-number">{results.partInfo.topRod}</p>
+                                        </div>
+
+                                        {results.partInfo.bottomRod !== 'N/A' && (
+                                            <div className="part-box">
+                                                <span className="part-label">Bottom Rod Part #</span>
+                                                <p className="part-number">{results.partInfo.bottomRod}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    {results.partInfo.notes.length > 0 && (
+                                        <div className="part-notes">
+                                            <div className="note-header">
+                                                <Info size={16} color="#f59e0b"/>
+                                                <span>ADDITIONAL PARTS REQUIRED</span>
+                                            </div>
+                                            {results.partInfo.notes.map((note, idx) => (
+                                                <p key={idx} className="note-text">{note}</p>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {/* TOP ASSEMBLY BLOCK */}
                             {results.crossbarLength === 'N/A' && (
-                                <div className="csr-result-card" style={{ 
-                                    background: '#1e293b', 
-                                    borderLeft: '5px solid #3b82f6',
-                                    padding: '0' // Remove default padding to control inner layout
-                                }}>
-                                    <div style={{ padding: '1rem 1.5rem', background: 'rgba(59, 130, 246, 0.1)', borderBottom: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                                <div className="csr-result-card top-rod-card">
+                                    <div className="assembly-header top">
                                         <div className="csr-card-header-left">
                                             <ArrowUp size={24} color="#3b82f6" />
-                                            <h3 className="csr-name" style={{fontSize: '1.1rem'}}>Top Rod Assembly</h3>
+                                            <h3 className="csr-name">Top Rod Assembly</h3>
                                         </div>
                                     </div>
                                     
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
-                                        {/* Top Rod */}
-                                        <div style={{ padding: '1.5rem', textAlign: 'center', background: '#1e293b' }}>
-                                            <p style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Top Rod Length</p>
-                                            <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#fff', margin: '0.5rem 0' }}>{results.topRodLength}"</p>
-                                            <p style={{ fontSize: '0.75rem', color: '#64748b' }}>Standard</p>
+                                    <div className="assembly-grid">
+                                        <div className="assembly-item">
+                                            <p className="assembly-label">Top Rod Length</p>
+                                            <p className="assembly-value">{results.topRodLength}"</p>
                                         </div>
-                                        {/* Extension */}
-                                        <div style={{ padding: '1.5rem', textAlign: 'center', background: '#1e293b' }}>
-                                            <p style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Extension</p>
-                                            <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#60a5fa', margin: '0.5rem 0' }}>
+                                        <div className="assembly-item">
+                                            <p className="assembly-label">Extension</p>
+                                            <p className="assembly-value accent">
                                                 {parseFloat(results.rodExtension) > 0 ? results.rodExtension + '"' : 'None'}
-                                            </p>
-                                            <p style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                                                {parseFloat(results.rodExtension) > 0 ? 'Required' : 'Not needed'}
                                             </p>
                                         </div>
                                     </div>
 
-                                    {/* Total Length Sum - Only visible if Extension exists */}
                                     {totalTopLength && (
-                                        <div style={{ 
-                                            background: 'rgba(59, 130, 246, 0.15)', 
-                                            padding: '1rem', 
-                                            borderTop: '1px solid rgba(59, 130, 246, 0.2)',
-                                            textAlign: 'center',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            gap: '10px'
-                                        }}>
+                                        <div className="total-length-box">
                                             <Plus size={20} color="#60a5fa" />
-                                            <div style={{ textAlign: 'left' }}>
-                                                <span style={{ color: '#93c5fd', fontSize: '0.9rem', fontWeight: '600', display: 'block' }}>TOTAL TOP LENGTH</span>
-                                                <span style={{ color: '#fff', fontSize: '1.25rem', fontWeight: 'bold' }}>{totalTopLength}"</span>
+                                            <div>
+                                                <span className="total-label">TOTAL TOP LENGTH</span>
+                                                <span className="total-value">{totalTopLength}"</span>
                                             </div>
                                         </div>
                                     )}
                                 </div>
                             )}
 
-                            {/* BOTTOM ASSEMBLY BLOCK */}
-                            {results.crossbarLength === 'N/A' && (
-                                <div className="csr-result-card" style={{ 
-                                    background: '#1e293b', 
-                                    borderLeft: '5px solid #10b981',
-                                    padding: '0'
-                                }}>
-                                    <div style={{ padding: '1rem 1.5rem', background: 'rgba(16, 185, 129, 0.1)', borderBottom: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                            {/* BOTTOM ASSEMBLY BLOCK - Hidden for L-Series */}
+                            {results.crossbarLength === 'N/A' && results.bottomRodLength !== 'N/A' && (
+                                <div className="csr-result-card bottom-rod-card">
+                                    <div className="assembly-header bottom">
                                         <div className="csr-card-header-left">
                                             <ArrowDown size={24} color="#10b981" />
-                                            <h3 className="csr-name" style={{fontSize: '1.1rem'}}>Bottom Rod Assembly</h3>
+                                            <h3 className="csr-name">Bottom Rod Assembly</h3>
                                         </div>
                                     </div>
-                                    <div style={{ padding: '1.5rem', textAlign: 'center' }}>
-                                        <p style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Bottom Rod Length</p>
-                                        <p style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#fff', margin: '0.5rem 0' }}>{results.bottomRodLength}"</p>
+                                    <div className="assembly-item single">
+                                        <p className="assembly-label">Bottom Rod Length</p>
+                                        <p className="assembly-value">{results.bottomRodLength}"</p>
                                     </div>
                                 </div>
                             )}
 
                             {/* CROSSBAR BLOCK */}
                             {results.crossbarLength !== 'N/A' && (
-                                <div className="csr-result-card" style={{ background: '#1e293b', borderLeft: '5px solid #f59e0b', padding: '1.5rem', textAlign: 'center' }}>
+                                <div className="csr-result-card crossbar-card">
                                     <Disc size={32} color="#f59e0b" style={{ margin: '0 auto 1rem auto' }} />
-                                    <p style={{ fontSize: '0.8rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: '600' }}>Crossbar Length</p>
-                                    <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#fff', margin: '0.5rem 0' }}>{results.crossbarLength}"</p>
-                                    <p style={{ fontSize: '0.8rem', color: '#64748b' }}>For {inputs.doorWidth}" Door</p>
+                                    <p className="assembly-label">Crossbar Length</p>
+                                    <p className="assembly-value">{results.crossbarLength}"</p>
+                                    <p className="detail-text">For {inputs.doorWidth}" Door</p>
                                 </div>
                             )}
 
