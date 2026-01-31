@@ -1,20 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { X, RotateCcw, CheckCircle, AlertTriangle, Lock, Video } from 'lucide-react';
+import { 
+    X, RotateCcw, CheckCircle, AlertTriangle, Lock, 
+    Video, LogOut, Key, DoorOpen 
+} from 'lucide-react';
 import handingDiagram from './assets/handing.png';
+import './HandingTool.css';
 
-// --- DATA: HANDING LOGIC DEFINITIONS ---
-const DEVICE_CATEGORIES = [
-    { id: 'exit', label: 'Exit Devices' },
-    { id: 'mortise', label: 'Mortise Locks' },
-    { id: 'bored', label: 'Bored Locks' }
-];
-
-// Explicit Model Lists based on your specific rules
-// 80 Series Handed: 83, 84, 86, 87, 89 (Applies to PE prefixes too)
-// 80 Series Reversible: 85, 88
-// 30 & 20 Series: Reversible
+// --- DATA: EXIT DEVICE MODELS ---
 const EXIT_DEVICE_MODELS = [
-    // --- 80 Series & PE80 Series ---
     { value: '8300', label: '8300 Series (Mortise)', type: 'HANDED' },
     { value: 'PE8300', label: 'PE8300 Series (Mortise)', type: 'HANDED' },
     { value: '8400', label: '8400 Series (CVR)', type: 'HANDED' },
@@ -29,12 +22,8 @@ const EXIT_DEVICE_MODELS = [
     { value: 'PE8800', label: 'PE8800 Series (Rim)', type: 'REVERSIBLE' },
     { value: '8900', label: '8900 Series (Mortise)', type: 'HANDED' },
     { value: 'PE8900', label: 'PE8900 Series (Mortise)', type: 'HANDED' },
-    
-    // --- 30 Series (Reversible) ---
     { value: '3828', label: '3828 Series', type: 'REVERSIBLE' },
     { value: '3727', label: '3727 Series', type: 'REVERSIBLE' },
-
-    // --- 20 Series (Reversible) ---
     { value: '2828', label: '2828 Series', type: 'REVERSIBLE' },
     { value: '2727', label: '2727 Series', type: 'REVERSIBLE' }
 ];
@@ -43,86 +32,58 @@ const HandingTool = ({ onClose }) => {
     const [category, setCategory] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
 
-    // --- LOGIC: DETERMINE RESULT ---
+    // --- LOGIC: DETERMINE HANDING STATUS ---
     const result = useMemo(() => {
         if (!category) return null;
 
-        // Rule: All Mortise and Bored locks are reversible
         if (category === 'mortise' || category === 'bored') {
             return {
                 status: 'REVERSIBLE',
                 title: 'Field Reversible',
-                description: 'This lock can be easily changed in the field to fit Left or Right Hand doors without disassembling the chassis.',
+                description: 'This product is designed for flexibility. You can easily change the handing in the field without disassembling the main chassis.',
                 color: 'success'
             };
         }
 
-        // Rule: Exit Devices depend on the specific model
         if (category === 'exit') {
-            if (!selectedModel) return null; // Waiting for model selection
-
+            if (!selectedModel) return null;
             const modelData = EXIT_DEVICE_MODELS.find(m => m.value === selectedModel);
-            
             if (modelData?.type === 'HANDED') {
                 return {
                     status: 'HANDED',
-                    title: 'Handed (Specify Order)',
-                    description: 'This device is NOT reversible. You must specify LHR (Left Hand Reverse) or RHR (Right Hand Reverse) when ordering.',
+                    title: 'Handed (Specify on Order)',
+                    description: 'This model is NOT field reversible. You must specify LHR (Left Hand Reverse) or RHR (Right Hand Reverse) when placing your order.',
                     color: 'warning'
                 };
-            } else {
-                return {
-                    status: 'REVERSIBLE',
-                    title: 'Field Reversible',
-                    description: 'This exit device can be re-handed in the field to suit your application.',
-                    color: 'success'
-                };
             }
-        }
-        return null;
-    }, [category, selectedModel]);
-
-    // --- LOGIC: GET VIDEO TUTORIAL ---
-    const videoData = useMemo(() => {
-        if (category === 'mortise') {
             return {
-                url: "https://www.youtube.com/embed/3alaDlEST1k?si=W0vN8-F0tiTBgK_o",
-                title: "How to Rehand Mortise Lock"
+                status: 'REVERSIBLE',
+                title: 'Field Reversible',
+                description: 'Standard rim devices are reversible. This unit can be re-handed in the field to suit your specific door application.',
+                color: 'success'
             };
         }
-        
-        if (category === 'exit' && selectedModel) {
-            // Check for PE80 Series (Starts with PE8)
-            if (selectedModel.startsWith('PE8')) {
-                return {
-                    url: "https://www.youtube.com/embed/Mm9RR3Q3SCI?si=4tPXU4Qj2uE8BGYK",
-                    title: "Rehanding PE80 Series Outside Trim"
-                };
-            }
-            // Check for 80 Series (Starts with 8)
-            if (selectedModel.startsWith('8')) {
-                return {
-                    url: "https://www.youtube.com/embed/x8Eq1moV97Y?si=TizDZdPoUYW7ad8d",
-                    title: "Rehanding 80 Series Outside Trim"
-                };
-            }
-        }
         return null;
     }, [category, selectedModel]);
 
-    // Reset model if category changes
-    const handleCategoryChange = (e) => {
-        setCategory(e.target.value);
-        setSelectedModel('');
-    };
+    // --- LOGIC: GET RELEVANT VIDEO ---
+    const videoData = useMemo(() => {
+        if (category === 'mortise') return { url: "https://www.youtube.com/embed/3alaDlEST1k", title: "Mortise Rehanding Guide" };
+        if (category === 'exit' && selectedModel) {
+            if (selectedModel.startsWith('PE8')) return { url: "https://www.youtube.com/embed/Mm9RR3Q3SCI", title: "PE80 Trim Rehanding" };
+            if (selectedModel.startsWith('8')) return { url: "https://www.youtube.com/embed/x8Eq1moV97Y", title: "80 Series Trim Rehanding" };
+        }
+        return null;
+    }, [category, selectedModel]);
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="calculator-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+            <div className="calculator-modal handing-modal" onClick={e => e.stopPropagation()}>
+                
                 <div className="modal-header">
                     <h2 className="modal-title">
-                        <RotateCcw className="modal-title-icon" />
-                        Handing Determinator
+                        <RotateCcw className="modal-title-icon" style={{color: '#3b82f6'}} /> 
+                        Handing Specialist Tool
                     </h2>
                     <button onClick={onClose} className="close-button" aria-label="Close">
                         <X size={24} />
@@ -130,112 +91,119 @@ const HandingTool = ({ onClose }) => {
                 </div>
 
                 <div className="modal-body">
-                    {/* --- INPUT SECTION --- */}
-                    <div className="input-group-wrapper" style={{ marginBottom: '1.5rem' }}>
-                        <div className="input-group">
-                            <label className="input-label" htmlFor="category-select">1. Select Product Category</label>
-                            <select 
-                                id="category-select" 
-                                className="form-select" 
-                                value={category} 
-                                onChange={handleCategoryChange}
+                    
+                    {/* STEP 1: CATEGORY SELECTION */}
+                    <div>
+                        <h3 className="group-title">1. Select Product Category</h3>
+                        <div className="device-type-grid">
+                            <button 
+                                className={`device-type-btn ${category === 'exit' ? 'active' : ''}`} 
+                                onClick={() => { setCategory('exit'); setSelectedModel(''); }}
                             >
-                                <option value="">-- Choose Category --</option>
-                                {DEVICE_CATEGORIES.map(cat => (
-                                    <option key={cat.id} value={cat.id}>{cat.label}</option>
-                                ))}
-                            </select>
-                        </div>
+                                <LogOut size={28} />
+                                <span className="device-label">Exit Device</span>
+                                <span className="device-detail">80/90/20/30 Series</span>
+                                {category === 'exit' && <CheckCircle size={18} className="device-check" />}
+                            </button>
+                            
+                            <button 
+                                className={`device-type-btn ${category === 'mortise' ? 'active' : ''}`} 
+                                onClick={() => { setCategory('mortise'); setSelectedModel(''); }}
+                            >
+                                <Key size={28} />
+                                <span className="device-label">Mortise Lock</span>
+                                <span className="device-detail">8200 / R8200 Series</span>
+                                {category === 'mortise' && <CheckCircle size={18} className="device-check" />}
+                            </button>
 
-                        {/* Show Model Select ONLY for Exit Devices */}
-                        {category === 'exit' && (
-                            <div className="input-group fade-in">
-                                <label className="input-label" htmlFor="model-select">2. Select Device Series</label>
+                            <button 
+                                className={`device-type-btn ${category === 'bored' ? 'active' : ''}`} 
+                                onClick={() => { setCategory('bored'); setSelectedModel(''); }}
+                            >
+                                <DoorOpen size={28} />
+                                <span className="device-label">Bored Lock</span>
+                                <span className="device-detail">10-Line / 11-Line</span>
+                                {category === 'bored' && <CheckCircle size={18} className="device-check" />}
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* STEP 2: MODEL SELECTION (Conditional) */}
+                    {category === 'exit' && (
+                        <div className="fade-in">
+                            <h3 className="group-title">2. Select Device Series</h3>
+                            <div className="search-container" style={{marginBottom: '0'}}>
                                 <select 
-                                    id="model-select" 
-                                    className="form-select" 
+                                    className="model-search-input" 
+                                    style={{paddingLeft: '1rem', appearance: 'auto', cursor: 'pointer'}}
                                     value={selectedModel} 
                                     onChange={(e) => setSelectedModel(e.target.value)}
                                 >
-                                    <option value="">-- Choose Series --</option>
-                                    {EXIT_DEVICE_MODELS.map(model => (
-                                        <option key={model.value} value={model.value}>{model.label}</option>
-                                    ))}
+                                    <option value="">-- Click to choose series --</option>
+                                    {EXIT_DEVICE_MODELS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
                                 </select>
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
 
-                    {/* --- RESULT SECTION --- */}
+                    {/* RESULTS DISPLAY */}
                     {result && (
-                        <div className={`csr-result-card fade-in`} style={{ 
-                            borderLeft: `5px solid ${result.color === 'success' ? '#10b981' : '#f59e0b'}`,
-                            background: result.color === 'success' ? 'rgba(16, 185, 129, 0.05)' : 'rgba(245, 158, 11, 0.05)',
-                            marginBottom: '2rem'
-                        }}>
-                            <div className="csr-card-top-row" style={{ marginBottom: '0.5rem' }}>
+                        <div className="results-container fade-in" style={{paddingTop: '0', border: 'none'}}>
+                            <div className={`csr-result-card ${result.color === 'success' ? 'top-rod-card' : 'crossbar-card'}`} 
+                                 style={{ borderLeftWidth: '5px', padding: '1.5rem' }}>
                                 <div className="csr-card-header-left">
-                                    {result.color === 'success' ? (
-                                        <CheckCircle size={32} color="#10b981" />
-                                    ) : (
-                                        <AlertTriangle size={32} color="#f59e0b" />
-                                    )}
+                                    {result.color === 'success' ? 
+                                        <CheckCircle size={32} color="#10b981"/> : 
+                                        <AlertTriangle size={32} color="#f59e0b"/>
+                                    }
                                     <div>
-                                        <h3 className="csr-name" style={{ fontSize: '1.5rem' }}>{result.title}</h3>
-                                        <p className="csr-region-label" style={{ marginTop: '0.25rem' }}>Status</p>
+                                        <h3 className="csr-name" style={{fontSize: '1.25rem'}}>{result.title}</h3>
+                                        <p className="detail-text" style={{color: '#94a3b8', marginTop: '4px'}}>{result.description}</p>
                                     </div>
                                 </div>
                             </div>
-                            <p className="csr-region-text" style={{ fontSize: '1rem' }}>
-                                {result.description}
+                        </div>
+                    )}
+
+                    {/* VIDEO & DIAGRAM SECTION */}
+                    <div className="parts-grid two-col fade-in">
+                        {/* Visual Reference Diagram */}
+                        <div className="part-info-card" style={{background: '#1a1a1a', border: '1px solid #333'}}>
+                            <div className="note-header" style={{color: '#3b82f6'}}>
+                                <Lock size={18} />
+                                <span>VISUAL REFERENCE</span>
+                            </div>
+                            <div style={{background: '#fff', borderRadius: '4px', padding: '10px', marginTop: '10px'}}>
+                                <img src={handingDiagram} alt="Handing Diagram" style={{width: '100%', height: 'auto', display: 'block'}} />
+                            </div>
+                            <p className="detail-text" style={{textAlign: 'center', marginTop: '8px'}}>
+                                Always view door from the <strong>Secure Side (Outside)</strong>.
                             </p>
                         </div>
-                    )}
 
-                    {/* --- VIDEO TUTORIAL SECTION --- */}
-                    {videoData && (
-                        <div className="fade-in" style={{ marginBottom: '2rem' }}>
-                            <h4 className="group-title" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <Video size={16} /> {videoData.title}
-                            </h4>
-                            <div style={{ 
-                                position: 'relative', 
-                                paddingBottom: '56.25%', /* 16:9 Aspect Ratio */
-                                height: 0, 
-                                overflow: 'hidden', 
-                                borderRadius: '8px',
-                                border: '1px solid #333'
-                            }}>
-                                <iframe 
-                                    width="100%" 
-                                    height="100%" 
-                                    src={videoData.url} 
-                                    title="YouTube video player" 
-                                    frameBorder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                    referrerPolicy="strict-origin-when-cross-origin" 
-                                    allowFullScreen
-                                    style={{ position: 'absolute', top: 0, left: 0 }}
-                                ></iframe>
+                        {/* Video Tutorial (If available) */}
+                        {videoData ? (
+                            <div className="part-info-card" style={{background: '#1a1a1a', border: '1px solid #333'}}>
+                                <div className="note-header" style={{color: '#f59e0b'}}>
+                                    <Video size={18} />
+                                    <span>{videoData.title}</span>
+                                </div>
+                                <div style={{marginTop: '10px', borderRadius: '4px', overflow: 'hidden', aspectRatio: '16/9'}}>
+                                    <iframe 
+                                        src={videoData.url} 
+                                        title="Tutorial" 
+                                        allowFullScreen 
+                                        frameBorder="0"
+                                        style={{width: '100%', height: '100%'}}
+                                    ></iframe>
+                                </div>
                             </div>
-                        </div>
-                    )}
-
-                    {/* --- VISUAL REFERENCE --- */}
-                    <div style={{ marginTop: '1rem', borderTop: '1px solid #333', paddingTop: '1.5rem' }}>
-                        <h4 className="group-title" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <Lock size={16} /> Reference Diagram
-                        </h4>
-                        <div style={{ background: '#fff', borderRadius: '8px', padding: '1rem', textAlign: 'center' }}>
-                            <img 
-                                src={handingDiagram} 
-                                alt="Door Handing Diagram" 
-                                style={{ maxWidth: '100%', height: 'auto', borderRadius: '4px' }} 
-                            />
-                        </div>
-                        <p className="note-text" style={{ marginTop: '1rem' }}>
-                            Always view the door from the <strong>Outside (Secure Side)</strong> when determining handing for keyed locks.
-                        </p>
+                        ) : (
+                            <div className="part-info-card" style={{background: '#1a1a1a', border: '1px solid #333', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', opacity: 0.6}}>
+                                <Video size={32} style={{marginBottom: '10px'}} />
+                                <p className="detail-text">Select a specific handed model to view re-handing tutorials.</p>
+                            </div>
+                        )}
                     </div>
 
                 </div>

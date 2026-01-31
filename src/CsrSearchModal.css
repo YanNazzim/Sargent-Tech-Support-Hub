@@ -1,0 +1,354 @@
+/* src/CsrSearchModal.css */
+
+/* --- 1. BRAND COLORS & VARIABLES --- */
+:root {
+  --brand-sargent: #2563eb;       /* Bright Blue */
+  --brand-corbin: #ef4444;        /* Red */
+  --brand-accentra: #a855f7;      /* Purple */
+  --brand-norton: #10b981;        /* Emerald Green */
+  --brand-all: #64748b;           /* Slate */
+  --bg-dark: #121212;
+  --bg-card: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+}
+
+/* --- 2. MODAL LAYOUT --- */
+.csr-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.csr-modal-content {
+  background: var(--bg-dark);
+  border: 1px solid #333;
+  width: 100%;
+  max-width: 800px;
+  height: 85vh;
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.csr-header {
+  padding: 1.5rem;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.csr-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.csr-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.csr-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.csr-close-btn:hover {
+  background: #333;
+  color: white;
+}
+
+/* --- 3. FILTER & SEARCH SECTION --- */
+.csr-controls {
+  padding: 1.5rem;
+  border-bottom: 1px solid #333;
+  background: #161616;
+}
+
+/* Brand Chips */
+.brand-chips-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.brand-chip {
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 99px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brand-chip:hover {
+  background: #3f3f46;
+  color: white;
+}
+
+/* Brand Active States */
+.brand-chip.active { 
+  color: white; 
+  border-color: transparent; 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+  transform: translateY(-1px); 
+}
+.brand-chip.active.all { background: var(--brand-all); }
+.brand-chip.active.sargent { background: var(--brand-sargent); }
+.brand-chip.active.corbin-russwin { background: var(--brand-corbin); }
+.brand-chip.active.accentra { background: var(--brand-accentra); }
+.brand-chip.active.norton-rixson { background: var(--brand-norton); }
+
+/* Search Input */
+.csr-search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.csr-search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.csr-search-input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 0.75rem;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.csr-search-input:focus {
+  outline: none;
+  border-color: var(--brand-sargent);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* --- 4. RESULTS LIST --- */
+.csr-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  background: #0A0A0A;
+}
+
+.csr-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Result Card */
+.csr-card {
+  background: var(--bg-card);
+  border: 1px solid #333;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.csr-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+/* Dynamic Left Border based on Brand */
+.csr-card[data-brand="Sargent"] { border-left: 4px solid var(--brand-sargent); }
+.csr-card[data-brand="Corbin Russwin"] { border-left: 4px solid var(--brand-corbin); }
+.csr-card[data-brand="ACCENTRA"] { border-left: 4px solid var(--brand-accentra); }
+.csr-card[data-brand="Norton Rixson"] { border-left: 4px solid var(--brand-norton); }
+
+/* Card Header */
+.csr-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.csr-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.csr-avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  font-size: 1.25rem;
+}
+
+/* Avatar Colors */
+.csr-card[data-brand="Sargent"] .csr-avatar { background: var(--brand-sargent); }
+.csr-card[data-brand="Corbin Russwin"] .csr-avatar { background: var(--brand-corbin); }
+.csr-card[data-brand="ACCENTRA"] .csr-avatar { background: var(--brand-accentra); }
+.csr-card[data-brand="Norton Rixson"] .csr-avatar { background: var(--brand-norton); }
+
+.csr-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Top-Right Brand Badge */
+.csr-brand-badge.top-right {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  color: white;
+  z-index: 10;
+}
+
+.csr-card[data-brand="Sargent"] .csr-brand-badge.top-right { background: var(--brand-sargent); }
+.csr-card[data-brand="Corbin Russwin"] .csr-brand-badge.top-right { background: var(--brand-corbin); }
+.csr-card[data-brand="ACCENTRA"] .csr-brand-badge.top-right { background: var(--brand-accentra); }
+.csr-card[data-brand="Norton Rixson"] .csr-brand-badge.top-right { background: var(--brand-norton); }
+
+/* Territory Codes under Name */
+.csr-territory-codes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.territory-code-tag {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Territory States Section */
+.csr-territory {
+  background: rgba(0,0,0,0.2);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.csr-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.csr-text {
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  line-height: 1.5;
+}
+
+/* Contact Grid */
+.csr-contacts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.contact-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.contact-btn.phone {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.contact-btn.phone:hover { background: rgba(16, 185, 129, 0.2); }
+
+.contact-btn.email {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+.contact-btn.email:hover { background: rgba(59, 130, 246, 0.2); }
+
+/* --- 5. HIGHLIGHTING --- */
+.highlight-match {
+  background-color: rgba(250, 204, 21, 0.25); /* Yellow Tint */
+  color: #fde047; /* Bright Yellow Text */
+  font-weight: 800;
+  padding: 0 2px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(253, 224, 71, 0.3);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 640px) {
+  .csr-contacts { grid-template-columns: 1fr; }
+  .csr-header { padding: 1rem; }
+  .csr-controls { padding: 1rem; }
+  .csr-brand-badge.top-right {
+    position: static;
+    margin-top: 0.5rem;
+    display: inline-block;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

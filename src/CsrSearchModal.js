@@ -1,12 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { MapPin, Search, User, Phone, Mail, X, Hash, Check, Info } from 'lucide-react'; 
+import { MapPin, Search, Phone, Mail, X, Check, Info } from 'lucide-react'; 
+import './CsrSearchModal.css'; 
 
-// --- HELPER: HIGHLIGHTED TEXT ---
+// --- HELPER: HIGHLIGHT COMPONENT ---
 const HighlightedText = ({ text, highlightKeywords }) => {
     if (!text) return null;
-    if (!highlightKeywords || highlightKeywords.length === 0) {
-        return <span>{text}</span>;
-    }
+    if (!highlightKeywords || highlightKeywords.length === 0) return <span>{text}</span>;
 
     const validKeywords = highlightKeywords.filter(k => k && k.trim().length > 0);
     if (validKeywords.length === 0) return <span>{text}</span>;
@@ -31,7 +30,7 @@ const HighlightedText = ({ text, highlightKeywords }) => {
     );
 };
 
-// --- DATA: STATE DEFINITIONS ---
+// --- DATA CONSTANTS ---
 const STATE_TO_FULL = {
     "AL": "ALABAMA", "AK": "ALASKA", "AZ": "ARIZONA", "AR": "ARKANSAS", "CA": "CALIFORNIA",
     "CO": "COLORADO", "CT": "CONNECTICUT", "DE": "DELAWARE", "DC": "DISTRICT OF COLUMBIA",
@@ -46,7 +45,6 @@ const STATE_TO_FULL = {
     "WA": "WASHINGTON", "WV": "WEST VIRGINIA", "WI": "WISCONSIN", "WY": "WYOMING"
 };
 
-// --- DATA: TERRITORY MAP ---
 const TERRITORY_DEFINITIONS = {
     "A01": ["CT", "MA", "ME", "NH", "RI", "VT"],
     "A02": ["Upstate NY"],
@@ -67,7 +65,6 @@ const TERRITORY_DEFINITIONS = {
     "A39": ["South CA", "South NV", "HI"],
     "A43": ["CO", "UT", "WY", "MT"],
     "A44": ["WA", "OR", "ID", "AK", "North ID"],
-    // Distributors / Specifics
     "Canada": ["Canada"], "Intl": ["International"], "Arrow": ["Arrow"],
     "Grainger": ["Grainger"], "Himmels": ["Himmels"], "Banner": ["Banner"],
     "SecLock": ["SecLock"], "Mayflower": ["Mayflower"], "IDN": ["IDN"],
@@ -76,9 +73,7 @@ const TERRITORY_DEFINITIONS = {
     "Dugmore": ["Dugmore"], "Norwood": ["Norwood"], "Cleveland": ["Cleveland Vicon"]
 };
 
-// --- DATA: CSR LIST ---
 const RAW_CSR_DATA = [
-    // --- SARGENT ---
     { name: "Miriam Redgate", phone: "(203) 498-5595", email: "miriam.redgate@assaabloy.com", brand: "Sargent", codes: ["A01", "A07", "HI"] },
     { name: "Anne Dempster", phone: "(203) 498-5840", email: "anne.dempster@assaabloy.com", brand: "Sargent", codes: ["A02", "A03", "A08", "Arrow"] },
     { name: "Alyssa Carey", phone: "(203) 498-5531", email: "alyssa.carey@assaabloy.com", brand: "Sargent", codes: ["A21", "A22", "A43", "Grainger", "Cleveland"] },
@@ -88,20 +83,17 @@ const RAW_CSR_DATA = [
     { name: "Maritza Yugchaoquendo", phone: "(203) 498-5699", email: "maritza.yugchaoquendo@assaabloy.com", brand: "Sargent", codes: ["A44", "Canada", "Intl"] },
     { name: "Patricia Hansen", phone: "(203) 498-5596", email: "patricia.hansen@assaabloy.com", brand: "Sargent", codes: ["Intermountain", "Clark", "Anixter", "ADI", "IDN", "JLM"] },
     { name: "Jennifer Leslie", phone: "(203) 498-5698", email: "jennifer.leslie@assaabloy.com", brand: "Sargent", codes: ["Akron", "Banner", "SecLock", "Norwood", "Dugmore"] },
-    // --- CORBIN RUSSWIN ---
     { name: "Amber States", phone: "704-226-6185", email: "amber.states@assaabloy.com", brand: "Corbin Russwin", codes: ["A13", "A21", "A31", "A32", "A43", "A44"] },
     { name: "AnnMarie Jones", phone: "860-828-7265", email: "annmarie.jones@assaabloy.com", brand: "Corbin Russwin", codes: ["A07", "A16", "A28", "A38", "A39"] },
     { name: "Delilah Whitley", phone: "704-226-6168", email: "delilah.whitley@assaabloy.com", brand: "Corbin Russwin", codes: ["A15", "A27", "A37", "Himmels"] },
     { name: "Noel McNeil", phone: "704-226-6123", email: "noel.mcneil@assaabloy.com", brand: "Corbin Russwin", codes: ["A02", "A03", "A08"] },
     { name: "Scott Sullivan", phone: "860-828-7270", email: "scott.sullivan1@assaabloy.com", brand: "Corbin Russwin", codes: ["A01", "A22", "Banner", "SecLock"] },
-    // --- ACCENTRA ---
     { name: "Debra D'Arienzo", phone: "855-557-5078 x7218", email: "debra.darienzo@assaabloy.com", brand: "ACCENTRA", codes: ["A13", "A38", "A39", "A44"] },
     { name: "Shanice Ivey", phone: "855-557-5078 x6198", email: "shanice.ivey@assaabloy.com", brand: "ACCENTRA", codes: ["A07", "A08"] },
     { name: "Dedee McClary", phone: "855-557-5078 x6170", email: "dedee.mcclary@assaabloy.com", brand: "ACCENTRA", codes: ["A15", "A16", "A28"] },
     { name: "Laura Moore", phone: "855-557-5078 x6255", email: "laura.moore@assaabloy.com", brand: "ACCENTRA", codes: ["A01", "A22", "A43", "Banner", "SecLock"] },
     { name: "Mary Tarlton", phone: "855-557-5078 x6177", email: "mary.tarlton@assaabloy.com", brand: "ACCENTRA", codes: ["A02", "A03", "A27", "Mayflower", "Himmels"] },
     { name: "Dawn Reynolds", phone: "855-557-5078 7327", email: "dawn.reynolds@assaabloy.com", brand: "ACCENTRA", codes: ["A21", "A31", "A32", "A37"] },
-    // --- NORTON RIXSON ---
     { name: "Casie Luther", phone: "(877) 974-2255", email: "casie.luther@assaabloy.com", brand: "Norton Rixson", codes: ["A01", "A21", "A37", "A38", "A39"] },
     { name: "Stacy Staples", phone: "(877) 974-2255", email: "stacy.staples@assaabloy.com", brand: "Norton Rixson", codes: ["A02", "A03", "A07", "A27", "A28"] },
     { name: "Jessica Kennington", phone: "(877) 974-2255", email: "jessica.kennington@assaabloy.com", brand: "Norton Rixson", codes: ["A15", "A16", "A32", "A44", "Intl"] },
@@ -112,11 +104,10 @@ const CsrSearchModal = ({ onClose }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedBrand, setSelectedBrand] = useState('All'); 
 
-    // --- 1. DATA PRE-PROCESSING ---
     const processedData = useMemo(() => {
         return RAW_CSR_DATA.map(csr => {
             const regionList = [];
-            const allKeywords = [...csr.codes]; 
+            const allKeywords = [...csr.codes];
 
             csr.codes.forEach(code => {
                 if (TERRITORY_DEFINITIONS[code]) {
@@ -125,10 +116,9 @@ const CsrSearchModal = ({ onClose }) => {
                     allKeywords.push(...mappedRegions);
 
                     mappedRegions.forEach(region => {
-                        Object.keys(STATE_TO_FULL).forEach(stateCode => {
-                            const regex = new RegExp(`\\b${stateCode}\\b`, 'i');
-                            if (regex.test(region)) {
-                                allKeywords.push(STATE_TO_FULL[stateCode]);
+                        Object.entries(STATE_TO_FULL).forEach(([stCode, stFull]) => {
+                            if (new RegExp(`\\b${stCode}\\b`, 'i').test(region)) {
+                                allKeywords.push(stFull);
                             }
                         });
                     });
@@ -137,206 +127,147 @@ const CsrSearchModal = ({ onClose }) => {
                 }
             });
 
-            const uniqueRegions = [...new Set(regionList)];
             return {
                 ...csr,
-                regionDescription: uniqueRegions.join(", "),
-                keywords: allKeywords.map(k => k.toString().toUpperCase()), 
-                territoryCodes: csr.codes.join(", ")
+                regionDescription: [...new Set(regionList)].join(", "),
+                keywords: [...new Set(allKeywords)].map(k => k.toString().toUpperCase())
             };
         });
     }, []);
 
-    // --- 2. FILTERING & SORTING LOGIC ---
-    const results = useMemo(() => {
-        // Step A: Brand Filter
-        let filtered = processedData;
-        if (selectedBrand !== 'All') {
-            filtered = filtered.filter(csr => csr.brand === selectedBrand);
-        }
-
-        // Step B: Search Term Logic
-        if (!searchTerm) {
-            if (selectedBrand === 'All') return [];
-            return filtered.sort((a, b) => a.name.localeCompare(b.name));
-        }
-
-        const lowerTerm = searchTerm.toLowerCase().trim();
-        const isShortTerm = lowerTerm.length <= 2; 
-
-        // Step C: Search Filtering
-        const matches = filtered.filter(csr => {
-            const nameMatch = csr.name.toLowerCase().includes(lowerTerm);
-            const territoryMatch = csr.keywords.some(k => {
-                const lowerK = k.toLowerCase();
-                if (isShortTerm) {
-                    // STRICT MODE FIX:
-                    // 1. "Starts With" covers "Alabama" (AL) or "Louisiana" (L)
-                    const startsWith = lowerK.startsWith(lowerTerm);
-                    
-                    // 2. "Word Boundary" covers "North LA" (LA)
-                    const wordBoundary = new RegExp(`\\b${lowerTerm}\\b`, 'i').test(lowerK);
-
-                    // 3. "Code Expansion" covers input "LA" matching "Louisiana" keyword 
-                    // (Ensure input "LA" finds "LOUISIANA" even if the keyword list doesn't explicitly have "LA" as a distinct item)
-                    let codeExpand = false;
-                    const fullState = STATE_TO_FULL[lowerTerm.toUpperCase()];
-                    if (fullState && lowerK === fullState.toLowerCase()) {
-                        codeExpand = true;
-                    }
-
-                    return startsWith || wordBoundary || codeExpand;
-                } else {
-                    return lowerK.includes(lowerTerm);
-                }
-            });
-            return nameMatch || territoryMatch;
-        });
-
-        // Step D: Smart Sorting (Exact matches first)
-        return matches.sort((a, b) => {
-            const getScore = (csr) => {
-                if (csr.keywords.includes(searchTerm.toUpperCase())) return 10; // Exact Code
-                if (csr.name.toLowerCase().startsWith(lowerTerm)) return 8; // Name Start
-                if (csr.keywords.some(k => k.toLowerCase().startsWith(lowerTerm))) return 5; // State Start
-                if (csr.name.toLowerCase().includes(lowerTerm)) return 2; // Name Partial
-                return 1;
-            };
-            return getScore(b) - getScore(a);
-        });
-
-    }, [searchTerm, selectedBrand, processedData]);
-
-    // --- 3. HIGHLIGHT LOGIC ---
     const highlightKeywords = useMemo(() => {
         if (!searchTerm) return [];
         const cleanTerm = searchTerm.trim().toUpperCase();
         const keywords = [searchTerm.trim()];
 
         if (STATE_TO_FULL[cleanTerm]) {
-            keywords.push(STATE_TO_FULL[cleanTerm]);
+            keywords.push(STATE_TO_FULL[cleanTerm]); 
         }
 
         Object.entries(STATE_TO_FULL).forEach(([code, fullName]) => {
-            const isCodeMatch = code === cleanTerm;
-            const isNameStart = fullName.startsWith(cleanTerm);
-            const isNameInclude = cleanTerm.length > 2 && fullName.includes(cleanTerm);
-
-            if (isCodeMatch || isNameStart || isNameInclude) {
+            if (fullName.startsWith(cleanTerm)) {
                 keywords.push(code);
-                keywords.push(fullName);
             }
         });
+
         return [...new Set(keywords)];
     }, [searchTerm]);
+
+    const results = useMemo(() => {
+        let filtered = processedData;
+        if (selectedBrand !== 'All') {
+            filtered = filtered.filter(csr => csr.brand === selectedBrand);
+        }
+
+        if (!searchTerm) return filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+        const lowerTerm = searchTerm.toLowerCase().trim();
+        const safeTerm = lowerTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const wordStartRegex = new RegExp(`\\b${safeTerm}`, 'i');
+
+        return filtered.filter(csr => {
+            const nameMatch = csr.name.toLowerCase().includes(lowerTerm);
+            const keywordMatch = csr.keywords.some(k => wordStartRegex.test(k));
+            return nameMatch || keywordMatch;
+        });
+    }, [searchTerm, selectedBrand, processedData]);
 
     const brands = ['All', 'Sargent', 'Corbin Russwin', 'ACCENTRA', 'Norton Rixson'];
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="calculator-modal" onClick={e => e.stopPropagation()} style={{maxWidth: '700px', height: 'auto', maxHeight: '90vh'}}>
-                <div className="modal-header">
-                    <h2 className="modal-title">
-                        <MapPin className="modal-title-icon" />
-                        Find Your CSR
-                    </h2>
-                    <button onClick={onClose} className="close-button"><X size={24}/></button>
-                </div>
+        <div className="csr-modal-overlay" onClick={onClose}>
+            <div className="csr-modal-content" onClick={e => e.stopPropagation()}>
                 
-                <div className="modal-body">
-                    {/* Brand Selector */}
-                    <div className="brand-selector-container">
-                        <span className="brand-label">Filter by Brand:</span>
-                        <div className="brand-chips">
-                            {brands.map(brand => (
-                                <button 
-                                    key={brand}
-                                    className={`brand-chip ${selectedBrand === brand ? 'active' : ''} ${brand.replace(/\s+/g, '-').toLowerCase()}`}
-                                    onClick={() => setSelectedBrand(brand)}
-                                >
-                                    {selectedBrand === brand && <Check size={14} style={{marginRight:4}}/>}
-                                    {brand}
-                                </button>
-                            ))}
-                        </div>
+                <div className="csr-header">
+                    <div className="csr-title-row">
+                        <MapPin size={28} color="#3b82f6" />
+                        <h2 className="csr-title">Find Your CSR</h2>
+                    </div>
+                    <button onClick={onClose} className="csr-close-btn"><X size={24}/></button>
+                </div>
+
+                <div className="csr-controls">
+                    <div className="brand-chips-row">
+                        {brands.map(brand => (
+                            <button 
+                                key={brand}
+                                className={`brand-chip ${selectedBrand === brand ? `active ${brand.replace(/\s+/g, '-').toLowerCase()}` : ''}`}
+                                onClick={() => setSelectedBrand(brand)}
+                            >
+                                {selectedBrand === brand && <Check size={14} strokeWidth={3} />}
+                                {brand}
+                            </button>
+                        ))}
                     </div>
 
-                    {/* Search Input */}
-                    <div className="input-group search-container">
-                        <label className="input-label" htmlFor="csr-search">Search by State, Code, Name, or Distributor</label>
-                        <div className="search-input-wrapper">
-                             <Search className="search-icon-absolute" size={20}/>
-                             <input
-                                id="csr-search"
-                                type="text"
-                                className="form-input with-icon"
-                                placeholder="e.g. Texas, A27, or Banner..."
-                                value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
-                                autoFocus
-                            />
-                        </div>
+                    <div className="csr-search-wrapper">
+                        <Search className="csr-search-icon" size={20}/>
+                        <input
+                            type="text"
+                            className="csr-search-input"
+                            placeholder="Search by Name, State (e.g. Texas or TX), Code..."
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            autoFocus
+                        />
                     </div>
+                </div>
 
-                    {/* Results */}
-                    <div className="csr-results-list">
+                <div className="csr-body">
+                    <div className="csr-grid">
                         {results.length > 0 ? (
-                            results.map((csr, index) => (
-                                <div key={`${csr.name}-${index}`} className="csr-result-card">
-                                    <div className="csr-card-top-row">
-                                        <div className="csr-card-header-left">
+                            results.map((csr, idx) => (
+                                <div key={idx} className="csr-card" data-brand={csr.brand}>
+                                    
+                                    <div className="csr-card-header">
+                                        <div className="csr-info">
                                             <div className="csr-avatar">
-                                                <User size={24} color="#fff" />
+                                                {csr.name.charAt(0)}
                                             </div>
                                             <div>
-                                                <h3 className="csr-name">{csr.name}</h3>
-                                                <div className="csr-code-container">
-                                                    <Hash size={12} className="csr-code-icon"/>
-                                                    <span className="csr-code-text">
-                                                        <HighlightedText text={csr.territoryCodes} highlightKeywords={highlightKeywords} />
-                                                    </span>
+                                                <h3 className="csr-name">
+                                                    <HighlightedText text={csr.name} highlightKeywords={highlightKeywords}/>
+                                                </h3>
+                                                {/* Explicit Territory Codes Display */}
+                                                <div className="csr-territory-codes">
+                                                    {csr.codes.map((code, cIdx) => (
+                                                        <span key={cIdx} className="territory-code-tag">
+                                                            <HighlightedText text={code} highlightKeywords={highlightKeywords} />
+                                                        </span>
+                                                    ))}
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={`brand-badge ${csr.brand.replace(/\s+/g, '-').toLowerCase()}`}>
-                                            {csr.brand}
-                                        </div>
+                                        {/* Repositioned Brand Badge */}
+                                        <div className="csr-brand-badge top-right">{csr.brand}</div>
                                     </div>
-                                    
-                                    <div className="csr-region-block">
-                                        <p className="csr-region-label">Territory Coverage:</p>
-                                        <p className="csr-region-text">
+
+                                    <div className="csr-territory">
+                                        <span className="csr-label">States Covered</span>
+                                        <p className="csr-text">
                                             <HighlightedText text={csr.regionDescription} highlightKeywords={highlightKeywords} />
                                         </p>
                                     </div>
 
-                                    <div className="csr-contact-actions">
-                                        <a href={`tel:${csr.phone}`} className="csr-action-btn">
+                                    <div className="csr-contacts">
+                                        <a href={`tel:${csr.phone}`} className="contact-btn phone">
                                             <Phone size={16} /> {csr.phone}
                                         </a>
-                                        <a href={`mailto:${csr.email}`} className="csr-action-btn secondary">
-                                            <Mail size={16} /> {csr.email}
+                                        <a href={`mailto:${csr.email}`} className="contact-btn email">
+                                            <Mail size={16} /> Email
                                         </a>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <div className="no-result-box">
-                                {selectedBrand === 'All' && !searchTerm ? (
-                                    <div className="empty-state">
-                                        <Info size={40} className="empty-icon"/>
-                                        <p>Select a brand to view all specialists, or type a location.</p>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <p>No matches found for "{searchTerm}" in {selectedBrand}.</p>
-                                        <p className="sub-text">Please try a State Code (e.g. "TX") or check spelling.</p>
-                                    </>
-                                )}
+                            <div style={{textAlign: 'center', padding: '3rem', color: '#64748b'}}>
+                                <Info size={48} style={{marginBottom: '1rem', opacity: 0.5}}/>
+                                <p>No specialists found for "{searchTerm}"</p>
                             </div>
                         )}
                     </div>
                 </div>
+
             </div>
         </div>
     );

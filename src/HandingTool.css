@@ -1,0 +1,37 @@
+/* src/HandingTool.css */
+
+.handing-modal .device-type-btn {
+    min-height: 120px;
+}
+
+.handing-modal .device-type-btn svg {
+    color: #3b82f6;
+    margin-bottom: 0.5rem;
+}
+
+.handing-modal .device-type-btn.active svg {
+    color: #fff;
+}
+
+/* Specific banner colors to match RodCalculator scheme */
+.handing-modal .top-rod-card {
+    border-left-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.handing-modal .crossbar-card {
+    border-left-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.05);
+}
+
+.handing-modal .model-search-input option {
+    background-color: #121212;
+    color: white;
+    padding: 10px;
+}
+
+@media (max-width: 640px) {
+    .handing-modal .parts-grid.two-col {
+        grid-template-columns: 1fr;
+    }
+}
