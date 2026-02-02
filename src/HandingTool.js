@@ -41,7 +41,7 @@ const HandingTool = ({ onClose }) => {
             return {
                 status: 'REVERSIBLE',
                 title: 'Field Reversible',
-                description: 'This product is designed for flexibility. You can easily change the handing in the field without disassembling the main chassis.',
+                description: 'This product is designed for flexibility. You can easily change the handing in the field without disassembling the main lockbody.',
                 color: 'success'
             };
         }
