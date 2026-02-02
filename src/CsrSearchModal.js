@@ -1,3 +1,4 @@
+/* src/CsrSearchModal.js */
 import React, { useState, useMemo } from 'react';
 import { MapPin, Search, Phone, Mail, X, Check, Info } from 'lucide-react'; 
 import './CsrSearchModal.css'; 
@@ -244,7 +245,11 @@ const CsrSearchModal = ({ onClose }) => {
         if (searchTerm) {
             const lowerTerm = searchTerm.toLowerCase().trim();
             const safeTerm = lowerTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const wordStartRegex = new RegExp(`\\b${safeTerm}`, 'i');
+            
+            // Updated regex: Allows match at start of string (^), after whitespace (\s), 
+            // after underscore (_), or after hyphen (-).
+            // This ensures searching "A32" will match "SGT_A32" or "SGT-A32".
+            const wordStartRegex = new RegExp(`(^|[\\s_\\-])${safeTerm}`, 'i');
 
             filtered = filtered.filter(csr => {
                 const nameMatch = csr.name.toLowerCase().includes(lowerTerm);
