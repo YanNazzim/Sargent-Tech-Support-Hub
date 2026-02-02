@@ -70,20 +70,20 @@ const TERRITORY_DEFINITIONS = {
     // --- SARGENT SPECIFIC DEFINITIONS (Updated 03-25-2025) ---
     "SGT_A01": ["CT", "ME", "MA", "NH", "VT", "RI"],
     "SGT_A02_A03": ["NY", "NJ"],
-    "SGT_A07": ["DE", "PA", "WV"], // WV moved here, NJ removed
+    "SGT_A07": ["DE", "PA", "WV"], // WV moved here from A21
     "SGT_A08": ["VA", "MD", "DC"],
     "SGT_A13": ["NC", "SC"], // TN removed
     "SGT_A15": ["FL"], // GA removed
-    "SGT_A16": ["AL", "MS", "TN"], // MS added, TN unified
-    "SGT_GA": ["GA"], // Georgia separated
+    "SGT_A16": ["AL", "MS", "TN"], // MS added (from A28), TN unified
+    "SGT_GA": ["GA"], // Georgia separated (Janelle)
     "SGT_A21": ["South IN", "KY", "MO", "OH"], // MO added, WV removed, OH unified
     "SGT_A22": ["IA", "KS", "NE"], // MO removed
     "SGT_A27": ["AR", "TX", "OK"], // LA removed, TX unified
     "SGT_A28": ["TX", "LA"], // MS removed, TX added
-    "SGT_A31": ["North IN"], // MI/WI moved to A32. OH covered by A21 mostly.
-    "SGT_A32": ["MI", "MN", "ND", "SD", "WI", "IL"], // MI, WI added.
-    "SGT_A37": ["AZ", "NM"], // West TX removed
-    "SGT_A38": ["CA", "NV"],
+    "SGT_A31": ["North IN"], // MI/WI moved to A32
+    "SGT_A32": ["MI", "MN", "ND", "SD", "WI", "IL"], // MI, WI, IL added
+    "SGT_A37": ["AZ", "NM"], 
+    "SGT_A38": ["CA", "NV"], // Full CA/NV coverage
     "SGT_A39": ["South CA"],
     "SGT_A43": ["CO", "ID", "MT", "UT", "WY"], // ID added
     "SGT_A44": ["AK", "OR", "WA"], // ID removed
@@ -140,7 +140,7 @@ const RAW_CSR_DATA = [
         phone: "(203) 498-5693", 
         email: "janelle.schmittberger@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["SGT_A15", "SGT_GA", "SGT_A37", "SGT_A38", "SGT_A39", "Ceco Door", "HES", "Curries"] 
+        codes: ["SGT_A15", "SGT_GA", "SGT_A37", "SGT_A38", "SGT_A39", "Ceco Door", "HES", "Curries", "Assa Abloy Entrance Systems"] 
     },
     { 
         name: "Maritza Yugchaoquendo", 
@@ -154,7 +154,7 @@ const RAW_CSR_DATA = [
         phone: "(203) 498-5596", 
         email: "patricia.hansen@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["Intermountain", "Clark", "Anixter", "ADI", "IDN", "JLM", "Top Notch", "Southern Lock"] 
+        codes: ["Intermountain", "Clark", "Anixter", "ADI", "IDN", "JLM", "Top Notch", "Southern Lock", "Accredited Lock"] 
     },
     { 
         name: "Jennifer Leslie", 
@@ -241,17 +241,25 @@ const CsrSearchModal = ({ onClose }) => {
             filtered = filtered.filter(csr => csr.brand === selectedBrand);
         }
 
-        if (!searchTerm) return filtered.sort((a, b) => a.name.localeCompare(b.name));
+        if (searchTerm) {
+            const lowerTerm = searchTerm.toLowerCase().trim();
+            const safeTerm = lowerTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const wordStartRegex = new RegExp(`\\b${safeTerm}`, 'i');
 
-        const lowerTerm = searchTerm.toLowerCase().trim();
-        const safeTerm = lowerTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const wordStartRegex = new RegExp(`\\b${safeTerm}`, 'i');
+            filtered = filtered.filter(csr => {
+                const nameMatch = csr.name.toLowerCase().includes(lowerTerm);
+                const keywordMatch = csr.keywords.some(k => wordStartRegex.test(k));
+                return nameMatch || keywordMatch;
+            });
+        }
 
-        return filtered.filter(csr => {
-            const nameMatch = csr.name.toLowerCase().includes(lowerTerm);
-            const keywordMatch = csr.keywords.some(k => wordStartRegex.test(k));
-            return nameMatch || keywordMatch;
+        // SORTING PRIORITY: Sargent First, then Alphabetical
+        return filtered.sort((a, b) => {
+            if (a.brand === 'Sargent' && b.brand !== 'Sargent') return -1;
+            if (a.brand !== 'Sargent' && b.brand === 'Sargent') return 1;
+            return a.name.localeCompare(b.name);
         });
+
     }, [searchTerm, selectedBrand, processedData]);
 
     const brands = ['All', 'Sargent', 'Corbin Russwin', 'ACCENTRA', 'Norton Rixson'];
