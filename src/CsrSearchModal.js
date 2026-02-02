@@ -46,6 +46,7 @@ const STATE_TO_FULL = {
 };
 
 const TERRITORY_DEFINITIONS = {
+    // --- STANDARD / LEGACY DEFINITIONS (Corbin, ACC, Norton) ---
     "A01": ["CT", "MA", "ME", "NH", "RI", "VT"],
     "A02": ["Upstate NY"],
     "A03": ["Metro NY", "North NJ"],
@@ -65,6 +66,30 @@ const TERRITORY_DEFINITIONS = {
     "A39": ["South CA", "South NV", "HI"],
     "A43": ["CO", "UT", "WY", "MT"],
     "A44": ["WA", "OR", "ID", "AK", "North ID"],
+    
+    // --- SARGENT SPECIFIC DEFINITIONS (Updated 03-25-2025) ---
+    "SGT_A01": ["CT", "ME", "MA", "NH", "VT", "RI"],
+    "SGT_A02_A03": ["NY", "NJ"],
+    "SGT_A07": ["DE", "PA", "WV"], // WV moved here, NJ removed
+    "SGT_A08": ["VA", "MD", "DC"],
+    "SGT_A13": ["NC", "SC"], // TN removed
+    "SGT_A15": ["FL"], // GA removed
+    "SGT_A16": ["AL", "MS", "TN"], // MS added, TN unified
+    "SGT_GA": ["GA"], // Georgia separated
+    "SGT_A21": ["South IN", "KY", "MO", "OH"], // MO added, WV removed, OH unified
+    "SGT_A22": ["IA", "KS", "NE"], // MO removed
+    "SGT_A27": ["AR", "TX", "OK"], // LA removed, TX unified
+    "SGT_A28": ["TX", "LA"], // MS removed, TX added
+    "SGT_A31": ["North IN"], // MI/WI moved to A32. OH covered by A21 mostly.
+    "SGT_A32": ["MI", "MN", "ND", "SD", "WI", "IL"], // MI, WI added.
+    "SGT_A37": ["AZ", "NM"], // West TX removed
+    "SGT_A38": ["CA", "NV"],
+    "SGT_A39": ["South CA"],
+    "SGT_A43": ["CO", "ID", "MT", "UT", "WY"], // ID added
+    "SGT_A44": ["AK", "OR", "WA"], // ID removed
+    "SGT_A45": ["HI"],
+
+    // --- WHOLESALE / SPECIAL ---
     "Canada": ["Canada"], "Intl": ["International"], "Arrow": ["Arrow"],
     "Grainger": ["Grainger"], "Himmels": ["Himmels"], "Banner": ["Banner"],
     "SecLock": ["SecLock"], "Mayflower": ["Mayflower"], "IDN": ["IDN"],
@@ -74,15 +99,72 @@ const TERRITORY_DEFINITIONS = {
 };
 
 const RAW_CSR_DATA = [
-    { name: "Miriam Redgate", phone: "(203) 498-5595", email: "miriam.redgate@assaabloy.com", brand: "Sargent", codes: ["A01", "A07", "HI"] },
-    { name: "Anne Dempster", phone: "(203) 498-5840", email: "anne.dempster@assaabloy.com", brand: "Sargent", codes: ["A02", "A03", "A08", "Arrow"] },
-    { name: "Alyssa Carey", phone: "(203) 498-5531", email: "alyssa.carey@assaabloy.com", brand: "Sargent", codes: ["A21", "A22", "A43", "Grainger", "Cleveland"] },
-    { name: "Robin Pascale", phone: "(203) 498-5596", email: "robin.pascale@assaabloy.com", brand: "Sargent", codes: ["A13", "A16", "A31", "A32"] },
-    { name: "Shirley Sotaski", phone: "(203) 498-5715", email: "shirley.sotaski@assaabloy.com", brand: "Sargent", codes: ["A27", "A28", "Himmels"] },
-    { name: "Janelle Schmittberger", phone: "(203) 498-5693", email: "janelle.schmittberger@assaabloy.com", brand: "Sargent", codes: ["A15", "A37", "A38", "A39"] },
-    { name: "Maritza Yugchaoquendo", phone: "(203) 498-5699", email: "maritza.yugchaoquendo@assaabloy.com", brand: "Sargent", codes: ["A44", "Canada", "Intl"] },
-    { name: "Patricia Hansen", phone: "(203) 498-5596", email: "patricia.hansen@assaabloy.com", brand: "Sargent", codes: ["Intermountain", "Clark", "Anixter", "ADI", "IDN", "JLM"] },
-    { name: "Jennifer Leslie", phone: "(203) 498-5698", email: "jennifer.leslie@assaabloy.com", brand: "Sargent", codes: ["Akron", "Banner", "SecLock", "Norwood", "Dugmore"] },
+    // --- SARGENT UPDATES (Source: 03-25-2025 CSV) ---
+    { 
+        name: "Miriam Redgate", 
+        phone: "(203) 498-5595", 
+        email: "miriam.redgate@assaabloy.com", 
+        brand: "Sargent", 
+        codes: ["SGT_A01", "SGT_A07", "SGT_A45", "Corbin Russwin Back up"] 
+    },
+    { 
+        name: "Anne Dempster", 
+        phone: "(203) 498-5840", 
+        email: "anne.dempster@assaabloy.com", 
+        brand: "Sargent", 
+        codes: ["SGT_A02_A03", "SGT_A08", "Arrow", "Medeco"] 
+    },
+    { 
+        name: "Alyssa Carey", 
+        phone: "(203) 498-5531", 
+        email: "alyssa.carey@assaabloy.com", 
+        brand: "Sargent", 
+        codes: ["SGT_A21", "SGT_A22", "SGT_A43", "Grainger", "Lyons Industries", "Safety Storage", "Security Door", "Savage Doorway"] 
+    },
+    { 
+        name: "Robin Pascale", 
+        phone: "(203) 498-5596", 
+        email: "robin.pascale@assaabloy.com", 
+        brand: "Sargent", 
+        codes: ["SGT_A16", "SGT_A13", "SGT_A31", "SGT_A32", "Ohio Stafford", "Lazzaro", "Allied Door", "Midwest Security", "Builders Enterprise"] 
+    },
+    { 
+        name: "Shirley Sotaski", 
+        phone: "(203) 498-5715", 
+        email: "shirley.sotaski@assaabloy.com", 
+        brand: "Sargent", 
+        codes: ["SGT_A27", "SGT_A28", "Himmels", "Persona", "EAC", "Accentra", "Ameristar", "Royal Arch"] 
+    },
+    { 
+        name: "Janelle Schmittberger", 
+        phone: "(203) 498-5693", 
+        email: "janelle.schmittberger@assaabloy.com", 
+        brand: "Sargent", 
+        codes: ["SGT_A15", "SGT_GA", "SGT_A37", "SGT_A38", "SGT_A39", "Ceco Door", "HES", "Curries"] 
+    },
+    { 
+        name: "Maritza Yugchaoquendo", 
+        phone: "(203) 498-5699", 
+        email: "maritza.yugchaoquendo@assaabloy.com", 
+        brand: "Sargent", 
+        codes: ["SGT_A44", "Canada", "Intl", "ADI"] 
+    },
+    { 
+        name: "Patricia Hansen", 
+        phone: "(203) 498-5596", 
+        email: "patricia.hansen@assaabloy.com", 
+        brand: "Sargent", 
+        codes: ["Intermountain", "Clark", "Anixter", "ADI", "IDN", "JLM", "Top Notch", "Southern Lock"] 
+    },
+    { 
+        name: "Jennifer Leslie", 
+        phone: "(203) 498-5698", 
+        email: "jennifer.leslie@assaabloy.com", 
+        brand: "Sargent", 
+        codes: ["Akron", "Banner", "SecLock", "Norwood", "Dugmore", "Midwest Wholesale"] 
+    },
+
+    // --- OTHER BRANDS (Kept as Original) ---
     { name: "Amber States", phone: "704-226-6185", email: "amber.states@assaabloy.com", brand: "Corbin Russwin", codes: ["A13", "A21", "A31", "A32", "A43", "A44"] },
     { name: "AnnMarie Jones", phone: "860-828-7265", email: "annmarie.jones@assaabloy.com", brand: "Corbin Russwin", codes: ["A07", "A16", "A28", "A38", "A39"] },
     { name: "Delilah Whitley", phone: "704-226-6168", email: "delilah.whitley@assaabloy.com", brand: "Corbin Russwin", codes: ["A15", "A27", "A37", "Himmels"] },
