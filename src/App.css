@@ -296,3 +296,34 @@
   .product-grid { grid-template-columns: 1fr; }
   .main-content { padding-top: 6rem; }
 }
+
+/* Beta Feature Glow Effect */
+.beta-feature-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #f59e0b, #fbbf24, #f59e0b);
+  z-index: -1;
+  border-radius: 18px;
+  opacity: 0.45;
+  filter: blur(10px);
+  transition: opacity 0.3s ease;
+}
+
+.beta-feature-glow:hover::before {
+  opacity: 0.7;
+}
+
+/* Beta Badge Style */
+.beta-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 99px;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4);
+}

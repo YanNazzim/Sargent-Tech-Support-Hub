@@ -1,3 +1,4 @@
+/* src/App.js */
 import React, { useState } from 'react';
 import './App.css'; 
 import sargentLogo from './assets/placeholder.jpg'; 
@@ -7,7 +8,10 @@ import RailCalculator from './RailCalculator';
 import CsrSearchModal from './CsrSearchModal'; 
 
 // Icons
-import { Settings, Wrench, Lock, Ruler, Info, MapPin, Scissors, RotateCcw, ExternalLink } from 'lucide-react'; 
+import { 
+  Settings, Wrench, Lock, Ruler, Info, MapPin, 
+  Scissors, RotateCcw, ExternalLink, Construction 
+} from 'lucide-react'; 
 
 const productIcons = {
   1: Settings, 
@@ -19,17 +23,22 @@ const productIcons = {
   7: Info, 
   8: Info, 
   9: MapPin, 
+  10: Construction, // Icon for the Configurator tool
 };
 
 // --- COMPONENT: PRODUCT CARD ---
-const ProductCard = ({ title, description, url, onClick, id, isNew }) => {
+const ProductCard = ({ title, description, url, onClick, id, isNew, isBeta }) => {
   const Icon = productIcons[id] || Settings; 
-  // Wrapper class handles the hover effects and layout
-  const wrapperClass = isNew ? "product-card-wrapper new-feature-glow" : "product-card-wrapper";
+  
+  // Determine wrapper class based on status
+  let wrapperClass = "product-card-wrapper";
+  if (isNew) wrapperClass += " new-feature-glow";
+  if (isBeta) wrapperClass += " beta-feature-glow"; // New class for yellow glow
   
   const CardContent = (
     <div className="product-card">
       {isNew && <span className="new-badge">NEW</span>}
+      {isBeta && <span className="beta-badge">BETA - WORK IN PROGRESS</span>}
       
       <div className="card-header-row">
         <div className="card-icon-container">
@@ -50,7 +59,6 @@ const ProductCard = ({ title, description, url, onClick, id, isNew }) => {
     </div>
   );
 
-  // Render logic based on whether it's a link or a modal trigger
   if (url) {
     return <a href={url} target="_blank" rel="noopener noreferrer" className={wrapperClass}>{CardContent}</a>;
   } else if (onClick) {
@@ -69,6 +77,7 @@ const App = () => {
   const products = [
     { id: 1, title: 'Templates Lookup', description: "Streamlines your search for templates, making it easy to get exactly what you need for prep/installation.", url: 'https://sargent-templates.netlify.app/' },
     { id: 2, title: 'Parts Lookup', description: "Effortlessly find the right parts with precise information and exploded views.", url: 'https://sargent-parts.netlify.app/' },
+    { id: 10, title: 'Configurator', description: "Configure products in real-time with early warnings for compatibility conflicts.", url: 'https://sargent-config.netlify.app/', isBeta: true },
     { id: 9, title: 'Find Your CSR', description: "Locate specific Customer Support Specialists for Sargent, Corbin Russwin, ACCENTRA, and Norton.", onClick: () => setIsCsrSearchOpen(true), isNew: true },
     { id: 3, title: 'Rod Calculator', description: "Precisely calculate Top Rod, Bottom Rod, and Extension lengths for SVR and CVR devices.", onClick: () => setIsRodCalculatorOpen(true) },
     { id: 5, title: 'Rail Calculator', description: "Determine uncut and cut rail lengths for 80 Series and PE80 Series Exit Devices.", onClick: () => setIsRailCalculatorOpen(true), isNew: true },
@@ -89,7 +98,7 @@ const App = () => {
             <span className="nav-brand-text">Sargent</span>
           </div>
           <div className="nav-right">
-            <div className="nav-status-tag">Last Updated  01-31-2026</div>
+            <div className="nav-status-tag">Last Updated 02-02-2026</div>
           </div>
         </div>
       </nav>
@@ -110,6 +119,7 @@ const App = () => {
               url={product.url}
               onClick={product.onClick}
               isNew={product.isNew}
+              isBeta={product.isBeta}
             />
           ))}
         </div>
