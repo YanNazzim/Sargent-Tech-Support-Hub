@@ -77,7 +77,6 @@ const App = () => {
   const products = [
     { id: 1, title: 'Templates Lookup', description: "Streamlines your search for templates, making it easy to get exactly what you need for prep/installation.", url: 'https://sargent-templates.netlify.app/' },
     { id: 2, title: 'Parts Lookup', description: "Effortlessly find the right parts with precise information and exploded views.", url: 'https://sargent-parts.netlify.app/' },
-    { id: 10, title: 'Configurator', description: "Configure products in real-time with early warnings for compatibility conflicts.", url: 'https://sargent-config.netlify.app/', isBeta: true },
     { id: 9, title: 'Find Your CSR', description: "Locate specific Customer Support Specialists for Sargent, Corbin Russwin, ACCENTRA, and Norton.", onClick: () => setIsCsrSearchOpen(true), isNew: true },
     { id: 3, title: 'Rod Calculator', description: "Precisely calculate Top Rod, Bottom Rod, and Extension lengths for SVR and CVR devices.", onClick: () => setIsRodCalculatorOpen(true) },
     { id: 5, title: 'Rail Calculator', description: "Determine uncut and cut rail lengths for 80 Series and PE80 Series Exit Devices.", onClick: () => setIsRailCalculatorOpen(true), isNew: true },
