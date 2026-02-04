@@ -86,8 +86,8 @@ const TERRITORY_DEFINITIONS = {
     "SGT_A37": ["AZ", "NM"], 
     "SGT_A38": ["CA", "NV"], // Full CA/NV coverage
     "SGT_A39": ["South CA"],
-    "SGT_A43": ["CO", "ID", "MT", "UT", "WY"], // ID added
-    "SGT_A44": ["AK", "OR", "WA"], // ID removed
+    "SGT_A43": ["CO", "MT", "UT", "WY"], // ID added
+    "SGT_A44": ["AK", "OR", "WA", "ID"], 
     "SGT_A45": ["HI"],
 
     // --- WHOLESALE / SPECIAL ---
@@ -148,7 +148,7 @@ const RAW_CSR_DATA = [
         phone: "(203) 498-5699", 
         email: "maritza.yugchaoquendo@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["SGT_A44", "Canada", "Intl", "ADI"] 
+        codes: ["SGT_A44", "Canada", "Intl", "ADI (BACKUP ONLY)"] 
     },
     { 
         name: "Patricia Hansen", 
