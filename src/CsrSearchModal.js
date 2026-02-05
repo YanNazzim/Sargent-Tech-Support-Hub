@@ -47,48 +47,28 @@ const STATE_TO_FULL = {
 };
 
 const TERRITORY_DEFINITIONS = {
-    // --- STANDARD / LEGACY DEFINITIONS (Corbin, ACC, Norton) ---
-    "A01": ["CT", "MA", "ME", "NH", "RI", "VT"],
-    "A02": ["Upstate NY"],
-    "A03": ["Metro NY", "North NJ"],
-    "A07": ["South NJ", "PA", "DE"],
-    "A08": ["DC", "MD", "VA"],
+    // --- UNIFIED STANDARD DEFINITIONS (Updated 03-25-2025) ---
+    "A01": ["CT", "ME", "MA", "NH", "VT", "RI"],
+    "A02": ["NY", "Upstate NY"],
+    "A03": ["NY", "NJ", "Metro NY", "North NJ"],
+    "A07": ["DE", "PA", "WV", "South NJ"],
+    "A08": ["VA", "MD", "DC"],
     "A13": ["NC", "SC", "East TN"],
-    "A15": ["FL", "GA"], 
-    "A16": ["AL", "West TN"],
-    "A21": ["South OH", "South IN", "KY", "WV"],
-    "A22": ["MO", "KS", "IA", "NE", "South IL"],
-    "A27": ["North TX", "South TX", "OK", "AR", "North LA"],
-    "A28": ["South MS", "South LA"],
-    "A31": ["MI", "WI", "North IN", "North OH"],
-    "A32": ["MN", "ND", "SD", "North IL"],
-    "A37": ["AZ", "West TX", "NM"],
-    "A38": ["North CA", "North NV"],
-    "A39": ["South CA", "South NV", "HI"],
-    "A43": ["CO", "UT", "WY", "MT"],
-    "A44": ["WA", "OR", "ID", "AK", "North ID"],
-    
-    // --- SARGENT SPECIFIC DEFINITIONS (Updated 03-25-2025) ---
-    "SGT_A01": ["CT", "ME", "MA", "NH", "VT", "RI"],
-    "SGT_A02_A03": ["NY", "NJ"],
-    "SGT_A07": ["DE", "PA", "WV"], // WV moved here from A21
-    "SGT_A08": ["VA", "MD", "DC"],
-    "SGT_A13": ["NC", "SC"], // TN removed
-    "SGT_A15": ["FL"], // GA removed
-    "SGT_A16": ["AL", "MS", "TN"], // MS added (from A28), TN unified
-    "SGT_GA": ["GA"], // Georgia separated (Janelle)
-    "SGT_A21": ["South IN", "KY", "MO", "OH"], // MO added, WV removed, OH unified
-    "SGT_A22": ["IA", "KS", "NE"], // MO removed
-    "SGT_A27": ["AR", "TX", "OK"], // LA removed, TX unified
-    "SGT_A28": ["TX", "LA"], // MS removed, TX added
-    "SGT_A31": ["North IN"], // MI/WI moved to A32
-    "SGT_A32": ["MI", "MN", "ND", "SD", "WI", "IL"], // MI, WI, IL added
-    "SGT_A37": ["AZ", "NM"], 
-    "SGT_A38": ["CA", "NV"], // Full CA/NV coverage
-    "SGT_A39": ["South CA"],
-    "SGT_A43": ["CO", "MT", "UT", "WY"], // ID added
-    "SGT_A44": ["AK", "OR", "WA", "ID"], 
-    "SGT_A45": ["HI"],
+    "A15": ["FL"],
+    "GA":  ["GA"],
+    "A16": ["AL", "MS", "TN", "West TN"],
+    "A21": ["South IN", "KY", "East MO", "South OH", "WV", "South IL"],
+    "A22": ["IA", "KS", "NE", "West MO", "Mid IL"],
+    "A27": ["AR", "TX", "OK", "North TX", "South TX"],
+    "A28": ["TX", "LA", "South MS", "South LA"],
+    "A31": ["North IN", "North & South MI", "WI", "North OH"],
+    "A32": ["West MI", "MN", "ND", "SD", "WI", "IL", "North IL", "West IN"],
+    "A37": ["AZ", "NM", "West TX", "North NV"],
+    "A38": ["CA", "NV", "North CA", "North NV"],
+    "A39": ["South CA", "HI", "South NV"],
+    "A43": ["CO", "MT", "UT", "WY", "South ID"],
+    "A44": ["AK", "OR", "WA", "ID", "North ID"],
+    "A45": ["HI"],
 
     // --- WHOLESALE / SPECIAL ---
     "Canada": ["Canada"], "Intl": ["International"], "Arrow": ["Arrow"],
@@ -100,55 +80,55 @@ const TERRITORY_DEFINITIONS = {
 };
 
 const RAW_CSR_DATA = [
-    // --- SARGENT UPDATES (Source: 03-25-2025 CSV) ---
+    // --- SARGENT (Standardized Codes) ---
     { 
         name: "Miriam Redgate", 
         phone: "(203) 498-5595", 
         email: "miriam.redgate@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["SGT_A01", "SGT_A07", "SGT_A45", "Corbin Russwin Back up"] 
+        codes: ["A01", "A07", "A45", "Corbin Russwin Back up"] 
     },
     { 
         name: "Anne Dempster", 
         phone: "(203) 498-5840", 
         email: "anne.dempster@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["SGT_A02_A03", "SGT_A08", "Arrow", "Medeco"] 
+        codes: ["A02", "A03", "A08", "Arrow", "Medeco"] 
     },
     { 
         name: "Alyssa Carey", 
         phone: "(203) 498-5531", 
         email: "alyssa.carey@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["SGT_A21", "SGT_A22", "SGT_A43", "Grainger", "Lyons Industries", "Safety Storage", "Security Door", "Savage Doorway"] 
+        codes: ["A21", "A22", "A43", "Grainger", "Lyons Industries", "Safety Storage", "Security Door", "Savage Doorway"] 
     },
     { 
         name: "Robin Pascale", 
         phone: "(203) 498-5596", 
         email: "robin.pascale@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["SGT_A16", "SGT_A13", "SGT_A31", "SGT_A32", "Ohio Stafford", "Lazzaro", "Allied Door", "Midwest Security", "Builders Enterprise"] 
+        codes: ["A16", "A13", "A31", "A32", "Ohio Stafford", "Lazzaro", "Allied Door", "Midwest Security", "Builders Enterprise"] 
     },
     { 
         name: "Shirley Sotaski", 
         phone: "(203) 498-5715", 
         email: "shirley.sotaski@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["SGT_A27", "SGT_A28", "Himmels", "Persona", "EAC", "Accentra", "Ameristar", "Royal Arch"] 
+        codes: ["A27", "A28", "Himmels", "Persona", "EAC", "Accentra", "Ameristar", "Royal Arch"] 
     },
     { 
         name: "Janelle Schmittberger", 
         phone: "(203) 498-5693", 
         email: "janelle.schmittberger@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["SGT_A15", "SGT_GA", "SGT_A37", "SGT_A38", "SGT_A39", "Ceco Door", "HES", "Curries", "Assa Abloy Entrance Systems"] 
+        codes: ["A15", "GA", "A37", "A38", "A39", "Ceco Door", "HES", "Curries", "Assa Abloy Entrance Systems"] 
     },
     { 
         name: "Maritza Yugchaoquendo", 
         phone: "(203) 498-5699", 
         email: "maritza.yugchaoquendo@assaabloy.com", 
         brand: "Sargent", 
-        codes: ["SGT_A44", "Canada", "Intl", "ADI (BACKUP ONLY)"] 
+        codes: ["A44", "Canada", "Intl", "ADI (BACKUP ONLY)"] 
     },
     { 
         name: "Patricia Hansen", 
@@ -165,21 +145,25 @@ const RAW_CSR_DATA = [
         codes: ["Akron", "Banner", "SecLock", "Norwood", "Dugmore", "Midwest Wholesale"] 
     },
 
-    // --- OTHER BRANDS (Kept as Original) ---
+    // --- CORBIN RUSSWIN ---
     { name: "Amber States", phone: "704-226-6185", email: "amber.states@assaabloy.com", brand: "Corbin Russwin", codes: ["A13", "A21", "A31", "A32", "A43", "A44"] },
     { name: "AnnMarie Jones", phone: "860-828-7265", email: "annmarie.jones@assaabloy.com", brand: "Corbin Russwin", codes: ["A07", "A16", "A28", "A38", "A39"] },
-    { name: "Delilah Whitley", phone: "704-226-6168", email: "delilah.whitley@assaabloy.com", brand: "Corbin Russwin", codes: ["A15", "A27", "A37", "Himmels"] },
+    { name: "Delilah Whitley", phone: "704-226-6168", email: "delilah.whitley@assaabloy.com", brand: "Corbin Russwin", codes: ["A15", "GA", "A27", "A37", "Himmels"] },
     { name: "Noel McNeil", phone: "704-226-6123", email: "noel.mcneil@assaabloy.com", brand: "Corbin Russwin", codes: ["A02", "A03", "A08"] },
     { name: "Scott Sullivan", phone: "860-828-7270", email: "scott.sullivan1@assaabloy.com", brand: "Corbin Russwin", codes: ["A01", "A22", "Banner", "SecLock"] },
+
+    // --- ACCENTRA ---
     { name: "Debra D'Arienzo", phone: "855-557-5078 x7218", email: "debra.darienzo@assaabloy.com", brand: "ACCENTRA", codes: ["A13", "A38", "A39", "A44"] },
     { name: "Shanice Ivey", phone: "855-557-5078 x6198", email: "shanice.ivey@assaabloy.com", brand: "ACCENTRA", codes: ["A07", "A08"] },
-    { name: "Dedee McClary", phone: "855-557-5078 x6170", email: "dedee.mcclary@assaabloy.com", brand: "ACCENTRA", codes: ["A15", "A16", "A28"] },
+    { name: "Dedee McClary", phone: "855-557-5078 x6170", email: "dedee.mcclary@assaabloy.com", brand: "ACCENTRA", codes: ["A15", "GA", "A16", "A28"] },
     { name: "Laura Moore", phone: "855-557-5078 x6255", email: "laura.moore@assaabloy.com", brand: "ACCENTRA", codes: ["A01", "A22", "A43", "Banner", "SecLock"] },
     { name: "Mary Tarlton", phone: "855-557-5078 x6177", email: "mary.tarlton@assaabloy.com", brand: "ACCENTRA", codes: ["A02", "A03", "A27", "Mayflower", "Himmels"] },
     { name: "Dawn Reynolds", phone: "855-557-5078 7327", email: "dawn.reynolds@assaabloy.com", brand: "ACCENTRA", codes: ["A21", "A31", "A32", "A37"] },
+
+    // --- NORTON RIXSON ---
     { name: "Casie Luther", phone: "(877) 974-2255", email: "casie.luther@assaabloy.com", brand: "Norton Rixson", codes: ["A01", "A21", "A37", "A38", "A39"] },
     { name: "Stacy Staples", phone: "(877) 974-2255", email: "stacy.staples@assaabloy.com", brand: "Norton Rixson", codes: ["A02", "A03", "A07", "A27", "A28"] },
-    { name: "Jessica Kennington", phone: "(877) 974-2255", email: "jessica.kennington@assaabloy.com", brand: "Norton Rixson", codes: ["A15", "A16", "A32", "A44", "Intl"] },
+    { name: "Jessica Kennington", phone: "(877) 974-2255", email: "jessica.kennington@assaabloy.com", brand: "Norton Rixson", codes: ["A15", "GA", "A16", "A32", "A44", "Intl"] },
     { name: "Crystal Frost", phone: "(877) 974-2255", email: "crystal.frost@assaabloy.com", brand: "Norton Rixson", codes: ["A08", "A13", "A22", "A31", "A43"] },
 ];
 
@@ -246,9 +230,7 @@ const CsrSearchModal = ({ onClose }) => {
             const lowerTerm = searchTerm.toLowerCase().trim();
             const safeTerm = lowerTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             
-            // Updated regex: Allows match at start of string (^), after whitespace (\s), 
-            // after underscore (_), or after hyphen (-).
-            // This ensures searching "A32" will match "SGT_A32" or "SGT-A32".
+            // Standard word start boundary
             const wordStartRegex = new RegExp(`(^|[\\s_\\-])${safeTerm}`, 'i');
 
             filtered = filtered.filter(csr => {
@@ -323,7 +305,6 @@ const CsrSearchModal = ({ onClose }) => {
                                                 <h3 className="csr-name">
                                                     <HighlightedText text={csr.name} highlightKeywords={highlightKeywords}/>
                                                 </h3>
-                                                {/* Explicit Territory Codes Display */}
                                                 <div className="csr-territory-codes">
                                                     {csr.codes.map((code, cIdx) => (
                                                         <span key={cIdx} className="territory-code-tag">
@@ -333,7 +314,6 @@ const CsrSearchModal = ({ onClose }) => {
                                                 </div>
                                             </div>
                                         </div>
-                                        {/* Repositioned Brand Badge */}
                                         <div className="csr-brand-badge top-right">{csr.brand}</div>
                                     </div>
 
