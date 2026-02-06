@@ -32,7 +32,7 @@
   max-width: 650px;
   max-height: 90vh;
   border-radius: var(--radius);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -80,12 +80,12 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 /* --- Groups & Buttons --- */
 .group-title {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   color: #60a5fa;
   text-transform: uppercase;
@@ -101,11 +101,9 @@
 
 .option-btn {
   display: flex;
-  flex-direction: column; /* Stack icon and text */
-  align-items: center;    /* Center horizontally */
-  justify-content: center; /* Center vertically */
-  text-align: center;
-  padding: 1.25rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
   background: #1e1e1e;
   border: 1px solid var(--border-color);
   border-radius: 0.75rem;
@@ -113,7 +111,7 @@
   transition: all 0.2s;
   color: var(--text-light);
   position: relative;
-  gap: 0.5rem;
+  text-align: left;
 }
 
 .option-btn:hover {
@@ -122,14 +120,13 @@
 }
 
 .option-btn.active {
-  background: #1e3a8a;
+  background: rgba(37, 99, 235, 0.15);
   border: 2px solid var(--accent-color);
   color: #ffffff;
 }
 
 .option-icon {
-  margin-bottom: 0.25rem;
-  opacity: 0.8;
+  opacity: 0.6;
 }
 
 .option-btn.active .option-icon {
@@ -147,11 +144,6 @@
   font-size: 0.75rem;
   color: #94a3b8;
   display: block;
-  margin-top: 2px;
-}
-
-.option-btn.active .option-sub {
-  color: #bfdbfe;
 }
 
 .check-icon {
@@ -170,68 +162,122 @@
   width: 100%;
   padding: 1rem;
   border: 1px solid var(--border-color);
-  background: #1e1e1e;
+  background: #000;
   color: white;
   border-radius: 0.5rem;
   font-size: 1.1rem;
+  transition: border-color 0.2s;
 }
 
 .form-input:focus {
   outline: none;
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .calculate-btn {
   width: 100%;
-  padding: 1rem;
+  padding: 1.125rem;
   background-color: var(--accent-color);
   color: white;
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  transition: background 0.2s;
+  gap: 0.75rem;
+  transition: background 0.2s, transform 0.1s;
 }
 
 .calculate-btn:hover {
   background-color: var(--accent-hover);
 }
 
-/* --- Results --- */
+.calculate-btn:active {
+  transform: scale(0.98);
+}
+
+/* --- RESULTS SECTION RESTYLE --- */
+.csr-result-card {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: #1e293b;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.csr-card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.csr-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.csr-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+.csr-region-label {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.brand-badge {
+  padding: 0.4rem 0.75rem;
+  border-radius: 2rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .rail-results-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: 1.25rem;
 }
 
 .rail-box {
-  padding: 1.25rem;
-  border-radius: 0.5rem;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.2s;
 }
 
 .rail-box.stock {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .rail-box.cut {
-  background: rgba(59, 130, 246, 0.15);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.25);
 }
 
 .rail-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #94a3b8;
   text-transform: uppercase;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
 }
 
 .cut-label {
@@ -239,34 +285,39 @@
 }
 
 .rail-value {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: 2.25rem;
+  font-weight: 800;
   color: #fff;
   margin: 0;
+  line-height: 1;
 }
 
 .rail-sub {
   font-size: 0.75rem;
   color: #64748b;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
+  font-weight: 500;
 }
 
 .calc-note {
-  margin-top: 1rem;
-  font-size: 0.85rem;
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
   color: #64748b;
   text-align: center;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-family: monospace;
 }
 
+/* --- MESSAGE BOXES --- */
 .message-box {
   padding: 1rem;
   border-radius: 0.5rem;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
 .message-box.warning {
@@ -282,10 +333,26 @@
 }
 
 /* Animations */
-.fade-in { animation: fadeIn 0.3s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.3s ease-out forwards; }
+@keyframes fadeIn { 
+  from { opacity: 0; transform: translateY(10px); } 
+  to { opacity: 1; transform: translateY(0); } 
+}
 
+/* --- RESPONSIVENESS --- */
 @media (max-width: 640px) {
-  .rail-results-grid { grid-template-columns: 1fr; }
+  .modal-body { padding: 1.25rem; }
+  .rail-results-grid { 
+    grid-template-columns: 1fr; 
+    gap: 1rem;
+  }
   .option-grid { grid-template-columns: 1fr; }
+  .csr-card-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .brand-badge { align-self: flex-start; }
+  .rail-value { font-size: 1.75rem; }
+  .rail-box { padding: 1.25rem; }
 }

@@ -1,5 +1,6 @@
+/* src/RailCalculator.js */
 import React, { useState, useRef } from 'react';
-import { X, Scissors, ArrowRight, CheckCircle, AlertTriangle, Layers, Maximize } from 'lucide-react';
+import { X, Scissors, ArrowRight, CheckCircle, AlertTriangle, Layers, Maximize, Info } from 'lucide-react';
 import './RailCalculator.css';
 
 // --- DATA: RAIL SPECS ---
@@ -55,33 +56,65 @@ export default function RailCalculator({ onClose }) {
 
     const calculate = () => {
         const width = parseFloat(doorWidth);
-        if (isNaN(width) || width < 24 || width > 48) {
-            setResult({ error: 'Please enter a valid Door Width between 24" and 48".' });
+        
+        // Validation: Allow any width >= 24"
+        if (isNaN(width) || width < 24) {
+            setResult({ error: 'Please enter a valid Door Width (minimum 24").' });
             return;
         }
 
-        // 1. Determine Rail Size (E, F, J, G)
-        const sizeData = RAIL_SIZES.find(s => width >= s.min && width <= s.max);
-        if (!sizeData) {
-            setResult({ error: 'Door width out of standard range (24"-48").' });
-            return;
-        }
-
-        // 2. Get Formula Data
         const spec = FORMULAS[generation][stile];
         
-        // 3. Calculate Values
-        const uncutLength = spec.uncutMap[sizeData.label];
+        let sizeLabel = '';
+        let rangeLabel = '';
+        let uncutLengthDisplay = '';
+        let customNote = null;
+        let isWarning = false;
+
+        // 1. Determine Rail Size (Standard vs Custom)
+        const sizeData = RAIL_SIZES.find(s => width >= s.min && width <= s.max);
+
+        if (sizeData) {
+            // STANDARD RANGE (24-48)
+            sizeLabel = sizeData.label;
+            rangeLabel = `${sizeData.min}" - ${sizeData.max}"`;
+            uncutLengthDisplay = spec.uncutMap[sizeData.label].toFixed(3) + '"';
+        } else if (width > 48) {
+            // CUSTOM / OVERSIZE RANGE (>48)
+            sizeLabel = 'Custom / SPAR';
+            rangeLabel = `Over 48"`;
+            
+            if (generation === '80_SERIES') {
+                uncutLengthDisplay = "Use NC-E20";
+                customNote = "For widths > 48\", request QSPAR using NC-E20.";
+            } else {
+                // PE80 Series Logic for > 48
+                uncutLengthDisplay = "N/A";
+                customNote = "Theoretical calculation only. PE80 Series cannot be extended via SPAR/Special Order.";
+                isWarning = true;
+            }
+        } else {
+            // Width is between 24 and 48 but falls in a non-standard gap (e.g. 32.5)
+            // Or technically should be caught by logic if gaps existed, 
+            // but our current RAIL_SIZES are continuous integers.
+            // We'll treat "no match" within 48 as an error to match previous behavior if any.
+            setResult({ error: 'Door width out of standard ranges (check standard sizes).' });
+            return;
+        }
+
+        // 2. Calculate Cut Length (Formula remains the same)
         const actualCutLength = width - spec.deduction;
 
         setResult({
-            sizeLabel: sizeData.label,
-            range: `${sizeData.min}" - ${sizeData.max}"`,
-            uncutLength: uncutLength.toFixed(3),
+            sizeLabel: sizeLabel,
+            range: rangeLabel,
+            uncutLength: uncutLengthDisplay,
             cutLength: actualCutLength.toFixed(3),
             deduction: spec.deduction,
             isPE: generation === 'PE80_SERIES',
-            stileLabel: stile === 'NARROW' ? (generation === 'PE80_SERIES' ? 'NE (Narrow)' : 'Narrow Stile') : (generation === 'PE80_SERIES' ? 'WE (Wide)' : 'Wide Stile')
+            stileLabel: stile === 'NARROW' ? (generation === 'PE80_SERIES' ? 'NE (Narrow)' : 'Narrow Stile') : (generation === 'PE80_SERIES' ? 'WE (Wide)' : 'Wide Stile'),
+            customNote: customNote,
+            isWarning: isWarning
         });
 
         // Auto Scroll to results
@@ -167,7 +200,7 @@ export default function RailCalculator({ onClose }) {
                             <input 
                                 type="number" 
                                 className="form-input" 
-                                placeholder="Enter width in inches (e.g. 36)" 
+                                placeholder="Enter width in inches (Min 24)" 
                                 value={doorWidth}
                                 onChange={(e) => setDoorWidth(e.target.value)}
                                 onKeyDown={handleKeyDown}
@@ -203,7 +236,10 @@ export default function RailCalculator({ onClose }) {
                                 <div className="rail-results-grid">
                                     <div className="rail-box stock">
                                         <p className="rail-label">Stock / Uncut Length</p>
-                                        <p className="rail-value">{result.uncutLength}"</p>
+                                        {/* Allow text wrapping for long strings like "Use NC-E20" */}
+                                        <p className="rail-value" style={{ fontSize: isNaN(parseFloat(result.uncutLength)) ? '1.25rem' : '1.75rem' }}>
+                                            {result.uncutLength}
+                                        </p>
                                         <p className="rail-sub">Full Rail Size</p>
                                     </div>
                                     <div className="rail-box cut">
@@ -212,6 +248,14 @@ export default function RailCalculator({ onClose }) {
                                         <p className="rail-sub">For {doorWidth}" Door</p>
                                     </div>
                                 </div>
+
+                                {/* Custom Note for Oversize/Special Orders */}
+                                {result.customNote && (
+                                    <div className={`message-box ${result.isWarning ? 'error' : 'warning'}`} style={{ marginTop: '1rem' }}>
+                                        <Info size={20} />
+                                        <span>{result.customNote}</span>
+                                    </div>
+                                )}
                                 
                                 <div className="calc-note">
                                     Calculation: Door Width ({doorWidth}") - Deduction ({result.deduction}")
