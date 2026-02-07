@@ -97,7 +97,7 @@ const App = () => {
             <span className="nav-brand-text">Sargent</span>
           </div>
           <div className="nav-right">
-            <div className="nav-status-tag">Last Updated 02-02-2026</div>
+            <div className="nav-status-tag">Last Updated 02-06-2026</div>
           </div>
         </div>
       </nav>
