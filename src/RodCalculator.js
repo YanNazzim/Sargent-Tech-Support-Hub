@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { 
     X, Calculator, AlertTriangle, ArrowRight, ArrowUp, ArrowDown, 
-    Disc, Plus, Tag, Info, Search, CheckCircle 
+    Disc, Plus, Tag, Info, Search, CheckCircle, Scissors, Printer 
 } from 'lucide-react'; 
 import './RodCalculator.css'; 
 
@@ -223,6 +223,10 @@ const RodCalculator = ({ onClose }) => {
         if(results) setResults(null);
     };
 
+    const handlePrint = () => {
+        window.print();
+    };
+
     // Calculate Function
     const calculate = () => {
         const dh = parseFloat(inputs.doorHeight);
@@ -287,12 +291,26 @@ const RodCalculator = ({ onClose }) => {
             partInfo = getPartNumber(deviceSeries, dh, aff);
         }
 
+        // --- CVR ASSEMBLED LOGIC ---
+        let topAssembled = null;
+        let bottomAssembled = null;
+
+        if (deviceType === 'CVR' && tr !== 'N/A') {
+            topAssembled = (parseFloat(tr) + 5.5).toFixed(3);
+        }
+        if (deviceType === 'CVR' && br !== 'N/A') {
+            bottomAssembled = (parseFloat(br) + 7.8125).toFixed(3);
+        }
+
         setResults({ 
             topRodLength: tr, 
             bottomRodLength: br, 
             rodExtension: re, 
             crossbarLength: cb,
-            partInfo 
+            partInfo,
+            topAssembled,
+            bottomAssembled,
+            isCVR: deviceType === 'CVR'
         });
         setMessage('');
         setIsError(false);
@@ -300,7 +318,7 @@ const RodCalculator = ({ onClose }) => {
         // Auto Scroll to results after short delay for render
         setTimeout(() => {
             if (resultsRef.current) {
-                resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }, 100);
     };
@@ -323,7 +341,7 @@ const RodCalculator = ({ onClose }) => {
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="calculator-modal" onClick={e => e.stopPropagation()}>
-                <div className="modal-header">
+                <div className="modal-header hide-on-print">
                     <h2 className="modal-title">
                         <Calculator className="modal-title-icon" style={{color: '#3b82f6'}} /> 
                         Rod Length Calculator
@@ -335,8 +353,14 @@ const RodCalculator = ({ onClose }) => {
 
                 <div className="modal-body">
                     
+                    {/* Print Only Header */}
+                    <div className="print-only-header">
+                        <h2>Sargent Rod Length Calculation</h2>
+                        <p>Date Generated: {new Date().toLocaleDateString()}</p>
+                    </div>
+
                     {/* --- STEP 1: DEVICE TYPE SELECTION --- */}
-                    <div>
+                    <div className="hide-on-print">
                         <h3 className="group-title">1. Select Device Type</h3>
                         <div className="device-type-grid">
                             {DEVICE_TYPES.map(type => (
@@ -355,7 +379,7 @@ const RodCalculator = ({ onClose }) => {
 
                     {/* --- STEP 2: MODEL SELECTION (If not Crossbar) --- */}
                     {inputs.deviceType && inputs.deviceType !== 'Crossbar' && (
-                        <div className="fade-in">
+                        <div className="fade-in hide-on-print">
                             <h3 className="group-title">2. Select Model</h3>
                             
                             {/* Search Bar */}
@@ -393,7 +417,7 @@ const RodCalculator = ({ onClose }) => {
 
                     {/* --- STEP 3: MEASUREMENTS --- */}
                     {((inputs.deviceType === 'Crossbar') || (inputs.deviceType && inputs.deviceSeries)) && (
-                        <div className="fade-in">
+                        <div className="fade-in hide-on-print">
                             <h3 className="group-title">
                                 {inputs.deviceType === 'Crossbar' ? '2. Measurements' : '3. Measurements'}
                             </h3>
@@ -451,7 +475,7 @@ const RodCalculator = ({ onClose }) => {
                     
                     {/* --- ERROR MESSAGE --- */}
                     {isError && message && (
-                        <div className="message-box error fade-in">
+                        <div className="message-box error fade-in hide-on-print">
                             <AlertTriangle size={20} />
                             <span>{message}</span>
                         </div>
@@ -459,14 +483,31 @@ const RodCalculator = ({ onClose }) => {
 
                     {/* --- RESULTS DISPLAY --- */}
                     {results && !isError && (
-                        <div className="results-container fade-in" ref={resultsRef}>
+                        <div className="results-container fade-in printable-area" ref={resultsRef}>
                             
+                            <div className="results-header-actions hide-on-print">
+                                <h3 className="group-title" style={{margin: 0}}>Calculated Results</h3>
+                                <button className="print-btn" onClick={handlePrint}>
+                                    <Printer size={16} /> Print / Save PDF
+                                </button>
+                            </div>
+
+                            {/* Print-Only Context Details */}
+                            <div className="print-only-details">
+                                <p><strong>Model Series:</strong> {inputs.deviceSeries.replace(/_/g, ' ')}</p>
+                                {inputs.deviceType !== 'Crossbar' ? (
+                                    <p><strong>Door Dimensions:</strong> {inputs.doorHeight}" Height | {inputs.aff}" AFF</p>
+                                ) : (
+                                    <p><strong>Door Width:</strong> {inputs.doorWidth}"</p>
+                                )}
+                            </div>
+
                             {/* --- PART NUMBER SECTION --- */}
                             {results.partInfo && (
-                                <div className="csr-result-card part-info-card">
+                                <div className="csr-result-card part-info-card print-card">
                                     <div className="csr-card-header-left">
-                                        <Tag size={20} color="#6366f1" />
-                                        <h3 className="csr-name" style={{color: '#818cf8'}}>Ordering Part Numbers</h3>
+                                        <Tag size={20} className="icon-blue" />
+                                        <h3 className="csr-name title-blue">Ordering Part Numbers</h3>
                                     </div>
                                     
                                     <div className={`parts-grid ${results.partInfo.bottomRod !== 'N/A' ? 'two-col' : 'one-col'}`}>
@@ -499,17 +540,17 @@ const RodCalculator = ({ onClose }) => {
 
                             {/* TOP ASSEMBLY BLOCK */}
                             {results.crossbarLength === 'N/A' && (
-                                <div className="csr-result-card top-rod-card">
+                                <div className="csr-result-card top-rod-card print-card">
                                     <div className="assembly-header top">
                                         <div className="csr-card-header-left">
-                                            <ArrowUp size={24} color="#3b82f6" />
+                                            <ArrowUp size={24} className="icon-blue" />
                                             <h3 className="csr-name">Top Rod Assembly</h3>
                                         </div>
                                     </div>
                                     
                                     <div className="assembly-grid">
                                         <div className="assembly-item">
-                                            <p className="assembly-label">Top Rod Length</p>
+                                            <p className="assembly-label">Top Rod Length (Rod Only)</p>
                                             <p className="assembly-value">{results.topRodLength}"</p>
                                         </div>
                                         <div className="assembly-item">
@@ -522,10 +563,21 @@ const RodCalculator = ({ onClose }) => {
 
                                     {totalTopLength && (
                                         <div className="total-length-box">
-                                            <Plus size={20} color="#60a5fa" />
+                                            <Plus size={20} className="icon-blue" />
                                             <div>
-                                                <span className="total-label">TOTAL TOP LENGTH</span>
+                                                <span className="total-label">TOTAL TOP ROD (w/ Extension)</span>
                                                 <span className="total-value">{totalTopLength}"</span>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* CVR Assembled Note */}
+                                    {results.isCVR && results.topAssembled && (
+                                        <div className="total-length-box cvr-assembled-box">
+                                            <div>
+                                                <span className="total-label">TOTAL ASSEMBLED LENGTH (w/ Latchbolt)</span>
+                                                <span className="total-value">{results.topAssembled}"</span>
+                                                <span className="detail-text">(Calculated as Rod Length + 5.5")</span>
                                             </div>
                                         </div>
                                     )}
@@ -534,27 +586,51 @@ const RodCalculator = ({ onClose }) => {
 
                             {/* BOTTOM ASSEMBLY BLOCK - Hidden for L-Series */}
                             {results.crossbarLength === 'N/A' && results.bottomRodLength !== 'N/A' && (
-                                <div className="csr-result-card bottom-rod-card">
+                                <div className="csr-result-card bottom-rod-card print-card">
                                     <div className="assembly-header bottom">
                                         <div className="csr-card-header-left">
-                                            <ArrowDown size={24} color="#10b981" />
+                                            <ArrowDown size={24} className="icon-green" />
                                             <h3 className="csr-name">Bottom Rod Assembly</h3>
                                         </div>
                                     </div>
                                     <div className="assembly-item single">
-                                        <p className="assembly-label">Bottom Rod Length</p>
+                                        <p className="assembly-label">Bottom Rod Length (Rod Only)</p>
                                         <p className="assembly-value">{results.bottomRodLength}"</p>
                                     </div>
+
+                                    {/* CVR Assembled Note */}
+                                    {results.isCVR && results.bottomAssembled && (
+                                        <div className="total-length-box cvr-assembled-box bottom-assembled-box">
+                                            <div>
+                                                <span className="total-label">TOTAL ASSEMBLED LENGTH (w/ Bottom Bolt)</span>
+                                                <span className="total-value">{results.bottomAssembled}"</span>
+                                                <span className="detail-text">(Calculated as Rod Length + 7.8125")</span>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
                             {/* CROSSBAR BLOCK */}
                             {results.crossbarLength !== 'N/A' && (
-                                <div className="csr-result-card crossbar-card">
+                                <div className="csr-result-card crossbar-card print-card">
                                     <Disc size={32} color="#f59e0b" style={{ margin: '0 auto 1rem auto' }} />
                                     <p className="assembly-label">Crossbar Length</p>
                                     <p className="assembly-value">{results.crossbarLength}"</p>
                                     <p className="detail-text">For {inputs.doorWidth}" Door</p>
+                                </div>
+                            )}
+
+                            {/* CUTTING INSTRUCTIONS */}
+                            {results.crossbarLength === 'N/A' && (
+                                <div className="cutting-instructions part-info-card print-card">
+                                    <div className="note-header">
+                                        <Scissors size={18} color="#f59e0b"/>
+                                        <span style={{color: '#fbbf24'}}>ROD CUTTING INSTRUCTIONS</span>
+                                    </div>
+                                    <p className="note-text instructions-text">
+                                        Remove Latchbolt or bottom bolt using the pin. Cut from the <strong>UNTHREADED</strong> side to the measurement needed. Redrill a 1/8" diameter hole for the pin, and reattach the latchbolt or bottom bolt.
+                                    </p>
                                 </div>
                             )}
 
