@@ -3,11 +3,11 @@
   --primary-color: #0f172a;
   --accent-color: #2563eb;
   --accent-hover: #1d4ed8;
-  --bg-color: #121212; 
+  --bg-color: #121212;
   --card-bg: #1e293b;
-  --text-main: #e2e8f0; 
+  --text-main: #e2e8f0;
   --text-light: #94a3b8;
-  --border-color: #333333; 
+  --border-color: #232323;
   --success-color: #10b981;
   --error-color: #ef4444;
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.3);
@@ -15,36 +15,18 @@
 }
 
 /* --- Global Scrollbar Styling --- */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+* { scrollbar-width: thin; scrollbar-color: #334155 transparent; box-sizing: border-box; }
 
-::-webkit-scrollbar-track {
-  background: #1e1e1e; 
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #475569; 
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #475569 #1e1e1e;
-  box-sizing: border-box;
-}
-
+/* --- MODAL OVERLAY --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85); 
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,13 +35,14 @@
   animation: fadeIn 0.2s ease-out;
 }
 
+/* --- MODAL SHELL --- */
 .calculator-modal {
-  background: #121212; 
+  background: #0e0e0e;
   width: 100%;
-  max-width: 750px;
+  max-width: 720px;
   max-height: 90vh;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.7);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -69,21 +52,21 @@
 }
 
 .modal-header {
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #121212; 
+  background: #0e0e0e;
 }
 
 .modal-title {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #ffffff; 
+  color: #ffffff;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
   margin: 0;
 }
 
@@ -91,39 +74,50 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.4rem;
   border-radius: 50%;
   color: var(--text-light);
   transition: all 0.2s;
 }
-
-.close-button:hover {
-  background: #333;
-  color: #fff;
-}
+.close-button:hover { background: #1e1e1e; color: #fff; }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
-/* --- Step 1: Device Buttons --- */
+/* ======================================================
+   STEP INDICATORS
+   ====================================================== */
 .group-title {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: #60a5fa; 
+  color: #60a5fa;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.75rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
+.group-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(96, 165, 250, 0.15);
+}
+
+/* ======================================================
+   STEP 1 — DEVICE TYPE BUTTONS (compact horizontal row)
+   ====================================================== */
 .device-type-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
 }
 
 .device-type-btn {
@@ -132,112 +126,108 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: #1e1e1e; 
+  gap: 0.25rem;
+  padding: 0.75rem 0.5rem;
+  background: #161616;
   border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
   color: var(--text-light);
   position: relative;
-  min-height: 100px;
 }
 
 .device-type-btn:hover {
-  background: #2d2d2d;
-  border-color: #4b5563;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  background: #1c1c1c;
+  border-color: #3f3f46;
 }
 
 .device-type-btn.active {
-  background: #1e3a8a; 
+  background: rgba(37, 99, 235, 0.12);
   border: 2px solid var(--accent-color);
   color: #ffffff;
 }
 
 .device-label {
   font-weight: 700;
-  font-size: 0.95rem;
-  color: #f1f5f9;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  line-height: 1.2;
 }
 
 .device-detail {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  line-height: 1.3;
+  font-size: 0.65rem;
+  color: #64748b;
+  line-height: 1.2;
 }
 
-.device-type-btn.active .device-detail {
-  color: #bfdbfe;
-}
+.device-type-btn.active .device-detail { color: #93c5fd; }
 
 .device-check {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 5px;
+  right: 5px;
   color: var(--accent-color);
 }
 
-/* --- Step 2: Search & Models --- */
+/* ======================================================
+   STEP 2 — SEARCH & MODEL SELECTION
+   ====================================================== */
 .search-container {
   position: relative;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   width: 100%;
 }
 
 .search-icon {
   position: absolute;
-  left: 12px;
+  left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #64748b;
+  color: #475569;
   pointer-events: none;
 }
 
 .model-search-input {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem 0.6rem 2.25rem;
+  border-radius: 8px;
   border: 1px solid var(--border-color);
-  font-size: 0.95rem;
-  background: #1e1e1e; 
+  font-size: 0.85rem;
+  background: #161616;
   color: white;
   transition: border-color 0.2s;
 }
-
 .model-search-input:focus {
   outline: none;
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .model-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.75rem;
-  max-height: 250px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.4rem;
+  max-height: 200px;
   overflow-y: auto;
-  padding: 4px;
+  padding: 2px;
 }
 
 .model-btn {
   text-align: left;
-  padding: 0.75rem;
-  font-size: 0.9rem;
-  border-radius: 0.5rem;
-  background: #1e1e1e; 
+  padding: 0.55rem 0.75rem;
+  font-size: 0.82rem;
+  border-radius: 8px;
+  background: #161616;
   color: var(--text-main);
   border: 1px solid var(--border-color);
   cursor: pointer;
-  transition: all 0.1s;
+  transition: all 0.15s;
 }
-
 .model-btn:hover {
-  background: #2d2d2d;
+  background: #1c1c1c;
   border-color: var(--accent-color);
 }
-
 .model-btn.active {
   background: var(--accent-color);
   color: white;
@@ -247,287 +237,347 @@
 .no-models {
   grid-column: 1/-1;
   text-align: center;
-  padding: 1.5rem;
+  padding: 1rem;
   color: var(--text-light);
   font-style: italic;
-  background: #1e1e1e;
-  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  background: #161616;
+  border-radius: 8px;
   border: 1px solid var(--border-color);
 }
 
-/* --- Step 3: Inputs --- */
+/* ======================================================
+   STEP 3 — MEASUREMENT INPUTS
+   ====================================================== */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .input-label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #e2e8f0; 
-  margin-bottom: 0.35rem;
+  color: #94a3b8;
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.65rem 0.75rem;
   border: 1px solid var(--border-color);
-  background: #1e1e1e; 
+  background: #161616;
   color: white;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   font-size: 1rem;
 }
-
 .form-input:focus {
   outline: none;
   border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .calculate-button {
   width: 100%;
-  padding: 1rem;
+  padding: 0.85rem;
   background-color: var(--accent-color);
   color: white;
   border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 1rem;
+  margin-top: 0.75rem;
   transition: background 0.2s;
 }
+.calculate-button:hover { background-color: var(--accent-hover); }
 
-.calculate-button:hover {
-  background-color: var(--accent-hover);
-}
-
-/* --- Results Header Actions --- */
+/* ======================================================
+   RESULTS AREA
+   ====================================================== */
 .results-header-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .print-btn {
-  background-color: #334155;
-  color: white;
-  border: none;
-  border-radius: 0.375rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.85rem;
+  background-color: #1e293b;
+  color: #94a3b8;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: background 0.2s;
+  gap: 0.4rem;
+  transition: all 0.2s;
 }
+.print-btn:hover { background-color: #334155; color: #fff; }
 
-.print-btn:hover {
-  background-color: #475569;
-}
-
-/* --- Results --- */
 .results-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding-top: 1.5rem;
+  gap: 0.75rem;
+  padding-top: 1rem;
   border-top: 1px solid var(--border-color);
 }
 
+/* --- Result Cards (shared) --- */
 .csr-result-card {
-  border-radius: 0.75rem;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .part-info-card {
-  background: #1e293b;
-  border: 1px solid #6366f1;
-  padding: 1.25rem;
+  background: #131c2e;
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  padding: 1rem;
 }
 
 .csr-card-header-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
 }
 
 .csr-name {
-  font-size: 1rem;
+  font-size: 0.95rem;
   margin: 0;
   font-weight: 600;
   color: #f1f5f9;
 }
 
+/* Part Numbers */
 .parts-grid {
   display: grid;
-  gap: 1rem;
+  gap: 0.6rem;
 }
-
 .parts-grid.two-col { grid-template-columns: 1fr 1fr; }
 .parts-grid.one-col { grid-template-columns: 1fr; }
 
 .part-box {
-  background: rgba(99, 102, 241, 0.15); 
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(99, 102, 241, 0.15);
 }
 
 .part-label {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: #a5b4fc;
   text-transform: uppercase;
   font-weight: 700;
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.03em;
 }
 
 .part-number {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #fff;
   margin: 0;
-  font-family: monospace;
+  font-family: 'SF Mono', 'Fira Code', monospace;
   word-break: break-all;
 }
 
 .part-notes {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  background: rgba(245, 158, 11, 0.1);
+  margin-top: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  background: rgba(245, 158, 11, 0.08);
   border-left: 3px solid #f59e0b;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 6px 6px 0;
 }
 
 .note-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
   color: #fbbf24;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
 }
 
 .note-text {
-  margin: 0.25rem 0;
+  margin: 0.15rem 0;
   color: #d1d5db;
-  font-size: 0.85rem;
-  padding-left: 1.5rem;
+  font-size: 0.78rem;
+  padding-left: 1.25rem;
 }
 
-/* Instructions */
+/* Cutting Instructions */
 .instructions-text {
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-top: 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin-top: 8px;
 }
 
-/* Assembly Cards */
-.top-rod-card { background: #1e293b; border-left: 5px solid #3b82f6; }
-.bottom-rod-card { background: #1e293b; border-left: 5px solid #10b981; }
-.crossbar-card { background: #1e293b; border-left: 5px solid #f59e0b; padding: 1.5rem; text-align: center; }
+.cutting-instructions {
+  border-color: #f59e0b;
+}
+
+/* ======================================================
+   ASSEMBLY RESULT CARDS (Top Rod / Bottom Rod / Crossbar)
+   ====================================================== */
+.top-rod-card {
+  background: #0f1724;
+  border-left: 4px solid #3b82f6;
+}
+
+.bottom-rod-card {
+  background: #0f1f1a;
+  border-left: 4px solid #10b981;
+}
+
+.crossbar-card {
+  background: #1a1710;
+  border-left: 4px solid #f59e0b;
+  padding: 1.25rem;
+  text-align: center;
+}
 
 .assembly-header {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.65rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
-.assembly-header.top { background: rgba(59, 130, 246, 0.1); }
-.assembly-header.bottom { background: rgba(16, 185, 129, 0.1); }
-.assembly-header .csr-name { color: #fff; }
+.assembly-header.top { background: rgba(59, 130, 246, 0.08); }
+.assembly-header.bottom { background: rgba(16, 185, 129, 0.08); }
+.assembly-header .csr-name { color: #fff; font-size: 0.9rem; }
 
 .assembly-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1px;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.03);
 }
 
 .assembly-item {
-  padding: 1.5rem;
+  padding: 1rem 1.25rem;
   text-align: center;
-  background: #1e293b;
+  background: inherit;
 }
-
 .assembly-item.single { width: 100%; }
 
 .assembly-label {
-  font-size: 0.8rem;
+  font-size: 0.68rem;
   color: #94a3b8;
   text-transform: uppercase;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
 }
 
 .assembly-value {
-  font-size: 1.75rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #fff;
   margin: 0;
+  font-family: 'SF Mono', 'Fira Code', monospace;
 }
-
 .assembly-value.accent { color: #60a5fa; }
 
+/* Total / Assembled Boxes */
 .total-length-box {
-  background: rgba(59, 130, 246, 0.15);
-  padding: 1rem;
-  border-top: 1px solid rgba(59, 130, 246, 0.2);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(59, 130, 246, 0.15);
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .cvr-assembled-box {
-  background: rgba(245, 158, 11, 0.15); /* Orange hue for special attention */
-  border-top: 1px solid rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.1);
+  border-top: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .bottom-assembled-box {
-  background: rgba(16, 185, 129, 0.15);
-  border-top: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.1);
+  border-top: 1px solid rgba(16, 185, 129, 0.2);
 }
 
-.total-label { color: #93c5fd; font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 4px; }
+.total-label {
+  color: #93c5fd;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 2px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
 .cvr-assembled-box .total-label { color: #fcd34d; }
 .bottom-assembled-box .total-label { color: #6ee7b7; }
 
-.total-value { color: #fff; font-size: 1.5rem; font-weight: 700; }
-
-.detail-text { font-size: 0.8rem; color: #64748b; margin-top: 0.5rem; display: block; }
-
-/* Cutting instructions specific */
-.cutting-instructions {
-  border-color: #f59e0b;
+.total-value {
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-family: 'SF Mono', 'Fira Code', monospace;
 }
 
-/* --- Print Only Elements --- */
-.print-only-header {
-  display: none;
-}
-.print-only-details {
-  display: none;
+.detail-text {
+  font-size: 0.72rem;
+  color: #475569;
+  margin-top: 0.3rem;
+  display: block;
 }
 
-/* --- Mobile Responsiveness --- */
+/* ======================================================
+   PRINT-ONLY ELEMENTS
+   ====================================================== */
+.print-only-header { display: none; }
+.print-only-details { display: none; }
+
+/* ======================================================
+   MESSAGES
+   ====================================================== */
+.message-box {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+}
+.message-box.error {
+  background: rgba(239, 68, 68, 0.08);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+/* ======================================================
+   ANIMATIONS
+   ====================================================== */
+.fade-in { animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ======================================================
+   MOBILE RESPONSIVENESS
+   ====================================================== */
 @media (max-width: 640px) {
-  .modal-body { padding: 1rem; gap: 1.5rem; }
+  .modal-body { padding: 1rem; gap: 1.25rem; }
   .form-grid { grid-template-columns: 1fr; }
   .parts-grid.two-col { grid-template-columns: 1fr; }
-  .assembly-value { font-size: 1.5rem; }
+  .assembly-value { font-size: 1.3rem; }
   .device-type-grid { grid-template-columns: 1fr 1fr; }
 }
 
@@ -535,35 +585,13 @@
   .device-type-grid { grid-template-columns: 1fr; }
 }
 
-/* Animations */
-.fade-in { animation: fadeIn 0.3s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-.message-box {
-  padding: 1rem;
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-}
-.message-box.error { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.2); }
-
-/* =======================================================================
-   --- PRINT STYLES (For PDF Export / Screenshot Cleansing) ---
-   ======================================================================= */
+/* ======================================================
+   PRINT STYLES
+   ====================================================== */
 @media print {
-  /* Hide standard web elements */
-  body * {
-    visibility: hidden;
-  }
-  
-  /* Show only the modal content */
-  .calculator-modal, .calculator-modal * {
-    visibility: visible;
-  }
-  
-  /* OVERRIDE SCROLL & HEIGHT FORCES SO EVERYTHING PRINTS */
+  body * { visibility: hidden; }
+  .calculator-modal, .calculator-modal * { visibility: visible; }
+
   .calculator-modal {
     position: absolute;
     left: 0;
@@ -571,19 +599,19 @@
     width: 100%;
     max-width: 100%;
     margin: 0;
-    padding: 10px; /* Small outer padding */
+    padding: 10px;
     background: #ffffff !important;
     border: none !important;
     box-shadow: none !important;
-    height: auto !important;      
-    max-height: none !important;  
-    overflow: visible !important; 
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
 
   .modal-body {
     padding: 0 !important;
     overflow: visible !important;
-    gap: 0.5rem !important; /* Tighten gap between sections */
+    gap: 0.5rem !important;
   }
 
   .results-container {
@@ -591,55 +619,40 @@
     padding-top: 0.5rem !important;
   }
 
-  /* Force light theme colors & adjust fonts for compact printing */
   .calculator-modal { color: #000000 !important; }
   .csr-name { font-size: 1.1rem !important; color: #000000 !important; }
   .assembly-value { font-size: 1.25rem !important; margin: 0 !important; color: #000000 !important; }
   .part-number { font-size: 1rem !important; margin: 0 !important; color: #000000 !important; }
   .total-value { font-size: 1.15rem !important; color: #000000 !important; }
-  .assembly-label, .part-label, .note-text, .detail-text { color: #333333 !important; font-size: 0.75rem !important; margin-bottom: 2px !important; }
+  .assembly-label, .part-label, .note-text, .detail-text {
+    color: #333333 !important; font-size: 0.75rem !important; margin-bottom: 2px !important;
+  }
   .instructions-text { font-size: 0.8rem !important; line-height: 1.3 !important; margin-top: 5px !important; }
-  
-  /* Cards compacting */
+
   .print-card {
     background: #ffffff !important;
     border: 1px solid #cccccc !important;
     box-shadow: none !important;
-    margin-bottom: 8px !important; /* Tighten bottom margin heavily */
-    padding: 0.5rem !important; /* Tighten card paddings heavily */
+    margin-bottom: 8px !important;
+    padding: 0.5rem !important;
     page-break-inside: avoid;
   }
 
   .part-info-card { padding: 0.5rem !important; }
   .part-box { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; padding: 0.5rem !important; }
   .part-notes { margin-top: 0.5rem !important; padding: 0.5rem !important; }
-
-  .assembly-header {
-    background: #f1f5f9 !important;
-    border-bottom: 1px solid #cccccc !important;
-    padding: 0.5rem !important;
-  }
-
+  .assembly-header { background: #f1f5f9 !important; border-bottom: 1px solid #cccccc !important; padding: 0.5rem !important; }
   .assembly-item { background: #ffffff !important; padding: 0.5rem !important; }
   .total-length-box { background: #f1f5f9 !important; border-top: 1px solid #cccccc !important; padding: 0.5rem !important; }
-  
+
   .icon-blue { color: #2563eb !important; }
   .icon-green { color: #059669 !important; }
   .title-blue { color: #1e3a8a !important; }
   .total-label { color: #475569 !important; font-size: 0.75rem !important; margin-bottom: 0 !important; }
 
-  /* Ensure background colors print */
-  * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .hide-on-print { display: none !important; }
 
-  /* Hide inputs, steps, and buttons */
-  .hide-on-print {
-    display: none !important;
-  }
-
-  /* Show the print headers */
   .print-only-header {
     display: block !important;
     text-align: center;
@@ -647,9 +660,9 @@
     padding-bottom: 5px !important;
     margin-bottom: 10px !important;
   }
-  .print-only-header h2 { margin: 0 0 2px 0; font-size: 18px !important; color: #000;}
+  .print-only-header h2 { margin: 0 0 2px 0; font-size: 18px !important; color: #000; }
   .print-only-header p { margin: 0; font-size: 12px !important; color: #555; }
-  
+
   .print-only-details {
     display: flex;
     justify-content: space-between;
