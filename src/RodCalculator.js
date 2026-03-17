@@ -296,7 +296,8 @@ const RodCalculator = ({ onClose }) => {
         let bottomAssembled = null;
 
         if (deviceType === 'CVR' && tr !== 'N/A') {
-            topAssembled = (parseFloat(tr) + 5.5).toFixed(3);
+            const reVal = parseFloat(re) || 0;
+            topAssembled = (parseFloat(tr) + reVal + 5.5).toFixed(3);
         }
         if (deviceType === 'CVR' && br !== 'N/A') {
             bottomAssembled = (parseFloat(br) + 7.8125).toFixed(3);
@@ -577,7 +578,7 @@ const RodCalculator = ({ onClose }) => {
                                             <div>
                                                 <span className="total-label">TOTAL ASSEMBLED LENGTH (w/ Latchbolt)</span>
                                                 <span className="total-value">{results.topAssembled}"</span>
-                                                <span className="detail-text">(Calculated as Rod Length + 5.5")</span>
+                                                <span className="detail-text">{parseFloat(results.rodExtension) > 0 ? '(Calculated as Rod + Extension + 5.5")' : '(Calculated as Rod Length + 5.5")'}</span>
                                             </div>
                                         </div>
                                     )}
