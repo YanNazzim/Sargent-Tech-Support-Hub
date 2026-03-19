@@ -6,7 +6,7 @@ import {
 import './RodCalculator.css'; 
 
 // ----------------------------------------------------------------------------
-// DATA CONSTANTS - Based on 2026 ROD LENGTH CALCULATIONS (Rev 4)
+// DATA CONSTANTS - Based on 2026 ROD LENGTH CALCULATIONS (Rev 5)
 // ----------------------------------------------------------------------------
 const CONSTANTS = {
     // --- CONCEALED VERTICAL RODS (CVR) - STANDARD ---
@@ -16,7 +16,7 @@ const CONSTANTS = {
     'CVR_SN_8600_STD':          { DH_OFFSET: 6.250,  RE_OFFSET: 42.250, MAX_ROD: 42.750, TR_STD: 35.000, BR_OFFSET: 12.125 },
     'CVR_SN_AUX_STD':           { DH_OFFSET: 17.625, RE_OFFSET: 53.625, MAX_ROD: 42.750, TR_STD: 35.000, BR_OFFSET: 12.125 },
     'CVR_PE8400_PE8600_STD':    { DH_OFFSET: 6.250,  RE_OFFSET: 42.250, MAX_ROD: 42.750, TR_STD: 35.000, BR_OFFSET: 12.125 },
-    'CVR_L_8600_STD':           { DH_OFFSET: 9.250,  RE_OFFSET: 45.250, MAX_ROD: 42.750, TR_STD: 35.000, BR_OFFSET: 12.125 },
+    'CVR_L_8600_STD':           { DH_OFFSET: 9.500,  RE_OFFSET: 45.000, MAX_ROD: 42.750, TR_STD: 35.000, BR_OFFSET: 12.125 },
     
     // --- CONCEALED VERTICAL RODS (CVR) - 5CH ---
     'CVR_8400_MD8600_5CH':      { DH_OFFSET: 14.500, RE_OFFSET: 50.500, MAX_ROD: 42.750, TR_STD: 35.000, BR_OFFSET: 12.125 },
