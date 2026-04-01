@@ -6,6 +6,7 @@ import RodCalculator from './RodCalculator';
 import HandingTool from './HandingTool';
 import RailCalculator from './RailCalculator';
 import CsrSearchModal from './CsrSearchModal'; 
+import ChatWidget from './ChatWidget'; // <-- AI Chatbot Import
 
 // Icons
 import {
@@ -174,6 +175,9 @@ const App = () => {
       {isCsrSearchOpen && <CsrSearchModal onClose={() => setIsCsrSearchOpen(false)} />}
       {isHandingToolOpen && <HandingTool onClose={() => setIsHandingToolOpen(false)} />}
       {isRailCalculatorOpen && <RailCalculator onClose={() => setIsRailCalculatorOpen(false)} />}
+      
+      {/* AI CHAT WIDGET */}
+      <ChatWidget />
     </div>
   );
 };

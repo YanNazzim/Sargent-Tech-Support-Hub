@@ -1,0 +1,60 @@
+/* src/components/style/ChatWidgetCustom.css */
+
+.custom-chat-window {
+    background-color: white; /* Changed to white */
+    color: black;
+    border: 2px solid var(--border-color);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9);
+  }
+
+  .custom-chat-window input {
+    background-color: white; /* Changed to white */
+    color: black;
+    border-color: var(--border-color);
+  }
+
+  .custom-chat-window input::placeholder {
+    color: var(--text-secondary);
+  }
+
+/* Styling the web component parts directly */
+
+/* Style the main container of the widget */
+gen-search-widget::part(widget-container) {
+  background-color: white; /* Changed to white */
+  border-radius: var(--card-radius);
+}
+
+/* Style the chat input area */
+gen-search-widget::part(input-container) {
+  border-top: 1px solid var(--border-color);
+  padding: 10px;
+  background-color: white; /* Changed to white */
+}
+
+/* Style the user's message bubbles */
+gen-search-widget::part(user-message) {
+  background-color: #e0f2fe; /* A light blue to differentiate from the background */
+  color: black; /* Setting text to black */
+  border-radius: 15px 15px 0 15px;
+  padding: 12px;
+}
+
+/* Style the AI's response bubbles */
+gen-search-widget::part(ai-message) {
+  background-color: #f1f3f4; /* A light gray for the AI response */
+  color: black; /* Setting text to black */
+  border-radius: 15px 15px 15px 0;
+  padding: 12px;
+}
+
+  /* Style the search result links in the widget */
+  gen-search-widget::part(result-link) {
+    color: black;
+  }
+
+  /* You can also use the ::part() selector to override the font style */
+  gen-search-widget::part(message-text) {
+    font-family: 'Roboto', sans-serif;
+    color: black;
+  }
